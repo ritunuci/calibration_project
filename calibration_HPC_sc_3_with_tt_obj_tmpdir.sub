@@ -1,0 +1,88 @@
+#!/bin/bash
+#SBATCH --job-name=sc_3_tt_obj
+#SBATCH -A HYLANDM_LAB
+#SBATCH -p standard
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=6
+#SBATCH --mem=36G
+#SBATCH --time=12-00:00:00
+#SBATCH --tmp=10G
+#SBATCH --output=/data/homezvol2/rituns/slurm-sc3-tt-obj-%j.out
+#SBATCH --error=/data/homezvol2/rituns/slurm-sc3-tt-obj-%j.err
+
+set -Eeuo pipefail
+
+# Adjust --tmp above to the actual size of your staged project and outputs.
+# All files in TMPDIR are disposable when SLURM ends the job.
+SOURCE_DIR=/dfs6b/pub/rituns/FleetPy_calibration_sc_3_tt_obj
+STUDY_NAME=calibration_sc_3_journal_30th_Oct_with_tt_obj
+PYTHON_SCRIPT=calibration_script_final_sc_3_with_CV_with_tt_obj_tmpdir.py
+
+: "${TMPDIR:?SLURM did not provide TMPDIR}"
+WORK_DIR="$TMPDIR/FleetPy_calibration_sc_3_tt_obj"
+SOURCE_CAL="$SOURCE_DIR/calibration_outputs/$STUDY_NAME"
+WORK_CAL="$WORK_DIR/calibration_outputs/$STUDY_NAME"
+SOURCE_RESULTS="$SOURCE_DIR/studies/example_study/results"
+WORK_RESULTS="$WORK_DIR/studies/example_study/results"
+
+copy_back() {
+    local run_status=$?
+    local copy_status=0
+    trap - EXIT
+    set +e
+    echo "[$(date -Is)] Job ending with status $run_status; copying output to permanent storage."
+    if [[ -d "$WORK_CAL" ]]; then
+        mkdir -p "$SOURCE_CAL"
+        rsync -a "$WORK_CAL/" "$SOURCE_CAL/" || copy_status=1
+    fi
+    if [[ -d "$WORK_RESULTS" ]]; then
+        mkdir -p "$SOURCE_RESULTS"
+        rsync -a "$WORK_RESULTS/" "$SOURCE_RESULTS/" || copy_status=1
+    fi
+    if [[ $copy_status -ne 0 ]]; then
+        echo "WARNING: At least one result copy failed; check the SLURM logs." >&2
+        if [[ $run_status -eq 0 ]]; then
+            run_status=1
+        fi
+    fi
+    exit "$run_status"
+}
+trap copy_back EXIT
+
+command -v rsync >/dev/null || { echo "rsync is required on the compute node" >&2; exit 1; }
+test -d "$SOURCE_DIR" || { echo "Source project not found: $SOURCE_DIR" >&2; exit 1; }
+test -f "$SOURCE_DIR/$PYTHON_SCRIPT" || { echo "Missing $PYTHON_SCRIPT in source project" >&2; exit 1; }
+mkdir -p "$WORK_DIR" "$WORK_CAL" "$WORK_RESULTS"
+
+# Copy code, scenarios and input datasets locally. Old simulation results and
+# unrelated calibration studies are not needed for this calibration run.
+echo "[$(date -Is)] Staging FleetPy project in $WORK_DIR"
+rsync -a \
+    --exclude='/.git/' \
+    --exclude='/calibration_outputs/' \
+    --exclude='/studies/example_study/results/' \
+    "$SOURCE_DIR/" "$WORK_DIR/"
+
+# Restore saved Ax state and evaluation history before Python starts.
+# Without this step, the optimization would start a new experiment.
+if [[ -d "$SOURCE_CAL" ]]; then
+    echo "[$(date -Is)] Restoring calibration checkpoints from $SOURCE_CAL"
+    rsync -a "$SOURCE_CAL/" "$WORK_CAL/"
+fi
+
+# Keep your original HPC3 Conda environment; only project I/O moves to TMPDIR.
+module load anaconda/2024.06
+eval "$(/opt/apps/anaconda/2024.06/bin/conda shell.bash hook)"
+conda activate /data/homezvol2/rituns/.conda/envs/fleetpy_hpc
+
+echo "SLURM_JOB_ID=$SLURM_JOB_ID"
+echo "TMPDIR=$TMPDIR"
+echo "CONDA_PREFIX=${CONDA_PREFIX:-<unset>}"
+echo "Python executable: $(which python)"
+
+# After each completed Ax trial, the patched Python script backs up the small
+# calibration checkpoint files to /pub. The EXIT trap copies final files too.
+export FLEETPY_CALIBRATION_PERSIST_DIR="$SOURCE_CAL"
+cd "$WORK_DIR"
+python -u "$PYTHON_SCRIPT"

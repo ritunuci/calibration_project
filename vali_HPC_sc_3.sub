@@ -1,0 +1,29 @@
+#!/bin/bash
+#SBATCH --job-name=sc_3_vali
+#SBATCH -A HYLANDM_LAB
+#SBATCH -p standard
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=6
+#SBATCH --mem=36G
+#SBATCH --time=1-00:00:00
+#SBATCH --error=slurm-%J.err
+
+set -e
+
+module load anaconda/2024.06
+eval "$(/opt/apps/anaconda/2024.06/bin/conda shell.bash hook)"
+
+echo "Before activate:"
+echo "  CONDA_PREFIX=${CONDA_PREFIX:-<unset>}"
+echo "  which python=$(which python)"
+
+conda activate /data/homezvol2/rituns/.conda/envs/fleetpy_hpc
+
+echo "After activate:"
+echo "  CONDA_PREFIX=${CONDA_PREFIX:-<unset>}"
+echo "  which python=$(which python)"
+python -c "import sys; print('Executable:', sys.executable)"
+python -c "import sys; print('Version:', sys.version)"
+
+python vali_script_sc_3.py

@@ -1,0 +1,26 @@
+# Licences / secrets
+gurobi.lic
+*.lic
+
+# Raw real-world request data (large, contains rider identifiers and coordinates)
+New folder/
+
+# Regenerated simulation outputs and logs
+studies/example_study/results/
+calibration_outputs/*/files_for_ODT_bins_std_cal/
+standard_bugfix.log
+output.txt
+*.log
+!docs/**
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.ipynb_checkpoints/
+
+# Editors / OS
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store

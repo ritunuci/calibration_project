@@ -1,0 +1,865 @@
+2026-11-03 21:20:13,342 [INFO] No AxClient checkpoint found. Creating a new Ax experiment.
+2026-11-03 21:20:13,345 [INFO] Generation Strategy: GenerationStrategy(name='Sobol+BoTorch', steps=[Sobol for 30 trials, BoTorch for subsequent trials])
+2026-11-03 21:20:13,345 [INFO] Completed trials already in Ax: 0. Starting from trial number 1.
+2026-11-03 21:20:13,375 [INFO] Sobol warm-start trial 1/80: {'op_max_wait_time': 1477.3103035986423, 'op_detour_time_factor': 71.5977293252945, 'const_PUDO_duration': 232.85718977451324, 'decline_wait_time_bound_upper': 1018.1943476200104, 'diffusion_wait_time_bound_lower': 667.3580259084702, 'max_cancel_decision_time': 34.078887328505516, 'random_term_variance': 2.0477590560913086, 'decision_threshold': 88.69092524051666, 'no_show_wait_time': 91.73871994018555, 'CV_group_1_peak': 0.22965383976697917, 'CV_group_1_offpeak': 0.4206340789794922, 'CV_group_2_peak': 0.6212757736444473, 'CV_group_2_offpeak': 0.46898752450943004, 'CV_group_3_peak': 1.084136438369751, 'CV_group_3_offpeak': 0.3345334634184837}
+2026-11-03 21:20:13,375 [INFO] f_total evaluating: (1477.3103035986423, 71.5977293252945, 232.85718977451324, 1018.1943476200104, 667.3580259084702, 34.078887328505516, 2.0477590560913086, 88.69092524051666, 91.73871994018555, 0.22965383976697917, 0.4206340789794922, 0.6212757736444473, 0.46898752450943004, 1.084136438369751, 0.3345334634184837)
+2026-11-03 21:20:13,377 [INFO] [31msend_instruction is being called for input tensor([[1.4773e+03, 7.1598e+01, 2.3286e+02, 1.0182e+03, 6.6736e+02, 3.4079e+01,
+         2.0478e+00, 8.8691e+01, 9.1739e+01, 2.2965e-01, 4.2063e-01, 6.2128e-01,
+         4.6899e-01, 1.0841e+00, 3.3453e-01]], dtype=torch.float64)[0m
+2026-11-03 21:20:13,377 [INFO] training_itr_1: evaluating input [1477.3103035986423, 71.5977293252945, 232.85718977451324, 1018.1943476200104, 667.3580259084702, 34.078887328505516, 2.0477590560913086, 88.69092524051666, 91.73871994018555, 0.22965383976697917, 0.4206340789794922, 0.6212757736444473, 0.46898752450943004, 1.084136438369751, 0.3345334634184837]
+2026-11-03 21:20:15,400 [INFO] Running program for tuesday
+2026-11-03 21:54:31,097 [INFO] Running program for wednesday
+2026-11-03 22:28:55,550 [INFO] Running program for thursday
+2026-11-03 23:03:19,697 [INFO] training_itr_1: weekly_ES=-5.352438, pooled_tt_ES=-124.847345, ODT_err=-137.804329, eval_time_sec=6186.32
+2026-11-03 23:03:19,699 [INFO] f_total result: -5.352438 (weekly_ES=-5.352438, pooled_tt_ES=-124.847345, ODT_err=-137.804329)
+2026-11-03 23:03:19,712 [INFO] Convergence | trial=1, stage=Sobol warm-start, objective=-5.352438, energy_score=5.352438, best_objective=-5.352438, best_energy_score=5.352438, improvement=inf, no_improve_count=0
+2026-11-03 23:03:19,733 [INFO] Saved live AxClient checkpoint to /tmp/rituns/58855356/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
+2026-11-03 23:04:56,711 [INFO] Synced completed calibration trial to /dfs6b/pub/rituns/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj
+2026-11-03 23:04:56,738 [INFO] Sobol warm-start trial 2/80: {'op_max_wait_time': 2386.942644417286, 'op_detour_time_factor': 43.954457584768534, 'const_PUDO_duration': 100.09467663243413, 'decline_wait_time_bound_upper': 677.7155935764313, 'diffusion_wait_time_bound_lower': 987.6103829592466, 'max_cancel_decision_time': 172.40786734968424, 'random_term_variance': 3.776079431641847, 'decision_threshold': 144.1811665147543, 'no_show_wait_time': 169.39667493104935, 'CV_group_1_peak': 0.6939648655243218, 'CV_group_1_offpeak': 0.14424233315512539, 'CV_group_2_peak': 0.1004834239371121, 'CV_group_2_offpeak': 0.14098242539912462, 'CV_group_3_peak': 0.48009495809674263, 'CV_group_3_offpeak': 0.6640067163854837}
+2026-11-03 23:04:56,738 [INFO] f_total evaluating: (2386.942644417286, 43.954457584768534, 100.09467663243413, 677.7155935764313, 987.6103829592466, 172.40786734968424, 3.776079431641847, 144.1811665147543, 169.39667493104935, 0.6939648655243218, 0.14424233315512539, 0.1004834239371121, 0.14098242539912462, 0.48009495809674263, 0.6640067163854837)
+2026-11-03 23:04:56,739 [INFO] [31msend_instruction is being called for input tensor([[2.3869e+03, 4.3954e+01, 1.0009e+02, 6.7772e+02, 9.8761e+02, 1.7241e+02,
+         3.7761e+00, 1.4418e+02, 1.6940e+02, 6.9396e-01, 1.4424e-01, 1.0048e-01,
+         1.4098e-01, 4.8009e-01, 6.6401e-01]], dtype=torch.float64)[0m
+2026-11-03 23:04:56,740 [INFO] training_itr_2: evaluating input [2386.942644417286, 43.954457584768534, 100.09467663243413, 677.7155935764313, 987.6103829592466, 172.40786734968424, 3.776079431641847, 144.1811665147543, 169.39667493104935, 0.6939648655243218, 0.14424233315512539, 0.1004834239371121, 0.14098242539912462, 0.48009495809674263, 0.6640067163854837]
+2026-11-03 23:04:58,721 [INFO] Running program for tuesday
+2026-11-03 23:50:45,180 [INFO] Running program for wednesday
+2026-11-04 00:36:45,039 [INFO] Running program for thursday
+2026-11-04 01:22:40,524 [INFO] training_itr_2: weekly_ES=-2.597152, pooled_tt_ES=-147.064276, ODT_err=-109.780205, eval_time_sec=8263.79
+2026-11-04 01:22:40,527 [INFO] f_total result: -2.597152 (weekly_ES=-2.597152, pooled_tt_ES=-147.064276, ODT_err=-109.780205)
+2026-11-04 01:22:40,539 [INFO] Convergence | trial=2, stage=Sobol warm-start, objective=-2.597152, energy_score=2.597152, best_objective=-2.597152, best_energy_score=2.597152, improvement=2.755286, no_improve_count=0
+2026-11-04 01:22:40,558 [INFO] Saved live AxClient checkpoint to /tmp/rituns/58855356/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
+2026-11-04 01:31:39,604 [INFO] Synced completed calibration trial to /dfs6b/pub/rituns/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj
+2026-11-04 01:31:39,632 [INFO] Sobol warm-start trial 3/80: {'op_max_wait_time': 2878.6751290783286, 'op_detour_time_factor': 83.68237812072039, 'const_PUDO_duration': 201.73667963594198, 'decline_wait_time_bound_upper': 865.815122704953, 'diffusion_wait_time_bound_lower': 784.3067517504096, 'max_cancel_decision_time': 126.94873401895165, 'random_term_variance': 1.219020705204457, 'decision_threshold': 134.89385226741433, 'no_show_wait_time': 110.68478524684906, 'CV_group_1_peak': 0.38378592696972186, 'CV_group_1_offpeak': 0.2445770186837763, 'CV_group_2_peak': 0.2705922913737595, 'CV_group_2_offpeak': 0.6765847131609917, 'CV_group_3_peak': 0.7697469361126423, 'CV_group_3_offpeak': 0.7800182493403554}
+2026-11-04 01:31:39,632 [INFO] f_total evaluating: (2878.6751290783286, 83.68237812072039, 201.73667963594198, 865.815122704953, 784.3067517504096, 126.94873401895165, 1.219020705204457, 134.89385226741433, 110.68478524684906, 0.38378592696972186, 0.2445770186837763, 0.2705922913737595, 0.6765847131609917, 0.7697469361126423, 0.7800182493403554)
+2026-11-04 01:31:39,633 [INFO] [31msend_instruction is being called for input tensor([[2.8787e+03, 8.3682e+01, 2.0174e+02, 8.6582e+02, 7.8431e+02, 1.2695e+02,
+         1.2190e+00, 1.3489e+02, 1.1068e+02, 3.8379e-01, 2.4458e-01, 2.7059e-01,
+         6.7658e-01, 7.6975e-01, 7.8002e-01]], dtype=torch.float64)[0m
+2026-11-04 01:31:39,633 [INFO] training_itr_3: evaluating input [2878.6751290783286, 83.68237812072039, 201.73667963594198, 865.815122704953, 784.3067517504096, 126.94873401895165, 1.219020705204457, 134.89385226741433, 110.68478524684906, 0.38378592696972186, 0.2445770186837763, 0.2705922913737595, 0.6765847131609917, 0.7697469361126423, 0.7800182493403554]
+2026-11-04 01:31:41,624 [INFO] Running program for tuesday
+2026-11-04 02:20:39,923 [INFO] Running program for wednesday
+2026-11-04 03:10:00,527 [INFO] Running program for thursday
+2026-11-04 03:59:04,576 [INFO] training_itr_3: weekly_ES=-2.812510, pooled_tt_ES=-200.224325, ODT_err=-142.494437, eval_time_sec=8844.94
+2026-11-04 03:59:04,586 [INFO] f_total result: -2.812510 (weekly_ES=-2.812510, pooled_tt_ES=-200.224325, ODT_err=-142.494437)
+2026-11-04 03:59:04,598 [INFO] Convergence | trial=3, stage=Sobol warm-start, objective=-2.812510, energy_score=2.812510, best_objective=-2.597152, best_energy_score=2.597152, improvement=-0.215358, no_improve_count=1
+2026-11-04 03:59:04,618 [INFO] Saved live AxClient checkpoint to /tmp/rituns/58855356/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
+2026-11-04 04:06:15,993 [INFO] Synced completed calibration trial to /dfs6b/pub/rituns/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj
+2026-11-04 04:06:16,034 [INFO] Sobol warm-start trial 4/80: {'op_max_wait_time': 1862.1695187874138, 'op_detour_time_factor': 20.62262033112347, 'const_PUDO_duration': 64.76981543004513, 'decline_wait_time_bound_upper': 525.4331353120506, 'diffusion_wait_time_bound_lower': 563.1327638402581, 'max_cancel_decision_time': 73.6029729899019, 'random_term_variance': 4.063192912377417, 'decision_threshold': 32.37032411620021, 'no_show_wait_time': 28.029043078422546, 'CV_group_1_peak': 0.19262217488139866, 'CV_group_1_offpeak': 0.2925035130698234, 'CV_group_2_peak': 0.47146902126260093, 'CV_group_2_offpeak': 0.38609735462814565, 'CV_group_3_peak': 0.5659759253263473, 'CV_group_3_offpeak': 0.4094813081435859}
+2026-11-04 04:06:16,034 [INFO] f_total evaluating: (1862.1695187874138, 20.62262033112347, 64.76981543004513, 525.4331353120506, 563.1327638402581, 73.6029729899019, 4.063192912377417, 32.37032411620021, 28.029043078422546, 0.19262217488139866, 0.2925035130698234, 0.47146902126260093, 0.38609735462814565, 0.5659759253263473, 0.4094813081435859)
+2026-11-04 04:06:16,036 [INFO] [31msend_instruction is being called for input tensor([[1.8622e+03, 2.0623e+01, 6.4770e+01, 5.2543e+02, 5.6313e+02, 7.3603e+01,
+         4.0632e+00, 3.2370e+01, 2.8029e+01, 1.9262e-01, 2.9250e-01, 4.7147e-01,
+         3.8610e-01, 5.6598e-01, 4.0948e-01]], dtype=torch.float64)[0m
+2026-11-04 04:06:16,036 [INFO] training_itr_4: evaluating input [1862.1695187874138, 20.62262033112347, 64.76981543004513, 525.4331353120506, 563.1327638402581, 73.6029729899019, 4.063192912377417, 32.37032411620021, 28.029043078422546, 0.19262217488139866, 0.2925035130698234, 0.47146902126260093, 0.38609735462814565, 0.5659759253263473, 0.4094813081435859]
+2026-11-04 04:06:18,159 [INFO] Running program for tuesday
+2026-11-04 04:43:23,704 [INFO] Running program for wednesday
+2026-11-04 05:21:00,523 [INFO] Running program for thursday
+2026-11-04 05:58:05,205 [INFO] training_itr_4: weekly_ES=-3.528541, pooled_tt_ES=-40.732887, ODT_err=-90.694727, eval_time_sec=6709.17
+2026-11-04 05:58:05,208 [INFO] f_total result: -3.528541 (weekly_ES=-3.528541, pooled_tt_ES=-40.732887, ODT_err=-90.694727)
+2026-11-04 05:58:05,220 [INFO] Convergence | trial=4, stage=Sobol warm-start, objective=-3.528541, energy_score=3.528541, best_objective=-2.597152, best_energy_score=2.597152, improvement=-0.931389, no_improve_count=2
+2026-11-04 05:58:05,240 [INFO] Saved live AxClient checkpoint to /tmp/rituns/58855356/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
+2026-11-04 05:58:05,418 [INFO] Synced completed calibration trial to /dfs6b/pub/rituns/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj
+2026-11-04 05:58:05,445 [INFO] Sobol warm-start trial 5/80: {'op_max_wait_time': 2091.9491010718048, 'op_detour_time_factor': 93.093595597893, 'const_PUDO_duration': 158.76614903099835, 'decline_wait_time_bound_upper': 486.6339941509068, 'diffusion_wait_time_bound_lower': 439.5501583814621, 'max_cancel_decision_time': 63.37195057421923, 'random_term_variance': 0.8933715461753309, 'decision_threshold': 110.05660377442837, 'no_show_wait_time': 125.64793542027473, 'CV_group_1_peak': 0.6024416606407612, 'CV_group_1_offpeak': 0.16946005998179317, 'CV_group_2_peak': 0.438847576547414, 'CV_group_2_offpeak': 0.5882165633141995, 'CV_group_3_peak': 0.36624664813280106, 'CV_group_3_offpeak': 0.5099930215626955}
+2026-11-04 05:58:05,445 [INFO] f_total evaluating: (2091.9491010718048, 93.093595597893, 158.76614903099835, 486.6339941509068, 439.5501583814621, 63.37195057421923, 0.8933715461753309, 110.05660377442837, 125.64793542027473, 0.6024416606407612, 0.16946005998179317, 0.438847576547414, 0.5882165633141995, 0.36624664813280106, 0.5099930215626955)
+2026-11-04 05:58:05,446 [INFO] [31msend_instruction is being called for input tensor([[2.0919e+03, 9.3094e+01, 1.5877e+02, 4.8663e+02, 4.3955e+02, 6.3372e+01,
+         8.9337e-01, 1.1006e+02, 1.2565e+02, 6.0244e-01, 1.6946e-01, 4.3885e-01,
+         5.8822e-01, 3.6625e-01, 5.0999e-01]], dtype=torch.float64)[0m
+2026-11-04 05:58:05,446 [INFO] training_itr_5: evaluating input [2091.9491010718048, 93.093595597893, 158.76614903099835, 486.6339941509068, 439.5501583814621, 63.37195057421923, 0.8933715461753309, 110.05660377442837, 125.64793542027473, 0.6024416606407612, 0.16946005998179317, 0.438847576547414, 0.5882165633141995, 0.36624664813280106, 0.5099930215626955]
+2026-11-04 05:58:07,437 [INFO] Running program for tuesday
+2026-11-04 06:39:38,994 [INFO] Running program for wednesday
+2026-11-04 07:21:31,030 [INFO] Running program for thursday
+2026-11-04 08:03:31,119 [INFO] training_itr_5: weekly_ES=-3.806413, pooled_tt_ES=-150.153193, ODT_err=-146.074490, eval_time_sec=7525.67
+2026-11-04 08:03:31,121 [INFO] f_total result: -3.806413 (weekly_ES=-3.806413, pooled_tt_ES=-150.153193, ODT_err=-146.074490)
+2026-11-04 08:03:31,133 [INFO] Convergence | trial=5, stage=Sobol warm-start, objective=-3.806413, energy_score=3.806413, best_objective=-2.597152, best_energy_score=2.597152, improvement=-1.209260, no_improve_count=3
+2026-11-04 08:03:31,155 [INFO] Saved live AxClient checkpoint to /tmp/rituns/58855356/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
+2026-11-04 08:15:17,034 [INFO] Synced completed calibration trial to /dfs6b/pub/rituns/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj
+2026-11-04 08:15:17,062 [INFO] Sobol warm-start trial 6/80: {'op_max_wait_time': 2670.4386554658413, 'op_detour_time_factor': 22.645359141752124, 'const_PUDO_duration': 291.78331629373133, 'decline_wait_time_bound_upper': 816.0892044194043, 'diffusion_wait_time_bound_lower': 906.776512041688, 'max_cancel_decision_time': 180.13624810613692, 'random_term_variance': 4.792589630000293, 'decision_threshold': 52.95267377048731, 'no_show_wait_time': 52.992345839738846, 'CV_group_1_peak': 0.30086828516796227, 'CV_group_1_offpeak': 0.3395023675635457, 'CV_group_2_peak': 0.3197181266266852, 'CV_group_2_offpeak': 0.3164797456935048, 'CV_group_3_peak': 0.9703121595084667, 'CV_group_3_offpeak': 0.8394660965539515}
+2026-11-04 08:15:17,062 [INFO] f_total evaluating: (2670.4386554658413, 22.645359141752124, 291.78331629373133, 816.0892044194043, 906.776512041688, 180.13624810613692, 4.792589630000293, 52.95267377048731, 52.992345839738846, 0.30086828516796227, 0.3395023675635457, 0.3197181266266852, 0.3164797456935048, 0.9703121595084667, 0.8394660965539515)
+2026-11-04 08:15:17,063 [INFO] [31msend_instruction is being called for input tensor([[2.6704e+03, 2.2645e+01, 2.9178e+02, 8.1609e+02, 9.0678e+02, 1.8014e+02,
+         4.7926e+00, 5.2953e+01, 5.2992e+01, 3.0087e-01, 3.3950e-01, 3.1972e-01,
+         3.1648e-01, 9.7031e-01, 8.3947e-01]], dtype=torch.float64)[0m
+2026-11-04 08:15:17,063 [INFO] training_itr_6: evaluating input [2670.4386554658413, 22.645359141752124, 291.78331629373133, 816.0892044194043, 906.776512041688, 180.13624810613692, 4.792589630000293, 52.95267377048731, 52.992345839738846, 0.30086828516796227, 0.3395023675635457, 0.3197181266266852, 0.3164797456935048, 0.9703121595084667, 0.8394660965539515]
+2026-11-04 08:15:19,180 [INFO] Running program for tuesday
+2026-11-04 09:00:12,529 [INFO] Running program for wednesday
+2026-11-04 09:45:01,442 [INFO] Running program for thursday
+2026-11-04 10:29:22,780 [INFO] training_itr_6: weekly_ES=-2.609159, pooled_tt_ES=-42.120227, ODT_err=-82.095915, eval_time_sec=8045.72
+2026-11-04 10:29:22,816 [INFO] f_total result: -2.609159 (weekly_ES=-2.609159, pooled_tt_ES=-42.120227, ODT_err=-82.095915)
+2026-11-04 10:29:22,865 [INFO] Convergence | trial=6, stage=Sobol warm-start, objective=-2.609159, energy_score=2.609159, best_objective=-2.597152, best_energy_score=2.597152, improvement=-0.012007, no_improve_count=4
+2026-11-04 10:29:22,973 [INFO] Saved live AxClient checkpoint to /tmp/rituns/58855356/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
+2026-11-04 10:29:49,130 [INFO] Synced completed calibration trial to /dfs6b/pub/rituns/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj
+2026-11-04 10:29:49,158 [INFO] Sobol warm-start trial 7/80: {'op_max_wait_time': 2151.962819509208, 'op_detour_time_factor': 61.67032499797642, 'const_PUDO_duration': 55.92486868612468, 'decline_wait_time_bound_upper': 640.2940342202783, 'diffusion_wait_time_bound_lower': 1021.3437972590327, 'max_cancel_decision_time': 139.97291467152536, 'random_term_variance': 2.3025463819503784, 'decision_threshold': 68.82788417860866, 'no_show_wait_time': 66.7803005874157, 'CV_group_1_peak': 0.12148947906680405, 'CV_group_1_offpeak': 0.499323956342414, 'CV_group_2_peak': 0.16991999638266858, 'CV_group_2_offpeak': 0.5386056497693061, 'CV_group_3_peak': 0.6798730187118054, 'CV_group_3_offpeak': 0.6059259223751723}
+2026-11-04 10:29:49,158 [INFO] f_total evaluating: (2151.962819509208, 61.67032499797642, 55.92486868612468, 640.2940342202783, 1021.3437972590327, 139.97291467152536, 2.3025463819503784, 68.82788417860866, 66.7803005874157, 0.12148947906680405, 0.499323956342414, 0.16991999638266858, 0.5386056497693061, 0.6798730187118054, 0.6059259223751723)
+2026-11-04 10:29:49,159 [INFO] [31msend_instruction is being called for input tensor([[2.1520e+03, 6.1670e+01, 5.5925e+01, 6.4029e+02, 1.0213e+03, 1.3997e+02,
+         2.3025e+00, 6.8828e+01, 6.6780e+01, 1.2149e-01, 4.9932e-01, 1.6992e-01,
+         5.3861e-01, 6.7987e-01, 6.0593e-01]], dtype=torch.float64)[0m
+2026-11-04 10:29:49,159 [INFO] training_itr_7: evaluating input [2151.962819509208, 61.67032499797642, 55.92486868612468, 640.2940342202783, 1021.3437972590327, 139.97291467152536, 2.3025463819503784, 68.82788417860866, 66.7803005874157, 0.12148947906680405, 0.499323956342414, 0.16991999638266858, 0.5386056497693061, 0.6798730187118054, 0.6059259223751723]
+2026-11-04 10:29:51,325 [INFO] Running program for tuesday
+2026-11-04 11:12:39,463 [INFO] Running program for wednesday
+2026-11-04 11:55:35,846 [INFO] Running program for thursday
+2026-11-04 12:37:58,719 [INFO] training_itr_7: weekly_ES=-3.356028, pooled_tt_ES=-200.701544, ODT_err=-152.441581, eval_time_sec=7689.56
+2026-11-04 12:37:58,760 [INFO] f_total result: -3.356028 (weekly_ES=-3.356028, pooled_tt_ES=-200.701544, ODT_err=-152.441581)
+2026-11-04 12:37:58,788 [INFO] Convergence | trial=7, stage=Sobol warm-start, objective=-3.356028, energy_score=3.356028, best_objective=-2.597152, best_energy_score=2.597152, improvement=-0.758876, no_improve_count=5
+2026-11-04 12:37:58,883 [INFO] Saved live AxClient checkpoint to /tmp/rituns/58855356/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
+2026-11-04 12:37:59,046 [INFO] Synced completed calibration trial to /dfs6b/pub/rituns/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj
+2026-11-04 12:37:59,074 [INFO] Sobol warm-start trial 8/80: {'op_max_wait_time': 1680.7601471431553, 'op_detour_time_factor': 42.82143834978342, 'const_PUDO_duration': 193.17934750579298, 'decline_wait_time_bound_upper': 969.8245549574494, 'diffusion_wait_time_bound_lower': 629.9536408856511, 'max_cancel_decision_time': 108.22523618116975, 'random_term_variance': 2.8351959311403334, 'decision_threshold': 168.57347825542092, 'no_show_wait_time': 154.4384078681469, 'CV_group_1_peak': 0.47523234318941826, 'CV_group_1_offpeak': 0.09368428117595613, 'CV_group_2_peak': 0.6089676407165825, 'CV_group_2_offpeak': 0.2293499270454049, 'CV_group_3_peak': 0.8836200073361398, 'CV_group_3_offpeak': 0.23538915980607272}
+2026-11-04 12:37:59,074 [INFO] f_total evaluating: (1680.7601471431553, 42.82143834978342, 193.17934750579298, 969.8245549574494, 629.9536408856511, 108.22523618116975, 2.8351959311403334, 168.57347825542092, 154.4384078681469, 0.47523234318941826, 0.09368428117595613, 0.6089676407165825, 0.2293499270454049, 0.8836200073361398, 0.23538915980607272)
+2026-11-04 12:37:59,075 [INFO] [31msend_instruction is being called for input tensor([[1.6808e+03, 4.2821e+01, 1.9318e+02, 9.6982e+02, 6.2995e+02, 1.0823e+02,
+         2.8352e+00, 1.6857e+02, 1.5444e+02, 4.7523e-01, 9.3684e-02, 6.0897e-01,
+         2.2935e-01, 8.8362e-01, 2.3539e-01]], dtype=torch.float64)[0m
+2026-11-04 12:37:59,075 [INFO] training_itr_8: evaluating input [1680.7601471431553, 42.82143834978342, 193.17934750579298, 969.8245549574494, 629.9536408856511, 108.22523618116975, 2.8351959311403334, 168.57347825542092, 154.4384078681469, 0.47523234318941826, 0.09368428117595613, 0.6089676407165825, 0.2293499270454049, 0.8836200073361398, 0.23538915980607272]
+2026-11-04 12:38:01,555 [INFO] Running program for tuesday
+2026-11-04 13:13:40,002 [INFO] Running program for wednesday
+2026-11-04 13:49:44,471 [INFO] Running program for thursday
+2026-11-04 14:25:24,229 [INFO] training_itr_8: weekly_ES=-4.173585, pooled_tt_ES=-93.578569, ODT_err=-94.500879, eval_time_sec=6445.15
+2026-11-04 14:25:24,231 [INFO] f_total result: -4.173585 (weekly_ES=-4.173585, pooled_tt_ES=-93.578569, ODT_err=-94.500879)
+2026-11-04 14:25:24,243 [INFO] Convergence | trial=8, stage=Sobol warm-start, objective=-4.173585, energy_score=4.173585, best_objective=-2.597152, best_energy_score=2.597152, improvement=-1.576433, no_improve_count=6
+2026-11-04 14:25:24,267 [INFO] Saved live AxClient checkpoint to /tmp/rituns/58855356/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
+2026-11-04 14:25:48,415 [INFO] Synced completed calibration trial to /dfs6b/pub/rituns/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj
+2026-11-04 14:25:48,444 [INFO] Sobol warm-start trial 9/80: {'op_max_wait_time': 1561.2877876497805, 'op_detour_time_factor': 79.56830652430654, 'const_PUDO_duration': 31.24685830436647, 'decline_wait_time_bound_upper': 761.9279141537845, 'diffusion_wait_time_bound_lower': 949.8993802815676, 'max_cancel_decision_time': 88.15332354046404, 'random_term_variance': 0.6872598514892161, 'decision_threshold': 106.94950584322214, 'no_show_wait_time': 137.85961508750916, 'CV_group_1_peak': 0.16135297049768269, 'CV_group_1_offpeak': 0.05515043432824314, 'CV_group_2_peak': 0.6921528103295713, 'CV_group_2_offpeak': 0.2742573579773307, 'CV_group_3_peak': 0.61079768165946, 'CV_group_3_offpeak': 0.7356129146181047}
+2026-11-04 14:25:48,444 [INFO] f_total evaluating: (1561.2877876497805, 79.56830652430654, 31.24685830436647, 761.9279141537845, 949.8993802815676, 88.15332354046404, 0.6872598514892161, 106.94950584322214, 137.85961508750916, 0.16135297049768269, 0.05515043432824314, 0.6921528103295713, 0.2742573579773307, 0.61079768165946, 0.7356129146181047)
+2026-11-04 14:25:48,445 [INFO] [31msend_instruction is being called for input tensor([[1.5613e+03, 7.9568e+01, 3.1247e+01, 7.6193e+02, 9.4990e+02, 8.8153e+01,
+         6.8726e-01, 1.0695e+02, 1.3786e+02, 1.6135e-01, 5.5150e-02, 6.9215e-01,
+         2.7426e-01, 6.1080e-01, 7.3561e-01]], dtype=torch.float64)[0m
+2026-11-04 14:25:48,445 [INFO] training_itr_9: evaluating input [1561.2877876497805, 79.56830652430654, 31.24685830436647, 761.9279141537845, 949.8993802815676, 88.15332354046404, 0.6872598514892161, 106.94950584322214, 137.85961508750916, 0.16135297049768269, 0.05515043432824314, 0.6921528103295713, 0.2742573579773307, 0.61079768165946, 0.7356129146181047]
+2026-11-04 14:25:50,405 [INFO] Running program for tuesday
+2026-11-04 15:01:17,699 [INFO] Running program for wednesday
+2026-11-04 15:36:53,393 [INFO] Running program for thursday
+2026-11-04 16:11:25,010 [INFO] training_itr_9: weekly_ES=-4.085523, pooled_tt_ES=-240.874274, ODT_err=-154.772531, eval_time_sec=6336.57
+2026-11-04 16:11:25,059 [INFO] f_total result: -4.085523 (weekly_ES=-4.085523, pooled_tt_ES=-240.874274, ODT_err=-154.772531)
+2026-11-04 16:11:25,112 [INFO] Convergence | trial=9, stage=Sobol warm-start, objective=-4.085523, energy_score=4.085523, best_objective=-2.597152, best_energy_score=2.597152, improvement=-1.488371, no_improve_count=7
+2026-11-04 16:11:25,202 [INFO] Saved live AxClient checkpoint to /tmp/rituns/58855356/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
+2026-11-04 16:15:16,582 [INFO] Synced completed calibration trial to /dfs6b/pub/rituns/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj
+2026-11-04 16:15:16,611 [INFO] Sobol warm-start trial 10/80: {'op_max_wait_time': 2351.0314712300897, 'op_detour_time_factor': 13.604724882170558, 'const_PUDO_duration': 168.22119179181755, 'decline_wait_time_bound_upper': 410.522289108485, 'diffusion_wait_time_bound_lower': 745.1316997408867, 'max_cancel_decision_time': 120.15961330384016, 'random_term_variance': 4.594919417053461, 'decision_threshold': 60.1784198731184, 'no_show_wait_time': 40.828882455825806, 'CV_group_1_peak': 0.4169451998546719, 'CV_group_1_offpeak': 0.453708970407024, 'CV_group_2_peak': 0.09054189017042517, 'CV_group_2_offpeak': 0.5647452864795923, 'CV_group_3_peak': 0.8007034286856651, 'CV_group_3_offpeak': 0.4498891746625304}
+2026-11-04 16:15:16,611 [INFO] f_total evaluating: (2351.0314712300897, 13.604724882170558, 168.22119179181755, 410.522289108485, 745.1316997408867, 120.15961330384016, 4.594919417053461, 60.1784198731184, 40.828882455825806, 0.4169451998546719, 0.453708970407024, 0.09054189017042517, 0.5647452864795923, 0.8007034286856651, 0.4498891746625304)
+2026-11-04 16:15:16,612 [INFO] [31msend_instruction is being called for input tensor([[2.3510e+03, 1.3605e+01, 1.6822e+02, 4.1052e+02, 7.4513e+02, 1.2016e+02,
+         4.5949e+00, 6.0178e+01, 4.0829e+01, 4.1695e-01, 4.5371e-01, 9.0542e-02,
+         5.6475e-01, 8.0070e-01, 4.4989e-01]], dtype=torch.float64)[0m
+2026-11-04 16:15:16,612 [INFO] training_itr_10: evaluating input [2351.0314712300897, 13.604724882170558, 168.22119179181755, 410.522289108485, 745.1316997408867, 120.15961330384016, 4.594919417053461, 60.1784198731184, 40.828882455825806, 0.4169451998546719, 0.453708970407024, 0.09054189017042517, 0.5647452864795923, 0.8007034286856651, 0.4498891746625304]
+2026-11-04 16:15:18,574 [INFO] Running program for tuesday
+2026-11-04 16:53:01,060 [INFO] Running program for wednesday
+2026-11-04 17:31:16,560 [INFO] Running program for thursday
+2026-11-04 18:11:02,449 [INFO] training_itr_10: weekly_ES=-3.856808, pooled_tt_ES=-15.868565, ODT_err=-100.332344, eval_time_sec=6945.84
+2026-11-04 18:11:02,451 [INFO] f_total result: -3.856808 (weekly_ES=-3.856808, pooled_tt_ES=-15.868565, ODT_err=-100.332344)
+2026-11-04 18:11:02,463 [INFO] Convergence | trial=10, stage=Sobol warm-start, objective=-3.856808, energy_score=3.856808, best_objective=-2.597152, best_energy_score=2.597152, improvement=-1.259656, no_improve_count=8
+2026-11-04 18:11:02,489 [INFO] Saved live AxClient checkpoint to /tmp/rituns/58855356/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
+2026-11-04 18:11:02,667 [INFO] Synced completed calibration trial to /dfs6b/pub/rituns/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj
+2026-11-04 18:11:02,696 [INFO] Sobol warm-start trial 11/80: {'op_max_wait_time': 2683.3637189120054, 'op_detour_time_factor': 75.8326427359134, 'const_PUDO_duration': 135.12640901841223, 'decline_wait_time_bound_upper': 958.0190353095531, 'diffusion_wait_time_bound_lower': 499.3568079546094, 'max_cancel_decision_time': 157.68760891631246, 'random_term_variance': 2.6497980942949653, 'decision_threshold': 78.213464114815, 'no_show_wait_time': 79.53886598348618, 'CV_group_1_peak': 0.655400863988325, 'CV_group_1_offpeak': 0.38490610271692277, 'CV_group_2_peak': 0.2403430617414415, 'CV_group_2_offpeak': 0.17782578151673079, 'CV_group_3_peak': 0.34933270066976546, 'CV_group_3_offpeak': 0.30608536675572395}
+2026-11-04 18:11:02,696 [INFO] f_total evaluating: (2683.3637189120054, 75.8326427359134, 135.12640901841223, 958.0190353095531, 499.3568079546094, 157.68760891631246, 2.6497980942949653, 78.213464114815, 79.53886598348618, 0.655400863988325, 0.38490610271692277, 0.2403430617414415, 0.17782578151673079, 0.34933270066976546, 0.30608536675572395)
+2026-11-04 18:11:02,697 [INFO] [31msend_instruction is being called for input tensor([[2.6834e+03, 7.5833e+01, 1.3513e+02, 9.5802e+02, 4.9936e+02, 1.5769e+02,
+         2.6498e+00, 7.8213e+01, 7.9539e+01, 6.5540e-01, 3.8491e-01, 2.4034e-01,
+         1.7783e-01, 3.4933e-01, 3.0609e-01]], dtype=torch.float64)[0m
+2026-11-04 18:11:02,697 [INFO] training_itr_11: evaluating input [2683.3637189120054, 75.8326427359134, 135.12640901841223, 958.0190353095531, 499.3568079546094, 157.68760891631246, 2.6497980942949653, 78.213464114815, 79.53886598348618, 0.655400863988325, 0.38490610271692277, 0.2403430617414415, 0.17782578151673079, 0.34933270066976546, 0.30608536675572395]
+2026-11-04 18:11:04,673 [INFO] Running program for tuesday
+2026-11-04 18:58:16,252 [INFO] Running program for wednesday
+2026-11-04 19:43:35,001 [INFO] Running program for thursday
+2026-11-04 20:27:54,046 [INFO] training_itr_11: weekly_ES=-3.483347, pooled_tt_ES=-219.122217, ODT_err=-144.512462, eval_time_sec=8211.35
+2026-11-04 20:27:54,048 [INFO] f_total result: -3.483347 (weekly_ES=-3.483347, pooled_tt_ES=-219.122217, ODT_err=-144.512462)
+2026-11-04 20:27:54,060 [INFO] Convergence | trial=11, stage=Sobol warm-start, objective=-3.483347, energy_score=3.483347, best_objective=-2.597152, best_energy_score=2.597152, improvement=-0.886194, no_improve_count=9
+2026-11-04 20:27:54,087 [INFO] Saved live AxClient checkpoint to /tmp/rituns/58855356/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
+2026-11-04 20:30:44,644 [INFO] Synced completed calibration trial to /dfs6b/pub/rituns/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj
+2026-11-04 20:30:44,674 [INFO] Sobol warm-start trial 12/80: {'op_max_wait_time': 1999.2453551851213, 'op_detour_time_factor': 51.09319727867842, 'const_PUDO_duration': 267.8963939566165, 'decline_wait_time_bound_upper': 606.6889710724354, 'diffusion_wait_time_bound_lower': 803.202841989696, 'max_cancel_decision_time': 40.70588483475149, 'random_term_variance': 3.1740060946904123, 'decision_threshold': 154.52237514778972, 'no_show_wait_time': 141.5718111395836, 'CV_group_1_peak': 0.26630917796865106, 'CV_group_1_offpeak': 0.20777943739667537, 'CV_group_2_peak': 0.5220284263137728, 'CV_group_2_offpeak': 0.505832615122199, 'CV_group_3_peak': 0.9391144536435605, 'CV_group_3_offpeak': 0.7203727995045484}
+2026-11-04 20:30:44,674 [INFO] f_total evaluating: (1999.2453551851213, 51.09319727867842, 267.8963939566165, 606.6889710724354, 803.202841989696, 40.70588483475149, 3.1740060946904123, 154.52237514778972, 141.5718111395836, 0.26630917796865106, 0.20777943739667537, 0.5220284263137728, 0.505832615122199, 0.9391144536435605, 0.7203727995045484)
+2026-11-04 20:30:44,675 [INFO] [31msend_instruction is being called for input tensor([[1.9992e+03, 5.1093e+01, 2.6790e+02, 6.0669e+02, 8.0320e+02, 4.0706e+01,
+         3.1740e+00, 1.5452e+02, 1.4157e+02, 2.6631e-01, 2.0778e-01, 5.2203e-01,
+         5.0583e-01, 9.3911e-01, 7.2037e-01]], dtype=torch.float64)[0m
+2026-11-04 20:30:44,675 [INFO] training_itr_12: evaluating input [1999.2453551851213, 51.09319727867842, 267.8963939566165, 606.6889710724354, 803.202841989696, 40.70588483475149, 3.1740060946904123, 154.52237514778972, 141.5718111395836, 0.26630917796865106, 0.20777943739667537, 0.5220284263137728, 0.505832615122199, 0.9391144536435605, 0.7203727995045484]
+2026-11-04 20:30:46,644 [INFO] Running program for tuesday
+2026-11-04 21:08:00,996 [INFO] Running program for wednesday
+2026-11-04 21:43:49,674 [INFO] Running program for thursday
+2026-11-04 22:20:24,430 [INFO] training_itr_12: weekly_ES=-4.019749, pooled_tt_ES=-80.320251, ODT_err=-102.174690, eval_time_sec=6579.76
+2026-11-04 22:20:24,432 [INFO] f_total result: -4.019749 (weekly_ES=-4.019749, pooled_tt_ES=-80.320251, ODT_err=-102.174690)
+2026-11-04 22:20:24,444 [INFO] Convergence | trial=12, stage=Sobol warm-start, objective=-4.019749, energy_score=4.019749, best_objective=-2.597152, best_energy_score=2.597152, improvement=-1.422596, no_improve_count=10
+2026-11-04 22:20:24,473 [INFO] Saved live AxClient checkpoint to /tmp/rituns/58855356/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
+2026-11-04 22:29:35,839 [INFO] Synced completed calibration trial to /dfs6b/pub/rituns/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj
+2026-11-04 22:29:35,869 [INFO] Sobol warm-start trial 13/80: {'op_max_wait_time': 1795.8091893233359, 'op_detour_time_factor': 57.30562779121101, 'const_PUDO_duration': 227.68373161554337, 'decline_wait_time_bound_upper': 733.329869993031, 'diffusion_wait_time_bound_lower': 855.7350870221853, 'max_cancel_decision_time': 96.38299461454153, 'random_term_variance': 1.7092621745541692, 'decision_threshold': 94.26746778190136, 'no_show_wait_time': 84.57525834441185, 'CV_group_1_peak': 0.5083918497432023, 'CV_group_1_offpeak': 0.30973590300418435, 'CV_group_2_peak': 0.3882016970776021, 'CV_group_2_offpeak': 0.11751000192016364, 'CV_group_3_peak': 0.739576057344675, 'CV_group_3_offpeak': 0.5597049286589026}
+2026-11-04 22:29:35,870 [INFO] f_total evaluating: (1795.8091893233359, 57.30562779121101, 227.68373161554337, 733.329869993031, 855.7350870221853, 96.38299461454153, 1.7092621745541692, 94.26746778190136, 84.57525834441185, 0.5083918497432023, 0.30973590300418435, 0.3882016970776021, 0.11751000192016364, 0.739576057344675, 0.5597049286589026)
+2026-11-04 22:29:35,870 [INFO] [31msend_instruction is being called for input tensor([[1.7958e+03, 5.7306e+01, 2.2768e+02, 7.3333e+02, 8.5574e+02, 9.6383e+01,
+         1.7093e+00, 9.4267e+01, 8.4575e+01, 5.0839e-01, 3.0974e-01, 3.8820e-01,
+         1.1751e-01, 7.3958e-01, 5.5970e-01]], dtype=torch.float64)[0m
+2026-11-04 22:29:35,870 [INFO] training_itr_13: evaluating input [1795.8091893233359, 57.30562779121101, 227.68373161554337, 733.329869993031, 855.7350870221853, 96.38299461454153, 1.7092621745541692, 94.26746778190136, 84.57525834441185, 0.5083918497432023, 0.30973590300418435, 0.3882016970776021, 0.11751000192016364, 0.739576057344675, 0.5597049286589026]
+2026-11-04 22:29:37,851 [INFO] Running program for tuesday
+2026-11-04 23:07:15,651 [INFO] Running program for wednesday
+2026-11-04 23:45:21,744 [INFO] Running program for thursday
+2026-11-05 00:23:56,576 [INFO] training_itr_13: weekly_ES=-3.716070, pooled_tt_ES=-112.675760, ODT_err=-107.810063, eval_time_sec=6860.71
+2026-11-05 00:23:56,578 [INFO] f_total result: -3.716070 (weekly_ES=-3.716070, pooled_tt_ES=-112.675760, ODT_err=-107.810063)
+2026-11-05 00:23:56,591 [INFO] Convergence | trial=13, stage=Sobol warm-start, objective=-3.716070, energy_score=3.716070, best_objective=-2.597152, best_energy_score=2.597152, improvement=-1.118917, no_improve_count=11
+2026-11-05 00:23:56,622 [INFO] Saved live AxClient checkpoint to /tmp/rituns/58855356/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
+2026-11-05 00:31:24,590 [INFO] Synced completed calibration trial to /dfs6b/pub/rituns/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj
+2026-11-05 00:31:24,622 [INFO] Sobol warm-start trial 14/80: {'op_max_wait_time': 2918.355810828507, 'op_detour_time_factor': 35.72457866743207, 'const_PUDO_duration': 90.43672610074282, 'decline_wait_time_bound_upper': 1095.5867948010564, 'diffusion_wait_time_bound_lower': 447.9387380182743, 'max_cancel_decision_time': 149.28341732360423, 'random_term_variance': 3.4284458230249584, 'decision_threshold': 142.72327188402414, 'no_show_wait_time': 176.6083560883999, 'CV_group_1_peak': 0.0902200410142541, 'CV_group_1_offpeak': 0.25483148093335334, 'CV_group_2_peak': 0.3500494914595037, 'CV_group_2_offpeak': 0.4267662946134806, 'CV_group_3_peak': 0.5496951162815094, 'CV_group_3_offpeak': 0.27398101007565856}
+2026-11-05 00:31:24,622 [INFO] f_total evaluating: (2918.355810828507, 35.72457866743207, 90.43672610074282, 1095.5867948010564, 447.9387380182743, 149.28341732360423, 3.4284458230249584, 142.72327188402414, 176.6083560883999, 0.0902200410142541, 0.25483148093335334, 0.3500494914595037, 0.4267662946134806, 0.5496951162815094, 0.27398101007565856)
+2026-11-05 00:31:24,623 [INFO] [31msend_instruction is being called for input tensor([[2.9184e+03, 3.5725e+01, 9.0437e+01, 1.0956e+03, 4.4794e+02, 1.4928e+02,
+         3.4284e+00, 1.4272e+02, 1.7661e+02, 9.0220e-02, 2.5483e-01, 3.5005e-01,
+         4.2677e-01, 5.4970e-01, 2.7398e-01]], dtype=torch.float64)[0m
+2026-11-05 00:31:24,623 [INFO] training_itr_14: evaluating input [2918.355810828507, 35.72457866743207, 90.43672610074282, 1095.5867948010564, 447.9387380182743, 149.28341732360423, 3.4284458230249584, 142.72327188402414, 176.6083560883999, 0.0902200410142541, 0.25483148093335334, 0.3500494914595037, 0.4267662946134806, 0.5496951162815094, 0.27398101007565856]
+2026-11-05 00:31:26,613 [INFO] Running program for tuesday
+2026-11-05 01:23:12,553 [INFO] Running program for wednesday
+2026-11-05 02:16:39,174 [INFO] Running program for thursday
+2026-11-05 03:09:42,533 [INFO] training_itr_14: weekly_ES=-3.517848, pooled_tt_ES=-142.883548, ODT_err=-92.543574, eval_time_sec=9497.91
+2026-11-05 03:09:42,536 [INFO] f_total result: -3.517848 (weekly_ES=-3.517848, pooled_tt_ES=-142.883548, ODT_err=-92.543574)
+2026-11-05 03:09:42,549 [INFO] Convergence | trial=14, stage=Sobol warm-start, objective=-3.517848, energy_score=3.517848, best_objective=-2.597152, best_energy_score=2.597152, improvement=-0.920695, no_improve_count=12
+2026-11-05 03:09:42,582 [INFO] Saved live AxClient checkpoint to /tmp/rituns/58855356/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
+2026-11-05 03:09:42,752 [INFO] Synced completed calibration trial to /dfs6b/pub/rituns/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj
+2026-11-05 03:09:42,785 [INFO] Sobol warm-start trial 15/80: {'op_max_wait_time': 2559.229737892747, 'op_detour_time_factor': 97.24954720586538, 'const_PUDO_duration': 259.842393938452, 'decline_wait_time_bound_upper': 535.7856896705925, 'diffusion_wait_time_bound_lower': 607.5354302302003, 'max_cancel_decision_time': 192.14839755557477, 'random_term_variance': 1.4163089212961495, 'decision_threshold': 118.09979585930705, 'no_show_wait_time': 102.81818762421608, 'CV_group_1_peak': 0.3375240101944655, 'CV_group_1_offpeak': 0.13379056761041286, 'CV_group_2_peak': 0.17993374713696536, 'CV_group_2_offpeak': 0.3533231733366847, 'CV_group_3_peak': 1.000290507078171, 'CV_group_3_offpeak': 0.4806261260993779}
+2026-11-05 03:09:42,785 [INFO] f_total evaluating: (2559.229737892747, 97.24954720586538, 259.842393938452, 535.7856896705925, 607.5354302302003, 192.14839755557477, 1.4163089212961495, 118.09979585930705, 102.81818762421608, 0.3375240101944655, 0.13379056761041286, 0.17993374713696536, 0.3533231733366847, 1.000290507078171, 0.4806261260993779)
+2026-11-05 03:09:42,786 [INFO] [31msend_instruction is being called for input tensor([[2.5592e+03, 9.7250e+01, 2.5984e+02, 5.3579e+02, 6.0754e+02, 1.9215e+02,
+         1.4163e+00, 1.1810e+02, 1.0282e+02, 3.3752e-01, 1.3379e-01, 1.7993e-01,
+         3.5332e-01, 1.0003e+00, 4.8063e-01]], dtype=torch.float64)[0m
+2026-11-05 03:09:42,786 [INFO] training_itr_15: evaluating input [2559.229737892747, 97.24954720586538, 259.842393938452, 535.7856896705925, 607.5354302302003, 192.14839755557477, 1.4163089212961495, 118.09979585930705, 102.81818762421608, 0.3375240101944655, 0.13379056761041286, 0.17993374713696536, 0.3533231733366847, 1.000290507078171, 0.4806261260993779]
+2026-11-05 03:09:44,772 [INFO] Running program for tuesday
+2026-11-05 03:58:11,737 [INFO] Running program for wednesday
+2026-11-05 04:46:00,738 [INFO] Running program for thursday
+2026-11-05 05:31:37,009 [INFO] training_itr_15: weekly_ES=-3.374879, pooled_tt_ES=-146.235083, ODT_err=-138.217337, eval_time_sec=8514.22
+2026-11-05 05:31:37,011 [INFO] f_total result: -3.374879 (weekly_ES=-3.374879, pooled_tt_ES=-146.235083, ODT_err=-138.217337)
+2026-11-05 05:31:37,024 [INFO] Convergence | trial=15, stage=Sobol warm-start, objective=-3.374879, energy_score=3.374879, best_objective=-2.597152, best_energy_score=2.597152, improvement=-0.777727, no_improve_count=13
+2026-11-05 05:31:37,055 [INFO] Saved live AxClient checkpoint to /tmp/rituns/58855356/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
+2026-11-05 05:33:12,998 [INFO] Synced completed calibration trial to /dfs6b/pub/rituns/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj
+2026-11-05 05:33:13,029 [INFO] Sobol warm-start trial 16/80: {'op_max_wait_time': 1331.468592491001, 'op_detour_time_factor': 29.533473225310445, 'const_PUDO_duration': 126.8326879106462, 'decline_wait_time_bound_upper': 898.1394541449845, 'diffusion_wait_time_bound_lower': 1091.1679660901427, 'max_cancel_decision_time': 54.22357128933072, 'random_term_variance': 4.269617905840278, 'decision_threshold': 44.498857352882624, 'no_show_wait_time': 35.787607580423355, 'CV_group_1_peak': 0.563877270463854, 'CV_group_1_offpeak': 0.403200726211071, 'CV_group_2_peak': 0.5380140653811395, 'CV_group_2_offpeak': 0.6250617142766713, 'CV_group_3_peak': 0.41048394814133643, 'CV_group_3_offpeak': 0.8949137322604657}
+2026-11-05 05:33:13,029 [INFO] f_total evaluating: (1331.468592491001, 29.533473225310445, 126.8326879106462, 898.1394541449845, 1091.1679660901427, 54.22357128933072, 4.269617905840278, 44.498857352882624, 35.787607580423355, 0.563877270463854, 0.403200726211071, 0.5380140653811395, 0.6250617142766713, 0.41048394814133643, 0.8949137322604657)
+2026-11-05 05:33:13,030 [INFO] [31msend_instruction is being called for input tensor([[1.3315e+03, 2.9533e+01, 1.2683e+02, 8.9814e+02, 1.0912e+03, 5.4224e+01,
+         4.2696e+00, 4.4499e+01, 3.5788e+01, 5.6388e-01, 4.0320e-01, 5.3801e-01,
+         6.2506e-01, 4.1048e-01, 8.9491e-01]], dtype=torch.float64)[0m
+2026-11-05 05:33:13,030 [INFO] training_itr_16: evaluating input [1331.468592491001, 29.533473225310445, 126.8326879106462, 898.1394541449845, 1091.1679660901427, 54.22357128933072, 4.269617905840278, 44.498857352882624, 35.787607580423355, 0.563877270463854, 0.403200726211071, 0.5380140653811395, 0.6250617142766713, 0.41048394814133643, 0.8949137322604657]
+2026-11-05 05:33:14,999 [INFO] Running program for tuesday
+2026-11-05 06:05:23,991 [INFO] Running program for wednesday
+2026-11-05 06:37:44,950 [INFO] Running program for thursday
+2026-11-05 07:09:38,850 [INFO] training_itr_16: weekly_ES=-4.841065, pooled_tt_ES=-66.674483, ODT_err=-89.622320, eval_time_sec=5785.82
+2026-11-05 07:09:38,853 [INFO] f_total result: -4.841065 (weekly_ES=-4.841065, pooled_tt_ES=-66.674483, ODT_err=-89.622320)
+2026-11-05 07:09:38,865 [INFO] Convergence | trial=16, stage=Sobol warm-start, objective=-4.841065, energy_score=4.841065, best_objective=-2.597152, best_energy_score=2.597152, improvement=-2.243912, no_improve_count=14
+2026-11-05 07:09:38,899 [INFO] Saved live AxClient checkpoint to /tmp/rituns/58855356/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
+2026-11-05 07:09:39,039 [INFO] Synced completed calibration trial to /dfs6b/pub/rituns/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj
+2026-11-05 07:09:39,071 [INFO] Sobol warm-start trial 17/80: {'op_max_wait_time': 1387.5582440756261, 'op_detour_time_factor': 96.77334153093398, 'const_PUDO_duration': 173.4413694217801, 'decline_wait_time_bound_upper': 644.0615030005574, 'diffusion_wait_time_bound_lower': 538.0763822235167, 'max_cancel_decision_time': 155.13024971820414, 'random_term_variance': 3.594397011678666, 'decision_threshold': 122.23489524796605, 'no_show_wait_time': 48.10659900307655, 'CV_group_1_peak': 0.32144982153549784, 'CV_group_1_offpeak': 0.3950080524664372, 'CV_group_2_peak': 0.42195722926408047, 'CV_group_2_offpeak': 0.24353936091065406, 'CV_group_3_peak': 0.38910694867372514, 'CV_group_3_offpeak': 0.4365082515403628}
+2026-11-05 07:09:39,071 [INFO] f_total evaluating: (1387.5582440756261, 96.77334153093398, 173.4413694217801, 644.0615030005574, 538.0763822235167, 155.13024971820414, 3.594397011678666, 122.23489524796605, 48.10659900307655, 0.32144982153549784, 0.3950080524664372, 0.42195722926408047, 0.24353936091065406, 0.38910694867372514, 0.4365082515403628)
+2026-11-05 07:09:39,072 [INFO] [31msend_instruction is being called for input tensor([[1.3876e+03, 9.6773e+01, 1.7344e+02, 6.4406e+02, 5.3808e+02, 1.5513e+02,
+         3.5944e+00, 1.2223e+02, 4.8107e+01, 3.2145e-01, 3.9501e-01, 4.2196e-01,
+         2.4354e-01, 3.8911e-01, 4.3651e-01]], dtype=torch.float64)[0m
+2026-11-05 07:09:39,072 [INFO] training_itr_17: evaluating input [1387.5582440756261, 96.77334153093398, 173.4413694217801, 644.0615030005574, 538.0763822235167, 155.13024971820414, 3.594397011678666, 122.23489524796605, 48.10659900307655, 0.32144982153549784, 0.3950080524664372, 0.42195722926408047, 0.24353936091065406, 0.38910694867372514, 0.4365082515403628]
+2026-11-05 07:09:41,070 [INFO] Running program for tuesday
+2026-11-05 07:43:05,551 [INFO] Running program for wednesday
+2026-11-05 08:16:48,111 [INFO] Running program for thursday
+2026-11-05 08:49:46,952 [INFO] training_itr_17: weekly_ES=-4.523323, pooled_tt_ES=-125.824818, ODT_err=-169.402507, eval_time_sec=6007.88
+2026-11-05 08:49:46,955 [INFO] f_total result: -4.523323 (weekly_ES=-4.523323, pooled_tt_ES=-125.824818, ODT_err=-169.402507)
+2026-11-05 08:49:46,968 [INFO] Convergence | trial=17, stage=Sobol warm-start, objective=-4.523323, energy_score=4.523323, best_objective=-2.597152, best_energy_score=2.597152, improvement=-1.926171, no_improve_count=15
+2026-11-05 08:49:47,003 [INFO] Saved live AxClient checkpoint to /tmp/rituns/58855356/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
+2026-11-05 08:49:47,127 [INFO] Synced completed calibration trial to /dfs6b/pub/rituns/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj
+2026-11-05 08:49:47,158 [INFO] Sobol warm-start trial 18/80: {'op_max_wait_time': 2496.6165963560343, 'op_detour_time_factor': 30.19365631043911, 'const_PUDO_duration': 40.69326728582382, 'decline_wait_time_bound_upper': 1009.1263400390744, 'diffusion_wait_time_bound_lower': 764.6550019271672, 'max_cancel_decision_time': 101.86676915735006, 'random_term_variance': 1.9476421931758523, 'decision_threshold': 40.50092836841941, 'no_show_wait_time': 130.7634760439396, 'CV_group_1_peak': 0.5824775427114218, 'CV_group_1_offpeak': 0.11153049715794623, 'CV_group_2_peak': 0.2972523852717131, 'CV_group_2_offpeak': 0.5152584390714765, 'CV_group_3_peak': 0.9993980459868907, 'CV_group_3_offpeak': 0.7659768282435835}
+2026-11-05 08:49:47,158 [INFO] f_total evaluating: (2496.6165963560343, 30.19365631043911, 40.69326728582382, 1009.1263400390744, 764.6550019271672, 101.86676915735006, 1.9476421931758523, 40.50092836841941, 130.7634760439396, 0.5824775427114218, 0.11153049715794623, 0.2972523852717131, 0.5152584390714765, 0.9993980459868907, 0.7659768282435835)
+2026-11-05 08:49:47,159 [INFO] [31msend_instruction is being called for input tensor([[2.4966e+03, 3.0194e+01, 4.0693e+01, 1.0091e+03, 7.6466e+02, 1.0187e+02,
+         1.9476e+00, 4.0501e+01, 1.3076e+02, 5.8248e-01, 1.1153e-01, 2.9725e-01,
+         5.1526e-01, 9.9940e-01, 7.6598e-01]], dtype=torch.float64)[0m
+2026-11-05 08:49:47,159 [INFO] training_itr_18: evaluating input [2496.6165963560343, 30.19365631043911, 40.69326728582382, 1009.1263400390744, 764.6550019271672, 101.86676915735006, 1.9476421931758523, 40.50092836841941, 130.7634760439396, 0.5824775427114218, 0.11153049715794623, 0.2972523852717131, 0.5152584390714765, 0.9993980459868907, 0.7659768282435835]
+2026-11-05 08:49:49,131 [INFO] Running program for tuesday
+2026-11-05 09:35:05,365 [INFO] Running program for wednesday
+2026-11-05 10:20:47,473 [INFO] Running program for thursday
+2026-11-05 11:06:10,476 [INFO] training_itr_18: weekly_ES=-2.517564, pooled_tt_ES=-142.263579, ODT_err=-95.795143, eval_time_sec=8183.32
+2026-11-05 11:06:10,479 [INFO] f_total result: -2.517564 (weekly_ES=-2.517564, pooled_tt_ES=-142.263579, ODT_err=-95.795143)
+2026-11-05 11:06:10,491 [INFO] Convergence | trial=18, stage=Sobol warm-start, objective=-2.517564, energy_score=2.517564, best_objective=-2.517564, best_energy_score=2.517564, improvement=0.079589, no_improve_count=0
+2026-11-05 11:06:10,525 [INFO] Saved live AxClient checkpoint to /tmp/rituns/58855356/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
+2026-11-05 11:06:10,689 [INFO] Synced completed calibration trial to /dfs6b/pub/rituns/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj
+2026-11-05 11:06:10,721 [INFO] Sobol warm-start trial 19/80: {'op_max_wait_time': 2961.164212413132, 'op_detour_time_factor': 57.96861043199897, 'const_PUDO_duration': 277.3353356681764, 'decline_wait_time_bound_upper': 446.63740219548345, 'diffusion_wait_time_bound_lower': 1010.3015686385334, 'max_cancel_decision_time': 59.02245031669736, 'random_term_variance': 3.890583449974656, 'decision_threshold': 97.92405258864164, 'no_show_wait_time': 149.47300419211388, 'CV_group_1_peak': 0.49525349084287873, 'CV_group_1_offpeak': 0.26124892793595794, 'CV_group_2_peak': 0.14237802843563258, 'CV_group_2_offpeak': 0.30232671499252317, 'CV_group_3_peak': 0.6507626704871654, 'CV_group_3_offpeak': 0.6903401372022926}
+2026-11-05 11:06:10,721 [INFO] f_total evaluating: (2961.164212413132, 57.96861043199897, 277.3353356681764, 446.63740219548345, 1010.3015686385334, 59.02245031669736, 3.890583449974656, 97.92405258864164, 149.47300419211388, 0.49525349084287873, 0.26124892793595794, 0.14237802843563258, 0.30232671499252317, 0.6507626704871654, 0.6903401372022926)
+2026-11-05 11:06:10,722 [INFO] [31msend_instruction is being called for input tensor([[2.9612e+03, 5.7969e+01, 2.7734e+02, 4.4664e+02, 1.0103e+03, 5.9022e+01,
+         3.8906e+00, 9.7924e+01, 1.4947e+02, 4.9525e-01, 2.6125e-01, 1.4238e-01,
+         3.0233e-01, 6.5076e-01, 6.9034e-01]], dtype=torch.float64)[0m
+2026-11-05 11:06:10,722 [INFO] training_itr_19: evaluating input [2961.164212413132, 57.96861043199897, 277.3353356681764, 446.63740219548345, 1010.3015686385334, 59.02245031669736, 3.890583449974656, 97.92405258864164, 149.47300419211388, 0.49525349084287873, 0.26124892793595794, 0.14237802843563258, 0.30232671499252317, 0.6507626704871654, 0.6903401372022926]
+2026-11-05 11:06:12,689 [INFO] Running program for tuesday
+2026-11-05 11:51:29,188 [INFO] Running program for wednesday
+2026-11-05 12:37:36,209 [INFO] Running program for thursday
+2026-11-05 13:23:08,820 [INFO] training_itr_19: weekly_ES=-3.011675, pooled_tt_ES=-109.521988, ODT_err=-110.549589, eval_time_sec=8218.10
+2026-11-05 13:23:08,823 [INFO] f_total result: -3.011675 (weekly_ES=-3.011675, pooled_tt_ES=-109.521988, ODT_err=-110.549589)
+2026-11-05 13:23:08,835 [INFO] Convergence | trial=19, stage=Sobol warm-start, objective=-3.011675, energy_score=3.011675, best_objective=-2.517564, best_energy_score=2.517564, improvement=-0.494111, no_improve_count=1
+2026-11-05 13:23:08,872 [INFO] Saved live AxClient checkpoint to /tmp/rituns/58855356/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
+2026-11-05 13:36:24,430 [INFO] Synced completed calibration trial to /dfs6b/pub/rituns/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj
+2026-11-05 13:36:24,463 [INFO] Sobol warm-start trial 20/80: {'op_max_wait_time': 1746.4772977866232, 'op_detour_time_factor': 35.25115377269685, 'const_PUDO_duration': 140.35405391827226, 'decline_wait_time_bound_upper': 811.6493758745492, 'diffusion_wait_time_bound_lower': 684.5591149292886, 'max_cancel_decision_time': 197.26899265311658, 'random_term_variance': 1.1098308344371617, 'decision_threshold': 139.20385539531708, 'no_show_wait_time': 71.81864485144615, 'CV_group_1_peak': 0.10080628101713955, 'CV_group_1_offpeak': 0.3302143898792565, 'CV_group_2_peak': 0.5971547598019242, 'CV_group_2_offpeak': 0.6115269416943192, 'CV_group_3_peak': 0.8607840731739997, 'CV_group_3_offpeak': 0.31981854885816574}
+2026-11-05 13:36:24,463 [INFO] f_total evaluating: (1746.4772977866232, 35.25115377269685, 140.35405391827226, 811.6493758745492, 684.5591149292886, 197.26899265311658, 1.1098308344371617, 139.20385539531708, 71.81864485144615, 0.10080628101713955, 0.3302143898792565, 0.5971547598019242, 0.6115269416943192, 0.8607840731739997, 0.31981854885816574)
+2026-11-05 13:36:24,464 [INFO] [31msend_instruction is being called for input tensor([[1.7465e+03, 3.5251e+01, 1.4035e+02, 8.1165e+02, 6.8456e+02, 1.9727e+02,
+         1.1098e+00, 1.3920e+02, 7.1819e+01, 1.0081e-01, 3.3021e-01, 5.9715e-01,
+         6.1153e-01, 8.6078e-01, 3.1982e-01]], dtype=torch.float64)[0m
+2026-11-05 13:36:24,464 [INFO] training_itr_20: evaluating input [1746.4772977866232, 35.25115377269685, 140.35405391827226, 811.6493758745492, 684.5591149292886, 197.26899265311658, 1.1098308344371617, 139.20385539531708, 71.81864485144615, 0.10080628101713955, 0.3302143898792565, 0.5971547598019242, 0.6115269416943192, 0.8607840731739997, 0.31981854885816574]
+2026-11-05 13:36:26,435 [INFO] Running program for tuesday
+2026-11-05 14:15:45,018 [INFO] Running program for wednesday
+2026-11-05 14:53:58,494 [INFO] Running program for thursday
+2026-11-05 15:31:57,039 [INFO] training_itr_20: weekly_ES=-3.300763, pooled_tt_ES=-83.776359, ODT_err=-96.845998, eval_time_sec=6932.58
+2026-11-05 15:31:57,042 [INFO] f_total result: -3.300763 (weekly_ES=-3.300763, pooled_tt_ES=-83.776359, ODT_err=-96.845998)
+2026-11-05 15:31:57,055 [INFO] Convergence | trial=20, stage=Sobol warm-start, objective=-3.300763, energy_score=3.300763, best_objective=-2.517564, best_energy_score=2.517564, improvement=-0.783199, no_improve_count=2
+2026-11-05 15:31:57,092 [INFO] Saved live AxClient checkpoint to /tmp/rituns/58855356/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
+2026-11-05 15:42:50,939 [INFO] Synced completed calibration trial to /dfs6b/pub/rituns/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj
+2026-11-05 15:42:50,973 [INFO] Sobol warm-start trial 21/80: {'op_max_wait_time': 1943.2614899240434, 'op_detour_time_factor': 73.89456994831562, 'const_PUDO_duration': 83.0006683152169, 'decline_wait_time_bound_upper': 851.1110822670162, 'diffusion_wait_time_bound_lower': 656.5080762840807, 'max_cancel_decision_time': 120.34112196415663, 'random_term_variance': 4.971808709204197, 'decision_threshold': 74.62549110874534, 'no_show_wait_time': 174.5147368311882, 'CV_group_1_peak': 0.67392388144508, 'CV_group_1_offpeak': 0.2001397127751261, 'CV_group_2_peak': 0.6483230471145361, 'CV_group_2_offpeak': 0.3627866990864277, 'CV_group_3_peak': 1.0605132073163988, 'CV_group_3_offpeak': 0.26036532064899803}
+2026-11-05 15:42:50,973 [INFO] f_total evaluating: (1943.2614899240434, 73.89456994831562, 83.0006683152169, 851.1110822670162, 656.5080762840807, 120.34112196415663, 4.971808709204197, 74.62549110874534, 174.5147368311882, 0.67392388144508, 0.2001397127751261, 0.6483230471145361, 0.3627866990864277, 1.0605132073163988, 0.26036532064899803)
+2026-11-05 15:42:50,974 [INFO] [31msend_instruction is being called for input tensor([[1.9433e+03, 7.3895e+01, 8.3001e+01, 8.5111e+02, 6.5651e+02, 1.2034e+02,
+         4.9718e+00, 7.4625e+01, 1.7451e+02, 6.7392e-01, 2.0014e-01, 6.4832e-01,
+         3.6279e-01, 1.0605e+00, 2.6037e-01]], dtype=torch.float64)[0m
+2026-11-05 15:42:50,974 [INFO] training_itr_21: evaluating input [1943.2614899240434, 73.89456994831562, 83.0006683152169, 851.1110822670162, 656.5080762840807, 120.34112196415663, 4.971808709204197, 74.62549110874534, 174.5147368311882, 0.67392388144508, 0.2001397127751261, 0.6483230471145361, 0.3627866990864277, 1.0605132073163988, 0.26036532064899803]
+2026-11-05 15:42:52,951 [INFO] Running program for tuesday
+2026-11-05 16:24:37,306 [INFO] Running program for wednesday
+2026-11-05 17:06:49,801 [INFO] Running program for thursday
+2026-11-05 17:49:19,004 [INFO] training_itr_21: weekly_ES=-3.752482, pooled_tt_ES=-212.728085, ODT_err=-156.533101, eval_time_sec=7588.03
+2026-11-05 17:49:19,007 [INFO] f_total result: -3.752482 (weekly_ES=-3.752482, pooled_tt_ES=-212.728085, ODT_err=-156.533101)
+2026-11-05 17:49:19,020 [INFO] Convergence | trial=21, stage=Sobol warm-start, objective=-3.752482, energy_score=3.752482, best_objective=-2.517564, best_energy_score=2.517564, improvement=-1.234918, no_improve_count=3
+2026-11-05 17:49:19,059 [INFO] Saved live AxClient checkpoint to /tmp/rituns/58855356/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
+2026-11-05 17:49:19,544 [INFO] Synced completed calibration trial to /dfs6b/pub/rituns/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj
+2026-11-05 17:49:19,579 [INFO] Sobol warm-start trial 22/80: {'op_max_wait_time': 2746.0794042795897, 'op_detour_time_factor': 52.92960294522345, 'const_PUDO_duration': 216.03637701831758, 'decline_wait_time_bound_upper': 497.0686103217304, 'diffusion_wait_time_bound_lower': 1042.365385312587, 'max_cancel_decision_time': 88.67734075523913, 'random_term_variance': 0.9959517666138709, 'decision_threshold': 157.97314645722508, 'no_show_wait_time': 86.86022490262985, 'CV_group_1_peak': 0.25031720320694145, 'CV_group_1_offpeak': 0.36320544886402784, 'CV_group_2_peak': 0.11279101688414811, 'CV_group_2_offpeak': 0.6907374488189816, 'CV_group_3_peak': 0.45019730404019354, 'CV_group_3_offpeak': 0.589833721332252}
+2026-11-05 17:49:19,579 [INFO] f_total evaluating: (2746.0794042795897, 52.92960294522345, 216.03637701831758, 497.0686103217304, 1042.365385312587, 88.67734075523913, 0.9959517666138709, 157.97314645722508, 86.86022490262985, 0.25031720320694145, 0.36320544886402784, 0.11279101688414811, 0.6907374488189816, 0.45019730404019354, 0.589833721332252)
+2026-11-05 17:49:19,580 [INFO] [31msend_instruction is being called for input tensor([[2.7461e+03, 5.2930e+01, 2.1604e+02, 4.9707e+02, 1.0424e+03, 8.8677e+01,
+         9.9595e-01, 1.5797e+02, 8.6860e+01, 2.5032e-01, 3.6321e-01, 1.1279e-01,
+         6.9074e-01, 4.5020e-01, 5.8983e-01]], dtype=torch.float64)[0m
+2026-11-05 17:49:19,580 [INFO] training_itr_22: evaluating input [2746.0794042795897, 52.92960294522345, 216.03637701831758, 497.0686103217304, 1042.365385312587, 88.67734075523913, 0.9959517666138709, 157.97314645722508, 86.86022490262985, 0.25031720320694145, 0.36320544886402784, 0.11279101688414811, 0.6907374488189816, 0.45019730404019354, 0.589833721332252]
+2026-11-05 17:49:21,560 [INFO] Running program for tuesday
+2026-11-05 18:35:31,514 [INFO] Running program for wednesday
+2026-11-05 19:21:36,998 [INFO] Running program for thursday
+2026-11-05 20:07:34,580 [INFO] training_itr_22: weekly_ES=-3.033217, pooled_tt_ES=-117.725353, ODT_err=-109.094937, eval_time_sec=8295.00
+2026-11-05 20:07:34,583 [INFO] f_total result: -3.033217 (weekly_ES=-3.033217, pooled_tt_ES=-117.725353, ODT_err=-109.094937)
+2026-11-05 20:07:34,596 [INFO] Convergence | trial=22, stage=Sobol warm-start, objective=-3.033217, energy_score=3.033217, best_objective=-2.517564, best_energy_score=2.517564, improvement=-0.515653, no_improve_count=4
+2026-11-05 20:07:34,635 [INFO] Saved live AxClient checkpoint to /tmp/rituns/58855356/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
+2026-11-05 20:07:34,831 [INFO] Synced completed calibration trial to /dfs6b/pub/rituns/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj
+2026-11-05 20:07:34,879 [INFO] Sobol warm-start trial 23/80: {'op_max_wait_time': 2308.328855969012, 'op_detour_time_factor': 81.40751442871988, 'const_PUDO_duration': 115.17786604352295, 'decline_wait_time_bound_upper': 1047.2525216639042, 'diffusion_wait_time_bound_lower': 882.640680950135, 'max_cancel_decision_time': 51.12850262783468, 'random_term_variance': 3.0059085353277624, 'decision_threshold': 102.74629533290863, 'no_show_wait_time': 33.06990146636963, 'CV_group_1_peak': 0.17202080208808182, 'CV_group_1_offpeak': 0.4595807370729744, 'CV_group_2_peak': 0.28797990772873167, 'CV_group_2_offpeak': 0.1643293410539627, 'CV_group_3_peak': 0.7996202237904072, 'CV_group_3_offpeak': 0.8651159197092055}
+2026-11-05 20:07:34,879 [INFO] f_total evaluating: (2308.328855969012, 81.40751442871988, 115.17786604352295, 1047.2525216639042, 882.640680950135, 51.12850262783468, 3.0059085353277624, 102.74629533290863, 33.06990146636963, 0.17202080208808182, 0.4595807370729744, 0.28797990772873167, 0.1643293410539627, 0.7996202237904072, 0.8651159197092055)
+2026-11-05 20:07:34,880 [INFO] [31msend_instruction is being called for input tensor([[2.3083e+03, 8.1408e+01, 1.1518e+02, 1.0473e+03, 8.8264e+02, 5.1129e+01,
+         3.0059e+00, 1.0275e+02, 3.3070e+01, 1.7202e-01, 4.5958e-01, 2.8798e-01,
+         1.6433e-01, 7.9962e-01, 8.6512e-01]], dtype=torch.float64)[0m
+2026-11-05 20:07:34,880 [INFO] training_itr_23: evaluating input [2308.328855969012, 81.40751442871988, 115.17786604352295, 1047.2525216639042, 882.640680950135, 51.12850262783468, 3.0059085353277624, 102.74629533290863, 33.06990146636963, 0.17202080208808182, 0.4595807370729744, 0.28797990772873167, 0.1643293410539627, 0.7996202237904072, 0.8651159197092055]
+2026-11-05 20:07:36,861 [INFO] Running program for tuesday
+2026-11-05 20:54:31,642 [INFO] Running program for wednesday
+2026-11-05 21:41:27,028 [INFO] Running program for thursday
+2026-11-05 22:28:44,248 [INFO] training_itr_23: weekly_ES=-3.528626, pooled_tt_ES=-254.349812, ODT_err=-161.417647, eval_time_sec=8469.37
+2026-11-05 22:28:44,251 [INFO] f_total result: -3.528626 (weekly_ES=-3.528626, pooled_tt_ES=-254.349812, ODT_err=-161.417647)
+2026-11-05 22:28:44,264 [INFO] Convergence | trial=23, stage=Sobol warm-start, objective=-3.528626, energy_score=3.528626, best_objective=-2.517564, best_energy_score=2.517564, improvement=-1.011062, no_improve_count=5
+2026-11-05 22:28:44,303 [INFO] Saved live AxClient checkpoint to /tmp/rituns/58855356/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
+2026-11-05 22:36:15,273 [INFO] Synced completed calibration trial to /dfs6b/pub/rituns/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj
+2026-11-05 22:36:15,307 [INFO] Sobol warm-start trial 24/80: {'op_max_wait_time': 1610.7222230173647, 'op_detour_time_factor': 11.669430192559958, 'const_PUDO_duration': 252.41380342282355, 'decline_wait_time_bound_upper': 693.0931828916073, 'diffusion_wait_time_bound_lower': 420.86174627766013, 'max_cancel_decision_time': 167.80938418582082, 'random_term_variance': 2.413633110933006, 'decision_threshold': 64.24442660063505, 'no_show_wait_time': 105.72662591934204, 'CV_group_1_peak': 0.40373020847328, 'CV_group_1_offpeak': 0.0750897016376257, 'CV_group_2_peak': 0.49343749354593447, 'CV_group_2_offpeak': 0.4547978246584534, 'CV_group_3_peak': 0.5896236270666122, 'CV_group_3_offpeak': 0.4945945126004517}
+2026-11-05 22:36:15,307 [INFO] f_total evaluating: (1610.7222230173647, 11.669430192559958, 252.41380342282355, 693.0931828916073, 420.86174627766013, 167.80938418582082, 2.413633110933006, 64.24442660063505, 105.72662591934204, 0.40373020847328, 0.0750897016376257, 0.49343749354593447, 0.4547978246584534, 0.5896236270666122, 0.4945945126004517)
+2026-11-05 22:36:15,308 [INFO] [31msend_instruction is being called for input tensor([[1.6107e+03, 1.1669e+01, 2.5241e+02, 6.9309e+02, 4.2086e+02, 1.6781e+02,
+         2.4136e+00, 6.4244e+01, 1.0573e+02, 4.0373e-01, 7.5090e-02, 4.9344e-01,
+         4.5480e-01, 5.8962e-01, 4.9459e-01]], dtype=torch.float64)[0m
+2026-11-05 22:36:15,308 [INFO] training_itr_24: evaluating input [1610.7222230173647, 11.669430192559958, 252.41380342282355, 693.0931828916073, 420.86174627766013, 167.80938418582082, 2.413633110933006, 64.24442660063505, 105.72662591934204, 0.40373020847328, 0.0750897016376257, 0.49343749354593447, 0.4547978246584534, 0.5896236270666122, 0.4945945126004517]
+2026-11-05 22:36:17,281 [INFO] Running program for tuesday
+2026-11-05 23:09:14,847 [INFO] Running program for wednesday
+2026-11-05 23:42:28,734 [INFO] Running program for thursday
+2026-11-06 00:15:28,241 [INFO] training_itr_24: weekly_ES=-5.337132, pooled_tt_ES=-7.777036, ODT_err=-88.331265, eval_time_sec=5952.93
+2026-11-06 00:15:28,244 [INFO] f_total result: -5.337132 (weekly_ES=-5.337132, pooled_tt_ES=-7.777036, ODT_err=-88.331265)
+2026-11-06 00:15:28,257 [INFO] Convergence | trial=24, stage=Sobol warm-start, objective=-5.337132, energy_score=5.337132, best_objective=-2.517564, best_energy_score=2.517564, improvement=-2.819568, no_improve_count=6
+2026-11-06 00:15:28,299 [INFO] Saved live AxClient checkpoint to /tmp/rituns/58855356/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
+2026-11-06 00:22:17,581 [INFO] Synced completed calibration trial to /dfs6b/pub/rituns/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj
+2026-11-06 00:22:17,630 [INFO] Sobol warm-start trial 25/80: {'op_max_wait_time': 1623.855008650571, 'op_detour_time_factor': 64.85256642103195, 'const_PUDO_duration': 107.49027446843684, 'decline_wait_time_bound_upper': 572.3522131331265, 'diffusion_wait_time_bound_lower': 822.8340652771294, 'max_cancel_decision_time': 187.94424139894545, 'random_term_variance': 4.483824825845659, 'decision_threshold': 73.37267251685262, 'no_show_wait_time': 161.64814874529839, 'CV_group_1_peak': 0.07017657738178969, 'CV_group_1_offpeak': 0.0859397215768695, 'CV_group_2_peak': 0.4115792892873287, 'CV_group_2_offpeak': 0.6485162055119872, 'CV_group_3_peak': 0.715958920866251, 'CV_group_3_offpeak': 0.6502786975353956}
+2026-11-06 00:22:17,630 [INFO] f_total evaluating: (1623.855008650571, 64.85256642103195, 107.49027446843684, 572.3522131331265, 822.8340652771294, 187.94424139894545, 4.483824825845659, 73.37267251685262, 161.64814874529839, 0.07017657738178969, 0.0859397215768695, 0.4115792892873287, 0.6485162055119872, 0.715958920866251, 0.6502786975353956)
+2026-11-06 00:22:17,631 [INFO] [31msend_instruction is being called for input tensor([[1.6239e+03, 6.4853e+01, 1.0749e+02, 5.7235e+02, 8.2283e+02, 1.8794e+02,
+         4.4838e+00, 7.3373e+01, 1.6165e+02, 7.0177e-02, 8.5940e-02, 4.1158e-01,
+         6.4852e-01, 7.1596e-01, 6.5028e-01]], dtype=torch.float64)[0m
+2026-11-06 00:22:17,631 [INFO] training_itr_25: evaluating input [1623.855008650571, 64.85256642103195, 107.49027446843684, 572.3522131331265, 822.8340652771294, 187.94424139894545, 4.483824825845659, 73.37267251685262, 161.64814874529839, 0.07017657738178969, 0.0859397215768695, 0.4115792892873287, 0.6485162055119872, 0.715958920866251, 0.6502786975353956]
+2026-11-06 00:22:19,617 [INFO] Running program for tuesday
+2026-11-06 01:00:29,977 [INFO] Running program for wednesday
+2026-11-06 01:39:15,693 [INFO] Running program for thursday
+2026-11-06 02:17:32,074 [INFO] training_itr_25: weekly_ES=-4.259486, pooled_tt_ES=-136.773836, ODT_err=-138.550775, eval_time_sec=6914.44
+2026-11-06 02:17:32,078 [INFO] f_total result: -4.259486 (weekly_ES=-4.259486, pooled_tt_ES=-136.773836, ODT_err=-138.550775)
+2026-11-06 02:17:32,091 [INFO] Convergence | trial=25, stage=Sobol warm-start, objective=-4.259486, energy_score=4.259486, best_objective=-2.517564, best_energy_score=2.517564, improvement=-1.741922, no_improve_count=7
+2026-11-06 02:17:32,134 [INFO] Saved live AxClient checkpoint to /tmp/rituns/58855356/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
+2026-11-06 02:18:24,180 [INFO] Synced completed calibration trial to /dfs6b/pub/rituns/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj
+2026-11-06 02:18:24,217 [INFO] Sobol warm-start trial 26/80: {'op_max_wait_time': 2215.417387895286, 'op_detour_time_factor': 39.40569386817515, 'const_PUDO_duration': 244.47902952320874, 'decline_wait_time_bound_upper': 904.6364893205464, 'diffusion_wait_time_bound_lower': 524.4353876449168, 'max_cancel_decision_time': 70.87893921881914, 'random_term_variance': 0.5165551430545747, 'decision_threshold': 163.89148822054267, 'no_show_wait_time': 99.6187798678875, 'CV_group_1_peak': 0.5290527318138629, 'CV_group_1_offpeak': 0.4775221957825124, 'CV_group_2_peak': 0.3685658106114715, 'CV_group_2_offpeak': 0.3393142778426409, 'CV_group_3_peak': 0.5198035657405853, 'CV_group_3_offpeak': 0.3645609670318663}
+2026-11-06 02:18:24,217 [INFO] f_total evaluating: (2215.417387895286, 39.40569386817515, 244.47902952320874, 904.6364893205464, 524.4353876449168, 70.87893921881914, 0.5165551430545747, 163.89148822054267, 99.6187798678875, 0.5290527318138629, 0.4775221957825124, 0.3685658106114715, 0.3393142778426409, 0.5198035657405853, 0.3645609670318663)
+2026-11-06 02:18:24,218 [INFO] [31msend_instruction is being called for input tensor([[2.2154e+03, 3.9406e+01, 2.4448e+02, 9.0464e+02, 5.2444e+02, 7.0879e+01,
+         5.1656e-01, 1.6389e+02, 9.9619e+01, 5.2905e-01, 4.7752e-01, 3.6857e-01,
+         3.3931e-01, 5.1980e-01, 3.6456e-01]], dtype=torch.float64)[0m
+2026-11-06 02:18:24,218 [INFO] training_itr_26: evaluating input [2215.417387895286, 39.40569386817515, 244.47902952320874, 904.6364893205464, 524.4353876449168, 70.87893921881914, 0.5165551430545747, 163.89148822054267, 99.6187798678875, 0.5290527318138629, 0.4775221957825124, 0.3685658106114715, 0.3393142778426409, 0.5198035657405853, 0.3645609670318663]
+2026-11-06 02:18:26,200 [INFO] Running program for tuesday
+2026-11-06 03:02:25,228 [INFO] Running program for wednesday
+2026-11-06 03:47:21,513 [INFO] Running program for thursday
+2026-11-06 04:31:47,722 [INFO] training_itr_26: weekly_ES=-3.511582, pooled_tt_ES=-83.572499, ODT_err=-89.283073, eval_time_sec=8003.50
+2026-11-06 04:31:47,725 [INFO] f_total result: -3.511582 (weekly_ES=-3.511582, pooled_tt_ES=-83.572499, ODT_err=-89.283073)
+2026-11-06 04:31:47,739 [INFO] Convergence | trial=26, stage=Sobol warm-start, objective=-3.511582, energy_score=3.511582, best_objective=-2.517564, best_energy_score=2.517564, improvement=-0.994018, no_improve_count=8
+2026-11-06 04:31:47,782 [INFO] Saved live AxClient checkpoint to /tmp/rituns/58855356/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
+2026-11-06 04:34:15,499 [INFO] Synced completed calibration trial to /dfs6b/pub/rituns/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj
+2026-11-06 04:34:15,536 [INFO] Sobol warm-start trial 27/80: {'op_max_wait_time': 2626.814766973257, 'op_detour_time_factor': 89.68065067194402, 'const_PUDO_duration': 76.38418137095869, 'decline_wait_time_bound_upper': 726.1592024937272, 'diffusion_wait_time_bound_lower': 727.9524802230299, 'max_cancel_decision_time': 111.02161252871156, 'random_term_variance': 3.0714338035322726, 'decision_threshold': 115.21662753075361, 'no_show_wait_time': 20.906430035829544, 'CV_group_1_peak': 0.5432734181173146, 'CV_group_1_offpeak': 0.34549240707419815, 'CV_group_2_peak': 0.19337383969686922, 'CV_group_2_offpeak': 0.40327482353895905, 'CV_group_3_peak': 1.0301576912403108, 'CV_group_3_offpeak': 0.37912291241809726}
+2026-11-06 04:34:15,536 [INFO] f_total evaluating: (2626.814766973257, 89.68065067194402, 76.38418137095869, 726.1592024937272, 727.9524802230299, 111.02161252871156, 3.0714338035322726, 115.21662753075361, 20.906430035829544, 0.5432734181173146, 0.34549240707419815, 0.19337383969686922, 0.40327482353895905, 1.0301576912403108, 0.37912291241809726)
+2026-11-06 04:34:15,537 [INFO] [31msend_instruction is being called for input tensor([[2.6268e+03, 8.9681e+01, 7.6384e+01, 7.2616e+02, 7.2795e+02, 1.1102e+02,
+         3.0714e+00, 1.1522e+02, 2.0906e+01, 5.4327e-01, 3.4549e-01, 1.9337e-01,
+         4.0327e-01, 1.0302e+00, 3.7912e-01]], dtype=torch.float64)[0m
+2026-11-06 04:34:15,537 [INFO] training_itr_27: evaluating input [2626.814766973257, 89.68065067194402, 76.38418137095869, 726.1592024937272, 727.9524802230299, 111.02161252871156, 3.0714338035322726, 115.21662753075361, 20.906430035829544, 0.5432734181173146, 0.34549240707419815, 0.19337383969686922, 0.40327482353895905, 1.0301576912403108, 0.37912291241809726]
+2026-11-06 04:34:17,516 [INFO] Running program for tuesday
+2026-11-06 05:24:53,480 [INFO] Running program for wednesday
+2026-11-06 06:14:20,844 [INFO] Running program for thursday
+2026-11-06 07:03:31,785 [INFO] training_itr_27: weekly_ES=-3.393344, pooled_tt_ES=-257.024856, ODT_err=-176.221170, eval_time_sec=8956.25
+2026-11-06 07:03:31,788 [INFO] f_total result: -3.393344 (weekly_ES=-3.393344, pooled_tt_ES=-257.024856, ODT_err=-176.221170)
+2026-11-06 07:03:31,802 [INFO] Convergence | trial=27, stage=Sobol warm-start, objective=-3.393344, energy_score=3.393344, best_objective=-2.517564, best_energy_score=2.517564, improvement=-0.875780, no_improve_count=9
+2026-11-06 07:03:31,844 [INFO] Saved live AxClient checkpoint to /tmp/rituns/58855356/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
+2026-11-06 07:03:32,048 [INFO] Synced completed calibration trial to /dfs6b/pub/rituns/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj
+2026-11-06 07:03:32,085 [INFO] Sobol warm-start trial 28/80: {'op_max_wait_time': 2142.1224194578826, 'op_detour_time_factor': 25.830381345003843, 'const_PUDO_duration': 209.13974474184215, 'decline_wait_time_bound_upper': 1058.3266953006387, 'diffusion_wait_time_bound_lower': 927.1873342804611, 'max_cancel_decision_time': 143.111637448892, 'random_term_variance': 2.4705710522830486, 'decision_threshold': 47.655446231365204, 'no_show_wait_time': 117.93831661343575, 'CV_group_1_peak': 0.35746581214480094, 'CV_group_1_offpeak': 0.18951446195133032, 'CV_group_2_peak': 0.5664691239595413, 'CV_group_2_offpeak': 0.1315551619976759, 'CV_group_3_peak': 0.43412554636597633, 'CV_group_3_offpeak': 0.7933936545625329}
+2026-11-06 07:03:32,085 [INFO] f_total evaluating: (2142.1224194578826, 25.830381345003843, 209.13974474184215, 1058.3266953006387, 927.1873342804611, 143.111637448892, 2.4705710522830486, 47.655446231365204, 117.93831661343575, 0.35746581214480094, 0.18951446195133032, 0.5664691239595413, 0.1315551619976759, 0.43412554636597633, 0.7933936545625329)
+2026-11-06 07:03:32,086 [INFO] [31msend_instruction is being called for input tensor([[2.1421e+03, 2.5830e+01, 2.0914e+02, 1.0583e+03, 9.2719e+02, 1.4311e+02,
+         2.4706e+00, 4.7655e+01, 1.1794e+02, 3.5747e-01, 1.8951e-01, 5.6647e-01,
+         1.3156e-01, 4.3413e-01, 7.9339e-01]], dtype=torch.float64)[0m
+2026-11-06 07:03:32,086 [INFO] training_itr_28: evaluating input [2142.1224194578826, 25.830381345003843, 209.13974474184215, 1058.3266953006387, 927.1873342804611, 143.111637448892, 2.4705710522830486, 47.655446231365204, 117.93831661343575, 0.35746581214480094, 0.18951446195133032, 0.5664691239595413, 0.1315551619976759, 0.43412554636597633, 0.7933936545625329]
+2026-11-06 07:03:34,055 [INFO] Running program for tuesday
+2026-11-06 07:46:11,188 [INFO] Running program for wednesday
+2026-11-06 08:29:12,477 [INFO] Running program for thursday
+2026-11-06 09:11:49,287 [INFO] training_itr_28: weekly_ES=-2.225325, pooled_tt_ES=-67.993481, ODT_err=-89.760033, eval_time_sec=7697.20
+2026-11-06 09:11:49,290 [INFO] f_total result: -2.225325 (weekly_ES=-2.225325, pooled_tt_ES=-67.993481, ODT_err=-89.760033)
+2026-11-06 09:11:49,303 [INFO] Convergence | trial=28, stage=Sobol warm-start, objective=-2.225325, energy_score=2.225325, best_objective=-2.225325, best_energy_score=2.225325, improvement=0.292239, no_improve_count=0
+2026-11-06 09:11:49,348 [INFO] Saved live AxClient checkpoint to /tmp/rituns/58855356/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
+2026-11-06 09:26:51,258 [INFO] Synced completed calibration trial to /dfs6b/pub/rituns/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj
+2026-11-06 09:26:51,295 [INFO] Sobol warm-start trial 29/80: {'op_max_wait_time': 1918.9721134491265, 'op_detour_time_factor': 88.54484261013567, 'const_PUDO_duration': 286.5226817317307, 'decline_wait_time_bound_upper': 932.3904186487198, 'diffusion_wait_time_bound_lower': 1070.1241825707257, 'max_cancel_decision_time': 174.59204081445932, 'random_term_variance': 3.5376263898797333, 'decision_threshold': 129.8024403117597, 'no_show_wait_time': 55.86515486240387, 'CV_group_1_peak': 0.43752921577543014, 'CV_group_1_offpeak': 0.28443986615166067, 'CV_group_2_peak': 0.6789321267511695, 'CV_group_2_offpeak': 0.4917871600016952, 'CV_group_3_peak': 0.6336640857160092, 'CV_group_3_offpeak': 0.8255032279528678}
+2026-11-06 09:26:51,295 [INFO] f_total evaluating: (1918.9721134491265, 88.54484261013567, 286.5226817317307, 932.3904186487198, 1070.1241825707257, 174.59204081445932, 3.5376263898797333, 129.8024403117597, 55.86515486240387, 0.43752921577543014, 0.28443986615166067, 0.6789321267511695, 0.4917871600016952, 0.6336640857160092, 0.8255032279528678)
+2026-11-06 09:26:51,296 [INFO] [31msend_instruction is being called for input tensor([[1.9190e+03, 8.8545e+01, 2.8652e+02, 9.3239e+02, 1.0701e+03, 1.7459e+02,
+         3.5376e+00, 1.2980e+02, 5.5865e+01, 4.3753e-01, 2.8444e-01, 6.7893e-01,
+         4.9179e-01, 6.3366e-01, 8.2550e-01]], dtype=torch.float64)[0m
+2026-11-06 09:26:51,296 [INFO] training_itr_29: evaluating input [1918.9721134491265, 88.54484261013567, 286.5226817317307, 932.3904186487198, 1070.1241825707257, 174.59204081445932, 3.5376263898797333, 129.8024403117597, 55.86515486240387, 0.43752921577543014, 0.28443986615166067, 0.6789321267511695, 0.4917871600016952, 0.6336640857160092, 0.8255032279528678]
+2026-11-06 09:26:53,269 [INFO] Running program for tuesday
+2026-11-06 10:08:53,161 [INFO] Running program for wednesday
+2026-11-06 10:50:59,987 [INFO] Running program for thursday
+2026-11-06 11:32:40,443 [INFO] training_itr_29: weekly_ES=-3.503131, pooled_tt_ES=-170.309644, ODT_err=-155.396254, eval_time_sec=7549.15
+2026-11-06 11:32:40,446 [INFO] f_total result: -3.503131 (weekly_ES=-3.503131, pooled_tt_ES=-170.309644, ODT_err=-155.396254)
+2026-11-06 11:32:40,460 [INFO] Convergence | trial=29, stage=Sobol warm-start, objective=-3.503131, energy_score=3.503131, best_objective=-2.225325, best_energy_score=2.225325, improvement=-1.277806, no_improve_count=1
+2026-11-06 11:32:40,505 [INFO] Saved live AxClient checkpoint to /tmp/rituns/58855356/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
+2026-11-06 11:39:56,901 [INFO] Synced completed calibration trial to /dfs6b/pub/rituns/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj
+2026-11-06 11:39:56,938 [INFO] Sobol warm-start trial 30/80: {'op_max_wait_time': 2815.1147743687034, 'op_detour_time_factor': 15.900187939405441, 'const_PUDO_duration': 149.29421363398433, 'decline_wait_time_bound_upper': 589.2533406615257, 'diffusion_wait_time_bound_lower': 581.0015239752829, 'max_cancel_decision_time': 36.58461489714682, 'random_term_variance': 1.8818809073418379, 'decision_threshold': 37.598906476050615, 'no_show_wait_time': 122.89688885211945, 'CV_group_1_peak': 0.14139133212156593, 'CV_group_1_offpeak': 0.22244889866560696, 'CV_group_2_peak': 0.06186742261052132, 'CV_group_2_offpeak': 0.20131697542965413, 'CV_group_3_peak': 0.8297954186797143, 'CV_group_3_offpeak': 0.5397853162139654}
+2026-11-06 11:39:56,938 [INFO] f_total evaluating: (2815.1147743687034, 15.900187939405441, 149.29421363398433, 589.2533406615257, 581.0015239752829, 36.58461489714682, 1.8818809073418379, 37.598906476050615, 122.89688885211945, 0.14139133212156593, 0.22244889866560696, 0.06186742261052132, 0.20131697542965413, 0.8297954186797143, 0.5397853162139654)
+2026-11-06 11:39:56,939 [INFO] [31msend_instruction is being called for input tensor([[2.8151e+03, 1.5900e+01, 1.4929e+02, 5.8925e+02, 5.8100e+02, 3.6585e+01,
+         1.8819e+00, 3.7599e+01, 1.2290e+02, 1.4139e-01, 2.2245e-01, 6.1867e-02,
+         2.0132e-01, 8.2980e-01, 5.3979e-01]], dtype=torch.float64)[0m
+2026-11-06 11:39:56,939 [INFO] training_itr_30: evaluating input [2815.1147743687034, 15.900187939405441, 149.29421363398433, 589.2533406615257, 581.0015239752829, 36.58461489714682, 1.8818809073418379, 37.598906476050615, 122.89688885211945, 0.14139133212156593, 0.22244889866560696, 0.06186742261052132, 0.20131697542965413, 0.8297954186797143, 0.5397853162139654]
+2026-11-06 11:39:58,905 [INFO] Running program for tuesday
+2026-11-06 12:26:53,272 [INFO] Running program for wednesday
+2026-11-06 13:14:30,728 [INFO] Running program for thursday
+2026-11-06 14:00:46,600 [INFO] training_itr_30: weekly_ES=-2.369989, pooled_tt_ES=-39.145476, ODT_err=-90.056149, eval_time_sec=8449.66
+2026-11-06 14:00:46,604 [INFO] f_total result: -2.369989 (weekly_ES=-2.369989, pooled_tt_ES=-39.145476, ODT_err=-90.056149)
+2026-11-06 14:00:46,618 [INFO] Convergence | trial=30, stage=Sobol warm-start, objective=-2.369989, energy_score=2.369989, best_objective=-2.225325, best_energy_score=2.225325, improvement=-0.144664, no_improve_count=2
+2026-11-06 14:00:46,666 [INFO] Saved live AxClient checkpoint to /tmp/rituns/58855356/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
+2026-11-06 14:00:46,917 [INFO] Synced completed calibration trial to /dfs6b/pub/rituns/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj
+2026-11-06 14:00:46,918 [INFO] Sobol-phase normalisation stds computed and saved: {'weekly_ES': 1, 'pooled_tt_ES': 1, 'ODT_std_err': 1}
+2026-11-06 14:00:47,240 [INFO] Rewrote 30 convergence_log entries on rescaled scale. best_so_far reset to -2.225325.
+2026-11-06 14:00:47,255 [INFO] AxClient rebuilt with 30 rescaled Sobol observations. Flag written to /tmp/rituns/58855356/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_rebuilt.flag.
+2026-11-06 14:01:01,199 [INFO] Reset no_improve_count to 0 at the start of BO/SAASBO phase.
+2026-11-06 14:01:01,199 [INFO] Bayesian optimization trial 31/80: {'op_max_wait_time': 2485.1499102389953, 'op_detour_time_factor': 10.0, 'const_PUDO_duration': 175.10061621347464, 'decline_wait_time_bound_upper': 941.7577013264951, 'diffusion_wait_time_bound_lower': 980.5507492989202, 'max_cancel_decision_time': 129.60211761921494, 'random_term_variance': 0.9605693169112679, 'decision_threshold': 51.54452051620626, 'no_show_wait_time': 97.4283482293467, 'CV_group_1_peak': 0.18990980535006502, 'CV_group_1_offpeak': 0.21407627298056647, 'CV_group_2_peak': 0.3734827134973259, 'CV_group_2_offpeak': 0.1, 'CV_group_3_peak': 0.5657440718865213, 'CV_group_3_offpeak': 0.8205532365585934}
+2026-11-06 14:01:01,199 [INFO] f_total evaluating: (2485.1499102389953, 10.0, 175.10061621347464, 941.7577013264951, 980.5507492989202, 129.60211761921494, 0.9605693169112679, 51.54452051620626, 97.4283482293467, 0.18990980535006502, 0.21407627298056647, 0.3734827134973259, 0.1, 0.5657440718865213, 0.8205532365585934)
+2026-11-06 14:01:01,199 [INFO] [31msend_instruction is being called for input tensor([[2.4851e+03, 1.0000e+01, 1.7510e+02, 9.4176e+02, 9.8055e+02, 1.2960e+02,
+         9.6057e-01, 5.1545e+01, 9.7428e+01, 1.8991e-01, 2.1408e-01, 3.7348e-01,
+         1.0000e-01, 5.6574e-01, 8.2055e-01]], dtype=torch.float64)[0m
+2026-11-06 14:01:01,199 [INFO] optimization_itr_1: evaluating input [2485.1499102389953, 10.0, 175.10061621347464, 941.7577013264951, 980.5507492989202, 129.60211761921494, 0.9605693169112679, 51.54452051620626, 97.4283482293467, 0.18990980535006502, 0.21407627298056647, 0.3734827134973259, 0.1, 0.5657440718865213, 0.8205532365585934]
+2026-11-06 14:01:03,176 [INFO] Running program for tuesday
+2026-11-06 14:46:36,724 [INFO] Running program for wednesday
+2026-11-06 15:32:59,439 [INFO] Running program for thursday
+2026-11-06 16:18:14,299 [INFO] optimization_itr_1: weekly_ES=-2.110655, pooled_tt_ES=-44.427881, ODT_err=-79.552339, eval_time_sec=8233.10
+2026-11-06 16:18:14,302 [INFO] f_total result: -2.110655 (weekly_ES=-2.110655, pooled_tt_ES=-44.427881, ODT_err=-79.552339)
+2026-11-06 16:18:14,315 [INFO] Convergence | trial=31, stage=Bayesian optimization, objective=-2.110655, energy_score=2.110655, best_objective=-2.110655, best_energy_score=2.110655, improvement=0.114670, no_improve_count=0
+2026-11-06 16:18:14,354 [INFO] Saved live AxClient checkpoint to /tmp/rituns/58855356/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
+2026-11-06 16:18:14,564 [INFO] Synced completed calibration trial to /dfs6b/pub/rituns/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj
+2026-11-06 16:18:36,379 [INFO] Bayesian optimization trial 32/80: {'op_max_wait_time': 2245.400667702768, 'op_detour_time_factor': 26.21244024263776, 'const_PUDO_duration': 140.48734390465074, 'decline_wait_time_bound_upper': 1012.5614981546428, 'diffusion_wait_time_bound_lower': 987.0601228711241, 'max_cancel_decision_time': 197.4829860920401, 'random_term_variance': 1.1453063460451243, 'decision_threshold': 100.1791579450588, 'no_show_wait_time': 89.33333762874312, 'CV_group_1_peak': 0.22457535702694564, 'CV_group_1_offpeak': 0.23555847876115285, 'CV_group_2_peak': 0.3745550830426555, 'CV_group_2_offpeak': 0.1035920622118346, 'CV_group_3_peak': 0.4124316056411015, 'CV_group_3_offpeak': 0.7973560964164528}
+2026-11-06 16:18:36,379 [INFO] f_total evaluating: (2245.400667702768, 26.21244024263776, 140.48734390465074, 1012.5614981546428, 987.0601228711241, 197.4829860920401, 1.1453063460451243, 100.1791579450588, 89.33333762874312, 0.22457535702694564, 0.23555847876115285, 0.3745550830426555, 0.1035920622118346, 0.4124316056411015, 0.7973560964164528)
+2026-11-06 16:18:36,379 [INFO] [31msend_instruction is being called for input tensor([[2.2454e+03, 2.6212e+01, 1.4049e+02, 1.0126e+03, 9.8706e+02, 1.9748e+02,
+         1.1453e+00, 1.0018e+02, 8.9333e+01, 2.2458e-01, 2.3556e-01, 3.7456e-01,
+         1.0359e-01, 4.1243e-01, 7.9736e-01]], dtype=torch.float64)[0m
+2026-11-06 16:18:36,379 [INFO] optimization_itr_2: evaluating input [2245.400667702768, 26.21244024263776, 140.48734390465074, 1012.5614981546428, 987.0601228711241, 197.4829860920401, 1.1453063460451243, 100.1791579450588, 89.33333762874312, 0.22457535702694564, 0.23555847876115285, 0.3745550830426555, 0.1035920622118346, 0.4124316056411015, 0.7973560964164528]
+2026-11-06 16:18:38,358 [INFO] Running program for tuesday
+2026-11-06 17:03:58,283 [INFO] Running program for wednesday
+2026-11-06 17:52:14,305 [INFO] Running program for thursday
+2026-11-06 18:39:42,884 [INFO] optimization_itr_2: weekly_ES=-1.911416, pooled_tt_ES=-92.425847, ODT_err=-90.332637, eval_time_sec=8466.51
+2026-11-06 18:39:42,888 [INFO] f_total result: -1.911416 (weekly_ES=-1.911416, pooled_tt_ES=-92.425847, ODT_err=-90.332637)
+2026-11-06 18:39:42,902 [INFO] Convergence | trial=32, stage=Bayesian optimization, objective=-1.911416, energy_score=1.911416, best_objective=-1.911416, best_energy_score=1.911416, improvement=0.199239, no_improve_count=0
+2026-11-06 18:39:42,944 [INFO] Saved live AxClient checkpoint to /tmp/rituns/58855356/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
+2026-11-07 11:56:22,127 [INFO] Resuming AxClient from checkpoint: /tmp/rituns/59076623/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
+2026-11-07 11:56:22,296 [INFO] Generation Strategy: GenerationStrategy(name='BoTorch', steps=[BoTorch for all trials])
+2026-11-07 11:56:22,327 [INFO] Reloaded 32 previous objective evaluations from /tmp/rituns/59076623/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/result_intermediate.csv.
+2026-11-07 11:56:22,332 [INFO] Reloaded convergence log with 32 rows.
+2026-11-07 11:56:22,332 [INFO] Reloaded Sobol normalisation stds: {'weekly_ES': 1, 'pooled_tt_ES': 1, 'ODT_std_err': 1}
+2026-11-07 11:56:22,332 [INFO] Completed trials already in Ax: 32. Starting from trial number 33.
+2026-11-07 11:56:32,200 [INFO] Bayesian optimization trial 33/80: {'op_max_wait_time': 2262.3035031441536, 'op_detour_time_factor': 35.001516413082776, 'const_PUDO_duration': 148.11873070653525, 'decline_wait_time_bound_upper': 987.5408329581786, 'diffusion_wait_time_bound_lower': 1100.0, 'max_cancel_decision_time': 194.95433714156314, 'random_term_variance': 0.5, 'decision_threshold': 30.0, 'no_show_wait_time': 52.70583733877817, 'CV_group_1_peak': 0.05, 'CV_group_1_offpeak': 0.21040914794218377, 'CV_group_2_peak': 0.07977807592309491, 'CV_group_2_offpeak': 0.37578265786246096, 'CV_group_3_peak': 0.3, 'CV_group_3_offpeak': 0.6150223403319174}
+2026-11-07 11:56:32,200 [INFO] f_total evaluating: (2262.3035031441536, 35.001516413082776, 148.11873070653525, 987.5408329581786, 1100.0, 194.95433714156314, 0.5, 30.0, 52.70583733877817, 0.05, 0.21040914794218377, 0.07977807592309491, 0.37578265786246096, 0.3, 0.6150223403319174)
+2026-11-07 11:56:32,203 [INFO] [31msend_instruction is being called for input tensor([[2.2623e+03, 3.5002e+01, 1.4812e+02, 9.8754e+02, 1.1000e+03, 1.9495e+02,
+         5.0000e-01, 3.0000e+01, 5.2706e+01, 5.0000e-02, 2.1041e-01, 7.9778e-02,
+         3.7578e-01, 3.0000e-01, 6.1502e-01]], dtype=torch.float64)[0m
+2026-11-07 11:56:32,204 [INFO] optimization_itr_3: evaluating input [2262.3035031441536, 35.001516413082776, 148.11873070653525, 987.5408329581786, 1100.0, 194.95433714156314, 0.5, 30.0, 52.70583733877817, 0.05, 0.21040914794218377, 0.07977807592309491, 0.37578265786246096, 0.3, 0.6150223403319174]
+2026-11-07 11:56:34,193 [INFO] Running program for tuesday
+2026-11-07 12:38:38,247 [INFO] Running program for wednesday
+2026-11-07 13:21:44,435 [INFO] Running program for thursday
+2026-11-07 14:04:08,217 [INFO] optimization_itr_3: weekly_ES=-2.173406, pooled_tt_ES=-123.974785, ODT_err=-95.291373, eval_time_sec=7656.02
+2026-11-07 14:04:08,220 [INFO] f_total result: -2.173406 (weekly_ES=-2.173406, pooled_tt_ES=-123.974785, ODT_err=-95.291373)
+2026-11-07 14:04:08,235 [INFO] Convergence | trial=33, stage=Bayesian optimization, objective=-2.173406, energy_score=2.173406, best_objective=-1.911416, best_energy_score=1.911416, improvement=-0.261990, no_improve_count=1
+2026-11-07 14:04:08,275 [INFO] Saved live AxClient checkpoint to /tmp/rituns/59076623/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
+2026-11-07 14:04:08,402 [INFO] Synced completed calibration trial to /dfs6b/pub/rituns/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj
+2026-11-07 14:04:16,851 [INFO] Bayesian optimization trial 34/80: {'op_max_wait_time': 2286.1377301027255, 'op_detour_time_factor': 30.448907539108767, 'const_PUDO_duration': 104.91694807961596, 'decline_wait_time_bound_upper': 894.363310951374, 'diffusion_wait_time_bound_lower': 894.6319254161915, 'max_cancel_decision_time': 200.0, 'random_term_variance': 0.5, 'decision_threshold': 48.61177724984872, 'no_show_wait_time': 64.85241151554347, 'CV_group_1_peak': 0.05, 'CV_group_1_offpeak': 0.23930662174010367, 'CV_group_2_peak': 0.7, 'CV_group_2_offpeak': 0.1, 'CV_group_3_peak': 0.3, 'CV_group_3_offpeak': 0.9}
+2026-11-07 14:04:16,852 [INFO] f_total evaluating: (2286.1377301027255, 30.448907539108767, 104.91694807961596, 894.363310951374, 894.6319254161915, 200.0, 0.5, 48.61177724984872, 64.85241151554347, 0.05, 0.23930662174010367, 0.7, 0.1, 0.3, 0.9)
+2026-11-07 14:04:16,852 [INFO] [31msend_instruction is being called for input tensor([[2.2861e+03, 3.0449e+01, 1.0492e+02, 8.9436e+02, 8.9463e+02, 2.0000e+02,
+         5.0000e-01, 4.8612e+01, 6.4852e+01, 5.0000e-02, 2.3931e-01, 7.0000e-01,
+         1.0000e-01, 3.0000e-01, 9.0000e-01]], dtype=torch.float64)[0m
+2026-11-07 14:04:16,852 [INFO] optimization_itr_4: evaluating input [2286.1377301027255, 30.448907539108767, 104.91694807961596, 894.363310951374, 894.6319254161915, 200.0, 0.5, 48.61177724984872, 64.85241151554347, 0.05, 0.23930662174010367, 0.7, 0.1, 0.3, 0.9]
+2026-11-07 14:04:18,842 [INFO] Running program for tuesday
+2026-11-07 14:45:22,572 [INFO] Running program for wednesday
+2026-11-07 15:27:20,831 [INFO] Running program for thursday
+2026-11-07 16:10:09,126 [INFO] optimization_itr_4: weekly_ES=-2.161730, pooled_tt_ES=-112.302595, ODT_err=-96.668142, eval_time_sec=7552.27
+2026-11-07 16:10:09,129 [INFO] f_total result: -2.161730 (weekly_ES=-2.161730, pooled_tt_ES=-112.302595, ODT_err=-96.668142)
+2026-11-07 16:10:09,143 [INFO] Convergence | trial=34, stage=Bayesian optimization, objective=-2.161730, energy_score=2.161730, best_objective=-1.911416, best_energy_score=1.911416, improvement=-0.250314, no_improve_count=2
+2026-11-07 16:10:09,183 [INFO] Saved live AxClient checkpoint to /tmp/rituns/59076623/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
+2026-11-07 16:18:14,210 [INFO] Synced completed calibration trial to /dfs6b/pub/rituns/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj
+2026-11-07 16:18:22,042 [INFO] Bayesian optimization trial 35/80: {'op_max_wait_time': 2263.7119127271812, 'op_detour_time_factor': 16.617591962471284, 'const_PUDO_duration': 165.0868508661727, 'decline_wait_time_bound_upper': 1100.0, 'diffusion_wait_time_bound_lower': 1041.507372249558, 'max_cancel_decision_time': 200.0, 'random_term_variance': 1.2865976193848705, 'decision_threshold': 170.0, 'no_show_wait_time': 36.86126212737439, 'CV_group_1_peak': 0.7, 'CV_group_1_offpeak': 0.21765585653172737, 'CV_group_2_peak': 0.4001647938109996, 'CV_group_2_offpeak': 0.1, 'CV_group_3_peak': 0.5449002426340893, 'CV_group_3_offpeak': 0.9}
+2026-11-07 16:18:22,042 [INFO] f_total evaluating: (2263.7119127271812, 16.617591962471284, 165.0868508661727, 1100.0, 1041.507372249558, 200.0, 1.2865976193848705, 170.0, 36.86126212737439, 0.7, 0.21765585653172737, 0.4001647938109996, 0.1, 0.5449002426340893, 0.9)
+2026-11-07 16:18:22,043 [INFO] [31msend_instruction is being called for input tensor([[2.2637e+03, 1.6618e+01, 1.6509e+02, 1.1000e+03, 1.0415e+03, 2.0000e+02,
+         1.2866e+00, 1.7000e+02, 3.6861e+01, 7.0000e-01, 2.1766e-01, 4.0016e-01,
+         1.0000e-01, 5.4490e-01, 9.0000e-01]], dtype=torch.float64)[0m
+2026-11-07 16:18:22,043 [INFO] optimization_itr_5: evaluating input [2263.7119127271812, 16.617591962471284, 165.0868508661727, 1100.0, 1041.507372249558, 200.0, 1.2865976193848705, 170.0, 36.86126212737439, 0.7, 0.21765585653172737, 0.4001647938109996, 0.1, 0.5449002426340893, 0.9]
+2026-11-07 16:18:24,001 [INFO] Running program for tuesday
+2026-11-07 17:00:51,653 [INFO] Running program for wednesday
+2026-11-07 17:42:57,821 [INFO] Running program for thursday
+2026-11-07 18:25:06,328 [INFO] optimization_itr_5: weekly_ES=-1.868069, pooled_tt_ES=-56.807334, ODT_err=-88.311544, eval_time_sec=7604.29
+2026-11-07 18:25:06,332 [INFO] f_total result: -1.868069 (weekly_ES=-1.868069, pooled_tt_ES=-56.807334, ODT_err=-88.311544)
+2026-11-07 18:25:06,345 [INFO] Convergence | trial=35, stage=Bayesian optimization, objective=-1.868069, energy_score=1.868069, best_objective=-1.868069, best_energy_score=1.868069, improvement=0.043347, no_improve_count=0
+2026-11-07 18:25:06,386 [INFO] Saved live AxClient checkpoint to /tmp/rituns/59076623/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
+2026-11-07 18:25:06,573 [INFO] Synced completed calibration trial to /dfs6b/pub/rituns/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj
+2026-11-07 18:25:11,054 [INFO] Bayesian optimization trial 36/80: {'op_max_wait_time': 2283.9541006763816, 'op_detour_time_factor': 21.25573528293889, 'const_PUDO_duration': 186.88614159783725, 'decline_wait_time_bound_upper': 1100.0, 'diffusion_wait_time_bound_lower': 1031.0509917444779, 'max_cancel_decision_time': 200.0, 'random_term_variance': 0.5884983559689426, 'decision_threshold': 170.0, 'no_show_wait_time': 180.0, 'CV_group_1_peak': 0.48361508486062366, 'CV_group_1_offpeak': 0.23245224181035315, 'CV_group_2_peak': 0.28414603729075666, 'CV_group_2_offpeak': 0.1, 'CV_group_3_peak': 1.081302692584812, 'CV_group_3_offpeak': 0.9}
+2026-11-07 18:25:11,054 [INFO] f_total evaluating: (2283.9541006763816, 21.25573528293889, 186.88614159783725, 1100.0, 1031.0509917444779, 200.0, 0.5884983559689426, 170.0, 180.0, 0.48361508486062366, 0.23245224181035315, 0.28414603729075666, 0.1, 1.081302692584812, 0.9)
+2026-11-07 18:25:11,054 [INFO] [31msend_instruction is being called for input tensor([[2.2840e+03, 2.1256e+01, 1.8689e+02, 1.1000e+03, 1.0311e+03, 2.0000e+02,
+         5.8850e-01, 1.7000e+02, 1.8000e+02, 4.8362e-01, 2.3245e-01, 2.8415e-01,
+         1.0000e-01, 1.0813e+00, 9.0000e-01]], dtype=torch.float64)[0m
+2026-11-07 18:25:11,054 [INFO] optimization_itr_6: evaluating input [2283.9541006763816, 21.25573528293889, 186.88614159783725, 1100.0, 1031.0509917444779, 200.0, 0.5884983559689426, 170.0, 180.0, 0.48361508486062366, 0.23245224181035315, 0.28414603729075666, 0.1, 1.081302692584812, 0.9]
+2026-11-07 18:25:13,010 [INFO] Running program for tuesday
+2026-11-07 19:07:57,630 [INFO] Running program for wednesday
+2026-11-07 19:52:17,174 [INFO] Running program for thursday
+2026-11-07 20:36:55,724 [INFO] optimization_itr_6: weekly_ES=-1.929270, pooled_tt_ES=-63.235337, ODT_err=-96.085216, eval_time_sec=7904.67
+2026-11-07 20:36:55,728 [INFO] f_total result: -1.929270 (weekly_ES=-1.929270, pooled_tt_ES=-63.235337, ODT_err=-96.085216)
+2026-11-07 20:36:55,742 [INFO] Convergence | trial=36, stage=Bayesian optimization, objective=-1.929270, energy_score=1.929270, best_objective=-1.868069, best_energy_score=1.868069, improvement=-0.061201, no_improve_count=1
+2026-11-07 20:36:55,787 [INFO] Saved live AxClient checkpoint to /tmp/rituns/59076623/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
+2026-11-07 20:36:56,009 [INFO] Synced completed calibration trial to /dfs6b/pub/rituns/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj
+2026-11-07 20:37:01,053 [INFO] Bayesian optimization trial 37/80: {'op_max_wait_time': 2339.624804474825, 'op_detour_time_factor': 22.030971099066562, 'const_PUDO_duration': 208.80747248222218, 'decline_wait_time_bound_upper': 1100.0, 'diffusion_wait_time_bound_lower': 957.4249585080406, 'max_cancel_decision_time': 200.0, 'random_term_variance': 1.7355898890637609, 'decision_threshold': 170.0, 'no_show_wait_time': 20.0, 'CV_group_1_peak': 0.05, 'CV_group_1_offpeak': 0.2329282684338532, 'CV_group_2_peak': 0.05, 'CV_group_2_offpeak': 0.1, 'CV_group_3_peak': 0.3, 'CV_group_3_offpeak': 0.9}
+2026-11-07 20:37:01,053 [INFO] f_total evaluating: (2339.624804474825, 22.030971099066562, 208.80747248222218, 1100.0, 957.4249585080406, 200.0, 1.7355898890637609, 170.0, 20.0, 0.05, 0.2329282684338532, 0.05, 0.1, 0.3, 0.9)
+2026-11-07 20:37:01,053 [INFO] [31msend_instruction is being called for input tensor([[2.3396e+03, 2.2031e+01, 2.0881e+02, 1.1000e+03, 9.5742e+02, 2.0000e+02,
+         1.7356e+00, 1.7000e+02, 2.0000e+01, 5.0000e-02, 2.3293e-01, 5.0000e-02,
+         1.0000e-01, 3.0000e-01, 9.0000e-01]], dtype=torch.float64)[0m
+2026-11-07 20:37:01,053 [INFO] optimization_itr_7: evaluating input [2339.624804474825, 22.030971099066562, 208.80747248222218, 1100.0, 957.4249585080406, 200.0, 1.7355898890637609, 170.0, 20.0, 0.05, 0.2329282684338532, 0.05, 0.1, 0.3, 0.9]
+2026-11-07 20:37:03,018 [INFO] Running program for tuesday
+2026-11-07 21:20:20,115 [INFO] Running program for wednesday
+2026-11-07 22:05:00,551 [INFO] Running program for thursday
+2026-11-07 22:49:38,920 [INFO] optimization_itr_7: weekly_ES=-2.085192, pooled_tt_ES=-61.631427, ODT_err=-86.974721, eval_time_sec=7957.87
+2026-11-07 22:49:38,924 [INFO] f_total result: -2.085192 (weekly_ES=-2.085192, pooled_tt_ES=-61.631427, ODT_err=-86.974721)
+2026-11-07 22:49:38,937 [INFO] Convergence | trial=37, stage=Bayesian optimization, objective=-2.085192, energy_score=2.085192, best_objective=-1.868069, best_energy_score=1.868069, improvement=-0.217122, no_improve_count=2
+2026-11-07 22:49:38,980 [INFO] Saved live AxClient checkpoint to /tmp/rituns/59076623/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
+2026-11-07 22:49:39,156 [INFO] Synced completed calibration trial to /dfs6b/pub/rituns/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj
+2026-11-07 22:49:43,447 [INFO] Bayesian optimization trial 38/80: {'op_max_wait_time': 2162.8452921134444, 'op_detour_time_factor': 10.0, 'const_PUDO_duration': 122.76146909076418, 'decline_wait_time_bound_upper': 1100.0, 'diffusion_wait_time_bound_lower': 1100.0, 'max_cancel_decision_time': 200.0, 'random_term_variance': 1.6144846442424676, 'decision_threshold': 170.0, 'no_show_wait_time': 180.0, 'CV_group_1_peak': 0.47109686058971084, 'CV_group_1_offpeak': 0.24407082407481792, 'CV_group_2_peak': 0.4347011758635028, 'CV_group_2_offpeak': 0.1, 'CV_group_3_peak': 0.3, 'CV_group_3_offpeak': 0.9}
+2026-11-07 22:49:43,447 [INFO] f_total evaluating: (2162.8452921134444, 10.0, 122.76146909076418, 1100.0, 1100.0, 200.0, 1.6144846442424676, 170.0, 180.0, 0.47109686058971084, 0.24407082407481792, 0.4347011758635028, 0.1, 0.3, 0.9)
+2026-11-07 22:49:43,448 [INFO] [31msend_instruction is being called for input tensor([[2.1628e+03, 1.0000e+01, 1.2276e+02, 1.1000e+03, 1.1000e+03, 2.0000e+02,
+         1.6145e+00, 1.7000e+02, 1.8000e+02, 4.7110e-01, 2.4407e-01, 4.3470e-01,
+         1.0000e-01, 3.0000e-01, 9.0000e-01]], dtype=torch.float64)[0m
+2026-11-07 22:49:43,448 [INFO] optimization_itr_8: evaluating input [2162.8452921134444, 10.0, 122.76146909076418, 1100.0, 1100.0, 200.0, 1.6144846442424676, 170.0, 180.0, 0.47109686058971084, 0.24407082407481792, 0.4347011758635028, 0.1, 0.3, 0.9]
+2026-11-07 22:49:45,418 [INFO] Running program for tuesday
+2026-11-07 23:32:23,456 [INFO] Running program for wednesday
+2026-11-08 00:15:20,823 [INFO] Running program for thursday
+2026-11-08 00:58:57,666 [INFO] optimization_itr_8: weekly_ES=-1.861953, pooled_tt_ES=-48.839138, ODT_err=-85.881460, eval_time_sec=7754.22
+2026-11-08 00:58:57,669 [INFO] f_total result: -1.861953 (weekly_ES=-1.861953, pooled_tt_ES=-48.839138, ODT_err=-85.881460)
+2026-11-08 00:58:57,682 [INFO] Convergence | trial=38, stage=Bayesian optimization, objective=-1.861953, energy_score=1.861953, best_objective=-1.868069, best_energy_score=1.868069, improvement=0.006117, no_improve_count=3
+2026-11-08 00:58:57,727 [INFO] Saved live AxClient checkpoint to /tmp/rituns/59076623/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
+2026-11-08 00:58:57,907 [INFO] Synced completed calibration trial to /dfs6b/pub/rituns/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj
+2026-11-08 00:59:02,489 [INFO] Bayesian optimization trial 39/80: {'op_max_wait_time': 2179.496150097973, 'op_detour_time_factor': 10.0, 'const_PUDO_duration': 123.80870741389661, 'decline_wait_time_bound_upper': 1100.0, 'diffusion_wait_time_bound_lower': 1100.0, 'max_cancel_decision_time': 200.0, 'random_term_variance': 2.223287384863904, 'decision_threshold': 170.0, 'no_show_wait_time': 20.0, 'CV_group_1_peak': 0.05, 'CV_group_1_offpeak': 0.20880584021423193, 'CV_group_2_peak': 0.4973226463844403, 'CV_group_2_offpeak': 0.1, 'CV_group_3_peak': 1.1, 'CV_group_3_offpeak': 0.9}
+2026-11-08 00:59:02,490 [INFO] f_total evaluating: (2179.496150097973, 10.0, 123.80870741389661, 1100.0, 1100.0, 200.0, 2.223287384863904, 170.0, 20.0, 0.05, 0.20880584021423193, 0.4973226463844403, 0.1, 1.1, 0.9)
+2026-11-08 00:59:02,490 [INFO] [31msend_instruction is being called for input tensor([[2.1795e+03, 1.0000e+01, 1.2381e+02, 1.1000e+03, 1.1000e+03, 2.0000e+02,
+         2.2233e+00, 1.7000e+02, 2.0000e+01, 5.0000e-02, 2.0881e-01, 4.9732e-01,
+         1.0000e-01, 1.1000e+00, 9.0000e-01]], dtype=torch.float64)[0m
+2026-11-08 00:59:02,490 [INFO] optimization_itr_9: evaluating input [2179.496150097973, 10.0, 123.80870741389661, 1100.0, 1100.0, 200.0, 2.223287384863904, 170.0, 20.0, 0.05, 0.20880584021423193, 0.4973226463844403, 0.1, 1.1, 0.9]
+2026-11-08 00:59:04,452 [INFO] Running program for tuesday
+2026-11-08 01:40:09,964 [INFO] Running program for wednesday
+2026-11-08 02:21:58,184 [INFO] Running program for thursday
+2026-11-08 03:07:19,020 [INFO] optimization_itr_9: weekly_ES=-1.844471, pooled_tt_ES=-48.156668, ODT_err=-92.526016, eval_time_sec=7696.53
+2026-11-08 03:07:19,023 [INFO] f_total result: -1.844471 (weekly_ES=-1.844471, pooled_tt_ES=-48.156668, ODT_err=-92.526016)
+2026-11-08 03:07:19,036 [INFO] Convergence | trial=39, stage=Bayesian optimization, objective=-1.844471, energy_score=1.844471, best_objective=-1.868069, best_energy_score=1.868069, improvement=0.023598, no_improve_count=4
+2026-11-08 03:07:19,083 [INFO] Saved live AxClient checkpoint to /tmp/rituns/59076623/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
+2026-11-08 03:07:19,223 [INFO] Synced completed calibration trial to /dfs6b/pub/rituns/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj
+2026-11-08 03:07:23,354 [INFO] Bayesian optimization trial 40/80: {'op_max_wait_time': 2112.906485998933, 'op_detour_time_factor': 10.0, 'const_PUDO_duration': 87.05774335740811, 'decline_wait_time_bound_upper': 1006.1802945052377, 'diffusion_wait_time_bound_lower': 1100.0, 'max_cancel_decision_time': 200.0, 'random_term_variance': 0.5, 'decision_threshold': 170.0, 'no_show_wait_time': 20.0, 'CV_group_1_peak': 0.7, 'CV_group_1_offpeak': 0.23770832120685034, 'CV_group_2_peak': 0.2340030167715794, 'CV_group_2_offpeak': 0.1, 'CV_group_3_peak': 1.1, 'CV_group_3_offpeak': 0.9}
+2026-11-08 03:07:23,354 [INFO] f_total evaluating: (2112.906485998933, 10.0, 87.05774335740811, 1006.1802945052377, 1100.0, 200.0, 0.5, 170.0, 20.0, 0.7, 0.23770832120685034, 0.2340030167715794, 0.1, 1.1, 0.9)
+2026-11-08 03:07:23,354 [INFO] [31msend_instruction is being called for input tensor([[2.1129e+03, 1.0000e+01, 8.7058e+01, 1.0062e+03, 1.1000e+03, 2.0000e+02,
+         5.0000e-01, 1.7000e+02, 2.0000e+01, 7.0000e-01, 2.3771e-01, 2.3400e-01,
+         1.0000e-01, 1.1000e+00, 9.0000e-01]], dtype=torch.float64)[0m
+2026-11-08 03:07:23,354 [INFO] optimization_itr_10: evaluating input [2112.906485998933, 10.0, 87.05774335740811, 1006.1802945052377, 1100.0, 200.0, 0.5, 170.0, 20.0, 0.7, 0.23770832120685034, 0.2340030167715794, 0.1, 1.1, 0.9]
+2026-11-08 03:07:25,321 [INFO] Running program for tuesday
+2026-11-08 03:55:37,802 [INFO] Running program for wednesday
+2026-11-08 04:44:07,806 [INFO] Running program for thursday
+2026-11-08 05:32:54,258 [INFO] optimization_itr_10: weekly_ES=-1.893254, pooled_tt_ES=-48.472559, ODT_err=-84.651960, eval_time_sec=8730.90
+2026-11-08 05:32:54,262 [INFO] f_total result: -1.893254 (weekly_ES=-1.893254, pooled_tt_ES=-48.472559, ODT_err=-84.651960)
+2026-11-08 05:32:54,278 [INFO] Convergence | trial=40, stage=Bayesian optimization, objective=-1.893254, energy_score=1.893254, best_objective=-1.868069, best_energy_score=1.868069, improvement=-0.025184, no_improve_count=5
+2026-11-08 05:32:54,330 [INFO] Saved live AxClient checkpoint to /tmp/rituns/59076623/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
+2026-11-08 05:32:54,621 [INFO] Synced completed calibration trial to /dfs6b/pub/rituns/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj
+2026-11-08 05:33:01,497 [INFO] Bayesian optimization trial 41/80: {'op_max_wait_time': 2153.650694068768, 'op_detour_time_factor': 10.0, 'const_PUDO_duration': 121.11253458585226, 'decline_wait_time_bound_upper': 1100.0, 'diffusion_wait_time_bound_lower': 1100.0, 'max_cancel_decision_time': 200.0, 'random_term_variance': 0.5, 'decision_threshold': 170.0, 'no_show_wait_time': 116.91710360113026, 'CV_group_1_peak': 0.05, 'CV_group_1_offpeak': 0.15988001841946814, 'CV_group_2_peak': 0.44194518188079474, 'CV_group_2_offpeak': 0.1, 'CV_group_3_peak': 0.3, 'CV_group_3_offpeak': 0.9}
+2026-11-08 05:33:01,497 [INFO] f_total evaluating: (2153.650694068768, 10.0, 121.11253458585226, 1100.0, 1100.0, 200.0, 0.5, 170.0, 116.91710360113026, 0.05, 0.15988001841946814, 0.44194518188079474, 0.1, 0.3, 0.9)
+2026-11-08 05:33:01,498 [INFO] [31msend_instruction is being called for input tensor([[2.1537e+03, 1.0000e+01, 1.2111e+02, 1.1000e+03, 1.1000e+03, 2.0000e+02,
+         5.0000e-01, 1.7000e+02, 1.1692e+02, 5.0000e-02, 1.5988e-01, 4.4195e-01,
+         1.0000e-01, 3.0000e-01, 9.0000e-01]], dtype=torch.float64)[0m
+2026-11-08 05:33:01,498 [INFO] optimization_itr_11: evaluating input [2153.650694068768, 10.0, 121.11253458585226, 1100.0, 1100.0, 200.0, 0.5, 170.0, 116.91710360113026, 0.05, 0.15988001841946814, 0.44194518188079474, 0.1, 0.3, 0.9]
+2026-11-08 05:33:03,502 [INFO] Running program for tuesday
+2026-11-08 06:21:32,431 [INFO] Running program for wednesday
+2026-11-08 07:08:31,916 [INFO] Running program for thursday
+2026-11-08 07:55:01,485 [INFO] optimization_itr_11: weekly_ES=-1.915546, pooled_tt_ES=-50.031950, ODT_err=-85.767687, eval_time_sec=8519.99
+2026-11-08 07:55:01,490 [INFO] f_total result: -1.915546 (weekly_ES=-1.915546, pooled_tt_ES=-50.031950, ODT_err=-85.767687)
+2026-11-08 07:55:01,506 [INFO] Convergence | trial=41, stage=Bayesian optimization, objective=-1.915546, energy_score=1.915546, best_objective=-1.868069, best_energy_score=1.868069, improvement=-0.047476, no_improve_count=6
+2026-11-08 07:55:01,562 [INFO] Saved live AxClient checkpoint to /tmp/rituns/59076623/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
+2026-11-08 07:57:13,250 [INFO] Synced completed calibration trial to /dfs6b/pub/rituns/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj
+2026-11-08 07:57:18,528 [INFO] Bayesian optimization trial 42/80: {'op_max_wait_time': 2161.545985391085, 'op_detour_time_factor': 10.0, 'const_PUDO_duration': 160.53593396466073, 'decline_wait_time_bound_upper': 1100.0, 'diffusion_wait_time_bound_lower': 1100.0, 'max_cancel_decision_time': 200.0, 'random_term_variance': 0.5, 'decision_threshold': 170.0, 'no_show_wait_time': 20.0, 'CV_group_1_peak': 0.05, 'CV_group_1_offpeak': 0.273784491504904, 'CV_group_2_peak': 0.5772217987289937, 'CV_group_2_offpeak': 0.1, 'CV_group_3_peak': 0.817848268425565, 'CV_group_3_offpeak': 0.9}
+2026-11-08 07:57:18,528 [INFO] f_total evaluating: (2161.545985391085, 10.0, 160.53593396466073, 1100.0, 1100.0, 200.0, 0.5, 170.0, 20.0, 0.05, 0.273784491504904, 0.5772217987289937, 0.1, 0.817848268425565, 0.9)
+2026-11-08 07:57:18,529 [INFO] [31msend_instruction is being called for input tensor([[2.1615e+03, 1.0000e+01, 1.6054e+02, 1.1000e+03, 1.1000e+03, 2.0000e+02,
+         5.0000e-01, 1.7000e+02, 2.0000e+01, 5.0000e-02, 2.7378e-01, 5.7722e-01,
+         1.0000e-01, 8.1785e-01, 9.0000e-01]], dtype=torch.float64)[0m
+2026-11-08 07:57:18,529 [INFO] optimization_itr_12: evaluating input [2161.545985391085, 10.0, 160.53593396466073, 1100.0, 1100.0, 200.0, 0.5, 170.0, 20.0, 0.05, 0.273784491504904, 0.5772217987289937, 0.1, 0.817848268425565, 0.9]
+2026-11-08 07:57:20,491 [INFO] Running program for tuesday
+2026-11-08 08:43:18,471 [INFO] Running program for wednesday
+2026-11-08 09:29:36,242 [INFO] Running program for thursday
+2026-11-08 10:15:23,235 [INFO] optimization_itr_12: weekly_ES=-1.938468, pooled_tt_ES=-45.084628, ODT_err=-88.629800, eval_time_sec=8284.71
+2026-11-08 10:15:23,239 [INFO] f_total result: -1.938468 (weekly_ES=-1.938468, pooled_tt_ES=-45.084628, ODT_err=-88.629800)
+2026-11-08 10:15:23,255 [INFO] Convergence | trial=42, stage=Bayesian optimization, objective=-1.938468, energy_score=1.938468, best_objective=-1.868069, best_energy_score=1.868069, improvement=-0.070398, no_improve_count=7
+2026-11-08 10:15:23,315 [INFO] Saved live AxClient checkpoint to /tmp/rituns/59076623/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
+2026-11-08 10:15:23,466 [INFO] Synced completed calibration trial to /dfs6b/pub/rituns/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj
+2026-11-08 10:15:30,664 [INFO] Bayesian optimization trial 43/80: {'op_max_wait_time': 2204.841173661529, 'op_detour_time_factor': 10.0, 'const_PUDO_duration': 131.4430693292874, 'decline_wait_time_bound_upper': 1100.0, 'diffusion_wait_time_bound_lower': 1100.0, 'max_cancel_decision_time': 200.0, 'random_term_variance': 1.9845945543706387, 'decision_threshold': 30.0, 'no_show_wait_time': 51.914147803671426, 'CV_group_1_peak': 0.7, 'CV_group_1_offpeak': 0.21110376188818386, 'CV_group_2_peak': 0.36853663368835116, 'CV_group_2_offpeak': 0.1, 'CV_group_3_peak': 1.1, 'CV_group_3_offpeak': 0.9}
+2026-11-08 10:15:30,665 [INFO] f_total evaluating: (2204.841173661529, 10.0, 131.4430693292874, 1100.0, 1100.0, 200.0, 1.9845945543706387, 30.0, 51.914147803671426, 0.7, 0.21110376188818386, 0.36853663368835116, 0.1, 1.1, 0.9)
+2026-11-08 10:15:30,665 [INFO] [31msend_instruction is being called for input tensor([[2.2048e+03, 1.0000e+01, 1.3144e+02, 1.1000e+03, 1.1000e+03, 2.0000e+02,
+         1.9846e+00, 3.0000e+01, 5.1914e+01, 7.0000e-01, 2.1110e-01, 3.6854e-01,
+         1.0000e-01, 1.1000e+00, 9.0000e-01]], dtype=torch.float64)[0m
+2026-11-08 10:15:30,665 [INFO] optimization_itr_13: evaluating input [2204.841173661529, 10.0, 131.4430693292874, 1100.0, 1100.0, 200.0, 1.9845945543706387, 30.0, 51.914147803671426, 0.7, 0.21110376188818386, 0.36853663368835116, 0.1, 1.1, 0.9]
+2026-11-08 10:15:32,662 [INFO] Running program for tuesday
+2026-11-08 11:00:41,020 [INFO] Running program for wednesday
+2026-11-08 11:48:11,611 [INFO] Running program for thursday
+2026-11-08 12:35:43,545 [INFO] optimization_itr_13: weekly_ES=-1.845309, pooled_tt_ES=-50.032630, ODT_err=-90.352269, eval_time_sec=8412.88
+2026-11-08 12:35:43,549 [INFO] f_total result: -1.845309 (weekly_ES=-1.845309, pooled_tt_ES=-50.032630, ODT_err=-90.352269)
+2026-11-08 12:35:43,565 [INFO] Convergence | trial=43, stage=Bayesian optimization, objective=-1.845309, energy_score=1.845309, best_objective=-1.868069, best_energy_score=1.868069, improvement=0.022761, no_improve_count=8
+2026-11-08 12:35:43,625 [INFO] Saved live AxClient checkpoint to /tmp/rituns/59076623/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
+2026-11-08 12:38:02,130 [INFO] Synced completed calibration trial to /dfs6b/pub/rituns/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj
+2026-11-08 12:39:35,690 [INFO] Bayesian optimization trial 44/80: {'op_max_wait_time': 2236.9036386296157, 'op_detour_time_factor': 10.0, 'const_PUDO_duration': 147.63455182348326, 'decline_wait_time_bound_upper': 1029.6270379964214, 'diffusion_wait_time_bound_lower': 1100.0, 'max_cancel_decision_time': 200.0, 'random_term_variance': 2.499805462759675, 'decision_threshold': 170.0, 'no_show_wait_time': 180.0, 'CV_group_1_peak': 0.6985136601599289, 'CV_group_1_offpeak': 0.21269324109233662, 'CV_group_2_peak': 0.39252057288002523, 'CV_group_2_offpeak': 0.1, 'CV_group_3_peak': 1.1, 'CV_group_3_offpeak': 0.9}
+2026-11-08 12:39:35,690 [INFO] f_total evaluating: (2236.9036386296157, 10.0, 147.63455182348326, 1029.6270379964214, 1100.0, 200.0, 2.499805462759675, 170.0, 180.0, 0.6985136601599289, 0.21269324109233662, 0.39252057288002523, 0.1, 1.1, 0.9)
+2026-11-08 12:39:35,691 [INFO] [31msend_instruction is being called for input tensor([[2.2369e+03, 1.0000e+01, 1.4763e+02, 1.0296e+03, 1.1000e+03, 2.0000e+02,
+         2.4998e+00, 1.7000e+02, 1.8000e+02, 6.9851e-01, 2.1269e-01, 3.9252e-01,
+         1.0000e-01, 1.1000e+00, 9.0000e-01]], dtype=torch.float64)[0m
+2026-11-08 12:39:35,691 [INFO] optimization_itr_14: evaluating input [2236.9036386296157, 10.0, 147.63455182348326, 1029.6270379964214, 1100.0, 200.0, 2.499805462759675, 170.0, 180.0, 0.6985136601599289, 0.21269324109233662, 0.39252057288002523, 0.1, 1.1, 0.9]
+2026-11-08 12:39:37,699 [INFO] Running program for tuesday
+2026-11-08 13:29:15,727 [INFO] Running program for wednesday
+2026-11-08 14:19:52,089 [INFO] Running program for thursday
+2026-11-08 15:09:46,123 [INFO] optimization_itr_14: weekly_ES=-2.000565, pooled_tt_ES=-44.599000, ODT_err=-91.980471, eval_time_sec=9010.43
+2026-11-08 15:09:46,127 [INFO] f_total result: -2.000565 (weekly_ES=-2.000565, pooled_tt_ES=-44.599000, ODT_err=-91.980471)
+2026-11-08 15:09:46,144 [INFO] Convergence | trial=44, stage=Bayesian optimization, objective=-2.000565, energy_score=2.000565, best_objective=-1.868069, best_energy_score=1.868069, improvement=-0.132495, no_improve_count=9
+2026-11-08 15:09:46,201 [INFO] Saved live AxClient checkpoint to /tmp/rituns/59076623/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
+2026-11-08 15:09:51,268 [INFO] Synced completed calibration trial to /dfs6b/pub/rituns/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj
+2026-11-08 15:10:00,049 [INFO] Bayesian optimization trial 45/80: {'op_max_wait_time': 2031.6871069753463, 'op_detour_time_factor': 10.0, 'const_PUDO_duration': 30.0, 'decline_wait_time_bound_upper': 1100.0, 'diffusion_wait_time_bound_lower': 1042.6730743492997, 'max_cancel_decision_time': 200.0, 'random_term_variance': 0.5, 'decision_threshold': 79.44768649993627, 'no_show_wait_time': 20.0, 'CV_group_1_peak': 0.6091759207649186, 'CV_group_1_offpeak': 0.24841830666245376, 'CV_group_2_peak': 0.4462119097134277, 'CV_group_2_offpeak': 0.1, 'CV_group_3_peak': 0.6172455411391903, 'CV_group_3_offpeak': 0.2}
+2026-11-08 15:10:00,050 [INFO] f_total evaluating: (2031.6871069753463, 10.0, 30.0, 1100.0, 1042.6730743492997, 200.0, 0.5, 79.44768649993627, 20.0, 0.6091759207649186, 0.24841830666245376, 0.4462119097134277, 0.1, 0.6172455411391903, 0.2)
+2026-11-08 15:10:00,050 [INFO] [31msend_instruction is being called for input tensor([[2.0317e+03, 1.0000e+01, 3.0000e+01, 1.1000e+03, 1.0427e+03, 2.0000e+02,
+         5.0000e-01, 7.9448e+01, 2.0000e+01, 6.0918e-01, 2.4842e-01, 4.4621e-01,
+         1.0000e-01, 6.1725e-01, 2.0000e-01]], dtype=torch.float64)[0m
+2026-11-08 15:10:00,051 [INFO] optimization_itr_15: evaluating input [2031.6871069753463, 10.0, 30.0, 1100.0, 1042.6730743492997, 200.0, 0.5, 79.44768649993627, 20.0, 0.6091759207649186, 0.24841830666245376, 0.4462119097134277, 0.1, 0.6172455411391903, 0.2]
+2026-11-08 15:10:02,055 [INFO] Running program for tuesday
+2026-11-08 15:56:00,332 [INFO] Running program for wednesday
+2026-11-08 16:41:06,151 [INFO] Running program for thursday
+2026-11-08 17:22:23,825 [INFO] optimization_itr_15: weekly_ES=-1.955296, pooled_tt_ES=-64.316279, ODT_err=-96.243694, eval_time_sec=7943.78
+2026-11-08 17:22:23,829 [INFO] f_total result: -1.955296 (weekly_ES=-1.955296, pooled_tt_ES=-64.316279, ODT_err=-96.243694)
+2026-11-08 17:22:23,843 [INFO] Convergence | trial=45, stage=Bayesian optimization, objective=-1.955296, energy_score=1.955296, best_objective=-1.868069, best_energy_score=1.868069, improvement=-0.087227, no_improve_count=10
+2026-11-08 17:22:23,899 [INFO] Saved live AxClient checkpoint to /tmp/rituns/59076623/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
+2026-11-08 17:27:55,758 [INFO] Synced completed calibration trial to /dfs6b/pub/rituns/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj
+2026-11-08 17:28:00,430 [INFO] Bayesian optimization trial 46/80: {'op_max_wait_time': 2815.762055973557, 'op_detour_time_factor': 12.253515886681544, 'const_PUDO_duration': 279.057069680958, 'decline_wait_time_bound_upper': 1100.0, 'diffusion_wait_time_bound_lower': 626.7260196500239, 'max_cancel_decision_time': 30.0, 'random_term_variance': 0.5, 'decision_threshold': 30.0, 'no_show_wait_time': 20.0, 'CV_group_1_peak': 0.7, 'CV_group_1_offpeak': 0.09242440291789086, 'CV_group_2_peak': 0.29753363826186136, 'CV_group_2_offpeak': 0.1, 'CV_group_3_peak': 1.1, 'CV_group_3_offpeak': 0.9}
+2026-11-08 17:28:00,430 [INFO] f_total evaluating: (2815.762055973557, 12.253515886681544, 279.057069680958, 1100.0, 626.7260196500239, 30.0, 0.5, 30.0, 20.0, 0.7, 0.09242440291789086, 0.29753363826186136, 0.1, 1.1, 0.9)
+2026-11-08 17:28:00,431 [INFO] [31msend_instruction is being called for input tensor([[2.8158e+03, 1.2254e+01, 2.7906e+02, 1.1000e+03, 6.2673e+02, 3.0000e+01,
+         5.0000e-01, 3.0000e+01, 2.0000e+01, 7.0000e-01, 9.2424e-02, 2.9753e-01,
+         1.0000e-01, 1.1000e+00, 9.0000e-01]], dtype=torch.float64)[0m
+2026-11-08 17:28:00,431 [INFO] optimization_itr_16: evaluating input [2815.762055973557, 12.253515886681544, 279.057069680958, 1100.0, 626.7260196500239, 30.0, 0.5, 30.0, 20.0, 0.7, 0.09242440291789086, 0.29753363826186136, 0.1, 1.1, 0.9]
+2026-11-08 17:28:02,406 [INFO] Running program for tuesday
+2026-11-08 18:15:22,216 [INFO] Running program for wednesday
+2026-11-08 18:57:19,465 [INFO] Running program for thursday
+2026-11-08 19:36:33,491 [INFO] optimization_itr_16: weekly_ES=-3.051067, pooled_tt_ES=-42.920319, ODT_err=-86.724717, eval_time_sec=7713.06
+2026-11-08 19:36:33,494 [INFO] f_total result: -3.051067 (weekly_ES=-3.051067, pooled_tt_ES=-42.920319, ODT_err=-86.724717)
+2026-11-08 19:36:33,508 [INFO] Convergence | trial=46, stage=Bayesian optimization, objective=-3.051067, energy_score=3.051067, best_objective=-1.868069, best_energy_score=1.868069, improvement=-1.182998, no_improve_count=11
+2026-11-08 19:36:33,563 [INFO] Saved live AxClient checkpoint to /tmp/rituns/59076623/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
+2026-11-08 19:36:59,099 [INFO] Synced completed calibration trial to /dfs6b/pub/rituns/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj
+2026-11-08 19:43:09,969 [INFO] Bayesian optimization trial 47/80: {'op_max_wait_time': 2091.5840090711977, 'op_detour_time_factor': 10.0, 'const_PUDO_duration': 48.47768210509138, 'decline_wait_time_bound_upper': 1100.0, 'diffusion_wait_time_bound_lower': 972.3215417738031, 'max_cancel_decision_time': 200.0, 'random_term_variance': 0.5, 'decision_threshold': 30.0, 'no_show_wait_time': 20.0, 'CV_group_1_peak': 0.20936375747997774, 'CV_group_1_offpeak': 0.24404874816260164, 'CV_group_2_peak': 0.32037868746115766, 'CV_group_2_offpeak': 0.1, 'CV_group_3_peak': 0.79343439301536, 'CV_group_3_offpeak': 0.9}
+2026-11-08 19:43:09,969 [INFO] f_total evaluating: (2091.5840090711977, 10.0, 48.47768210509138, 1100.0, 972.3215417738031, 200.0, 0.5, 30.0, 20.0, 0.20936375747997774, 0.24404874816260164, 0.32037868746115766, 0.1, 0.79343439301536, 0.9)
+2026-11-08 19:43:09,969 [INFO] [31msend_instruction is being called for input tensor([[2.0916e+03, 1.0000e+01, 4.8478e+01, 1.1000e+03, 9.7232e+02, 2.0000e+02,
+         5.0000e-01, 3.0000e+01, 2.0000e+01, 2.0936e-01, 2.4405e-01, 3.2038e-01,
+         1.0000e-01, 7.9343e-01, 9.0000e-01]], dtype=torch.float64)[0m
+2026-11-08 19:43:09,970 [INFO] optimization_itr_17: evaluating input [2091.5840090711977, 10.0, 48.47768210509138, 1100.0, 972.3215417738031, 200.0, 0.5, 30.0, 20.0, 0.20936375747997774, 0.24404874816260164, 0.32037868746115766, 0.1, 0.79343439301536, 0.9]
+2026-11-08 19:43:11,918 [INFO] Running program for tuesday
+2026-11-08 20:21:55,468 [INFO] Running program for wednesday
+2026-11-08 21:03:37,149 [INFO] Running program for thursday
+2026-11-08 21:44:57,706 [INFO] optimization_itr_17: weekly_ES=-1.856892, pooled_tt_ES=-60.087213, ODT_err=-83.456809, eval_time_sec=7307.74
+2026-11-08 21:44:57,710 [INFO] f_total result: -1.856892 (weekly_ES=-1.856892, pooled_tt_ES=-60.087213, ODT_err=-83.456809)
+2026-11-08 21:44:57,725 [INFO] Convergence | trial=47, stage=Bayesian optimization, objective=-1.856892, energy_score=1.856892, best_objective=-1.868069, best_energy_score=1.868069, improvement=0.011178, no_improve_count=12
+2026-11-08 21:44:57,783 [INFO] Saved live AxClient checkpoint to /tmp/rituns/59076623/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
+2026-11-08 21:48:35,149 [INFO] Synced completed calibration trial to /dfs6b/pub/rituns/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj
+2026-11-08 21:48:41,185 [INFO] Bayesian optimization trial 48/80: {'op_max_wait_time': 2155.8055558841484, 'op_detour_time_factor': 23.756391559888222, 'const_PUDO_duration': 76.67895111718099, 'decline_wait_time_bound_upper': 1100.0, 'diffusion_wait_time_bound_lower': 1100.0, 'max_cancel_decision_time': 183.83157897158185, 'random_term_variance': 0.5, 'decision_threshold': 170.0, 'no_show_wait_time': 20.0, 'CV_group_1_peak': 0.7, 'CV_group_1_offpeak': 0.22083925597044485, 'CV_group_2_peak': 0.40879923657668804, 'CV_group_2_offpeak': 0.1, 'CV_group_3_peak': 0.9966928736697782, 'CV_group_3_offpeak': 0.9}
+2026-11-08 21:48:41,185 [INFO] f_total evaluating: (2155.8055558841484, 23.756391559888222, 76.67895111718099, 1100.0, 1100.0, 183.83157897158185, 0.5, 170.0, 20.0, 0.7, 0.22083925597044485, 0.40879923657668804, 0.1, 0.9966928736697782, 0.9)
+2026-11-08 21:48:41,185 [INFO] [31msend_instruction is being called for input tensor([[2.1558e+03, 2.3756e+01, 7.6679e+01, 1.1000e+03, 1.1000e+03, 1.8383e+02,
+         5.0000e-01, 1.7000e+02, 2.0000e+01, 7.0000e-01, 2.2084e-01, 4.0880e-01,
+         1.0000e-01, 9.9669e-01, 9.0000e-01]], dtype=torch.float64)[0m
+2026-11-08 21:48:41,185 [INFO] optimization_itr_18: evaluating input [2155.8055558841484, 23.756391559888222, 76.67895111718099, 1100.0, 1100.0, 183.83157897158185, 0.5, 170.0, 20.0, 0.7, 0.22083925597044485, 0.40879923657668804, 0.1, 0.9966928736697782, 0.9]
+2026-11-08 21:48:43,164 [INFO] Running program for tuesday
+2026-11-08 22:33:06,108 [INFO] Running program for wednesday
+2026-11-08 23:18:17,789 [INFO] Running program for thursday
+2026-11-09 00:04:51,064 [INFO] optimization_itr_18: weekly_ES=-1.983027, pooled_tt_ES=-109.297539, ODT_err=-92.436402, eval_time_sec=8169.88
+2026-11-09 00:04:51,068 [INFO] f_total result: -1.983027 (weekly_ES=-1.983027, pooled_tt_ES=-109.297539, ODT_err=-92.436402)
+2026-11-09 00:04:51,082 [INFO] Convergence | trial=48, stage=Bayesian optimization, objective=-1.983027, energy_score=1.983027, best_objective=-1.868069, best_energy_score=1.868069, improvement=-0.114957, no_improve_count=13
+2026-11-09 00:04:51,140 [INFO] Saved live AxClient checkpoint to /tmp/rituns/59076623/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
+2026-11-09 00:06:21,985 [INFO] Synced completed calibration trial to /dfs6b/pub/rituns/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj
+2026-11-09 00:06:27,220 [INFO] Bayesian optimization trial 49/80: {'op_max_wait_time': 2142.0051786151002, 'op_detour_time_factor': 10.0, 'const_PUDO_duration': 106.41676646812874, 'decline_wait_time_bound_upper': 1100.0, 'diffusion_wait_time_bound_lower': 966.3932308685175, 'max_cancel_decision_time': 200.0, 'random_term_variance': 1.150295968259071, 'decision_threshold': 170.0, 'no_show_wait_time': 20.0, 'CV_group_1_peak': 0.4798587471588105, 'CV_group_1_offpeak': 0.2289064214291704, 'CV_group_2_peak': 0.34364738286879215, 'CV_group_2_offpeak': 0.1, 'CV_group_3_peak': 0.3, 'CV_group_3_offpeak': 0.9}
+2026-11-09 00:06:27,221 [INFO] f_total evaluating: (2142.0051786151002, 10.0, 106.41676646812874, 1100.0, 966.3932308685175, 200.0, 1.150295968259071, 170.0, 20.0, 0.4798587471588105, 0.2289064214291704, 0.34364738286879215, 0.1, 0.3, 0.9)
+2026-11-09 00:06:27,221 [INFO] [31msend_instruction is being called for input tensor([[2.1420e+03, 1.0000e+01, 1.0642e+02, 1.1000e+03, 9.6639e+02, 2.0000e+02,
+         1.1503e+00, 1.7000e+02, 2.0000e+01, 4.7986e-01, 2.2891e-01, 3.4365e-01,
+         1.0000e-01, 3.0000e-01, 9.0000e-01]], dtype=torch.float64)[0m
+2026-11-09 00:06:27,221 [INFO] optimization_itr_19: evaluating input [2142.0051786151002, 10.0, 106.41676646812874, 1100.0, 966.3932308685175, 200.0, 1.150295968259071, 170.0, 20.0, 0.4798587471588105, 0.2289064214291704, 0.34364738286879215, 0.1, 0.3, 0.9]
+2026-11-09 00:06:29,190 [INFO] Running program for tuesday
+2026-11-09 00:50:17,148 [INFO] Running program for wednesday
+2026-11-09 01:31:30,319 [INFO] Running program for thursday
+2026-11-09 02:09:12,651 [INFO] optimization_itr_19: weekly_ES=-2.066572, pooled_tt_ES=-49.089927, ODT_err=-85.648416, eval_time_sec=7365.43
+2026-11-09 02:09:12,655 [INFO] f_total result: -2.066572 (weekly_ES=-2.066572, pooled_tt_ES=-49.089927, ODT_err=-85.648416)
+2026-11-09 02:09:12,668 [INFO] Convergence | trial=49, stage=Bayesian optimization, objective=-2.066572, energy_score=2.066572, best_objective=-1.868069, best_energy_score=1.868069, improvement=-0.198502, no_improve_count=14
+2026-11-09 02:09:12,726 [INFO] Saved live AxClient checkpoint to /tmp/rituns/59076623/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
+2026-11-09 02:09:13,230 [INFO] Synced completed calibration trial to /dfs6b/pub/rituns/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj
+2026-11-09 02:09:17,743 [INFO] Bayesian optimization trial 50/80: {'op_max_wait_time': 2141.5886731782493, 'op_detour_time_factor': 10.0, 'const_PUDO_duration': 82.83138617814333, 'decline_wait_time_bound_upper': 1100.0, 'diffusion_wait_time_bound_lower': 1100.0, 'max_cancel_decision_time': 200.0, 'random_term_variance': 0.8192906573946028, 'decision_threshold': 30.0, 'no_show_wait_time': 180.0, 'CV_group_1_peak': 0.05, 'CV_group_1_offpeak': 0.2539240874077183, 'CV_group_2_peak': 0.7, 'CV_group_2_offpeak': 0.1, 'CV_group_3_peak': 1.1, 'CV_group_3_offpeak': 0.9}
+2026-11-09 02:09:17,743 [INFO] f_total evaluating: (2141.5886731782493, 10.0, 82.83138617814333, 1100.0, 1100.0, 200.0, 0.8192906573946028, 30.0, 180.0, 0.05, 0.2539240874077183, 0.7, 0.1, 1.1, 0.9)
+2026-11-09 02:09:17,744 [INFO] [31msend_instruction is being called for input tensor([[2.1416e+03, 1.0000e+01, 8.2831e+01, 1.1000e+03, 1.1000e+03, 2.0000e+02,
+         8.1929e-01, 3.0000e+01, 1.8000e+02, 5.0000e-02, 2.5392e-01, 7.0000e-01,
+         1.0000e-01, 1.1000e+00, 9.0000e-01]], dtype=torch.float64)[0m
+2026-11-09 02:09:17,744 [INFO] optimization_itr_20: evaluating input [2141.5886731782493, 10.0, 82.83138617814333, 1100.0, 1100.0, 200.0, 0.8192906573946028, 30.0, 180.0, 0.05, 0.2539240874077183, 0.7, 0.1, 1.1, 0.9]
+2026-11-09 02:09:19,678 [INFO] Running program for tuesday
+2026-11-09 02:45:26,267 [INFO] Running program for wednesday
+2026-11-09 03:22:15,300 [INFO] Running program for thursday
+2026-11-09 03:59:15,992 [INFO] optimization_itr_20: weekly_ES=-1.816947, pooled_tt_ES=-52.531453, ODT_err=-79.175184, eval_time_sec=6598.25
+2026-11-09 03:59:15,996 [INFO] f_total result: -1.816947 (weekly_ES=-1.816947, pooled_tt_ES=-52.531453, ODT_err=-79.175184)
+2026-11-09 03:59:16,011 [INFO] Convergence | trial=50, stage=Bayesian optimization, objective=-1.816947, energy_score=1.816947, best_objective=-1.816947, best_energy_score=1.816947, improvement=0.051123, no_improve_count=0
+2026-11-09 03:59:16,075 [INFO] Saved live AxClient checkpoint to /tmp/rituns/59076623/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
+2026-11-09 03:59:29,722 [INFO] Synced completed calibration trial to /dfs6b/pub/rituns/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj
+2026-11-09 03:59:35,410 [INFO] Bayesian optimization trial 51/80: {'op_max_wait_time': 2095.423754723569, 'op_detour_time_factor': 10.0, 'const_PUDO_duration': 92.53529950838522, 'decline_wait_time_bound_upper': 1100.0, 'diffusion_wait_time_bound_lower': 1100.0, 'max_cancel_decision_time': 200.0, 'random_term_variance': 0.9419430462322361, 'decision_threshold': 30.0, 'no_show_wait_time': 180.0, 'CV_group_1_peak': 0.05, 'CV_group_1_offpeak': 0.25396825913326493, 'CV_group_2_peak': 0.05, 'CV_group_2_offpeak': 0.1, 'CV_group_3_peak': 1.1, 'CV_group_3_offpeak': 0.9}
+2026-11-09 03:59:35,410 [INFO] f_total evaluating: (2095.423754723569, 10.0, 92.53529950838522, 1100.0, 1100.0, 200.0, 0.9419430462322361, 30.0, 180.0, 0.05, 0.25396825913326493, 0.05, 0.1, 1.1, 0.9)
+2026-11-09 03:59:35,410 [INFO] [31msend_instruction is being called for input tensor([[2.0954e+03, 1.0000e+01, 9.2535e+01, 1.1000e+03, 1.1000e+03, 2.0000e+02,
+         9.4194e-01, 3.0000e+01, 1.8000e+02, 5.0000e-02, 2.5397e-01, 5.0000e-02,
+         1.0000e-01, 1.1000e+00, 9.0000e-01]], dtype=torch.float64)[0m
+2026-11-09 03:59:35,410 [INFO] optimization_itr_21: evaluating input [2095.423754723569, 10.0, 92.53529950838522, 1100.0, 1100.0, 200.0, 0.9419430462322361, 30.0, 180.0, 0.05, 0.25396825913326493, 0.05, 0.1, 1.1, 0.9]
+2026-11-09 03:59:37,383 [INFO] Running program for tuesday
+2026-11-09 04:40:12,004 [INFO] Running program for wednesday
+2026-11-09 05:27:12,519 [INFO] Running program for thursday
+2026-11-09 06:13:54,595 [INFO] optimization_itr_21: weekly_ES=-1.932480, pooled_tt_ES=-52.103861, ODT_err=-85.646852, eval_time_sec=8059.19
+2026-11-09 06:13:54,600 [INFO] f_total result: -1.932480 (weekly_ES=-1.932480, pooled_tt_ES=-52.103861, ODT_err=-85.646852)
+2026-11-09 06:13:54,617 [INFO] Convergence | trial=51, stage=Bayesian optimization, objective=-1.932480, energy_score=1.932480, best_objective=-1.816947, best_energy_score=1.816947, improvement=-0.115533, no_improve_count=1
+2026-11-09 06:13:54,686 [INFO] Saved live AxClient checkpoint to /tmp/rituns/59076623/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
+2026-11-09 06:13:54,863 [INFO] Synced completed calibration trial to /dfs6b/pub/rituns/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj
+2026-11-09 06:14:02,722 [INFO] Bayesian optimization trial 52/80: {'op_max_wait_time': 2249.4278820441345, 'op_detour_time_factor': 10.608046223595393, 'const_PUDO_duration': 133.21300660561667, 'decline_wait_time_bound_upper': 1100.0, 'diffusion_wait_time_bound_lower': 1099.7449744338176, 'max_cancel_decision_time': 200.0, 'random_term_variance': 1.354756088148577, 'decision_threshold': 30.0, 'no_show_wait_time': 64.26014279965106, 'CV_group_1_peak': 0.05, 'CV_group_1_offpeak': 0.20658955900659584, 'CV_group_2_peak': 0.7, 'CV_group_2_offpeak': 0.1, 'CV_group_3_peak': 1.1, 'CV_group_3_offpeak': 0.2}
+2026-11-09 06:14:02,722 [INFO] f_total evaluating: (2249.4278820441345, 10.608046223595393, 133.21300660561667, 1100.0, 1099.7449744338176, 200.0, 1.354756088148577, 30.0, 64.26014279965106, 0.05, 0.20658955900659584, 0.7, 0.1, 1.1, 0.2)
+2026-11-09 06:14:02,723 [INFO] [31msend_instruction is being called for input tensor([[2.2494e+03, 1.0608e+01, 1.3321e+02, 1.1000e+03, 1.0997e+03, 2.0000e+02,
+         1.3548e+00, 3.0000e+01, 6.4260e+01, 5.0000e-02, 2.0659e-01, 7.0000e-01,
+         1.0000e-01, 1.1000e+00, 2.0000e-01]], dtype=torch.float64)[0m
+2026-11-09 06:14:02,723 [INFO] optimization_itr_22: evaluating input [2249.4278820441345, 10.608046223595393, 133.21300660561667, 1100.0, 1099.7449744338176, 200.0, 1.354756088148577, 30.0, 64.26014279965106, 0.05, 0.20658955900659584, 0.7, 0.1, 1.1, 0.2]
+2026-11-09 06:14:04,723 [INFO] Running program for tuesday
+2026-11-09 07:02:49,960 [INFO] Running program for wednesday
+2026-11-09 07:52:10,664 [INFO] Running program for thursday
+2026-11-09 08:40:17,364 [INFO] optimization_itr_22: weekly_ES=-1.878563, pooled_tt_ES=-52.798617, ODT_err=-89.975052, eval_time_sec=8774.64
+2026-11-09 08:40:17,369 [INFO] f_total result: -1.878563 (weekly_ES=-1.878563, pooled_tt_ES=-52.798617, ODT_err=-89.975052)
+2026-11-09 08:40:17,386 [INFO] Convergence | trial=52, stage=Bayesian optimization, objective=-1.878563, energy_score=1.878563, best_objective=-1.816947, best_energy_score=1.816947, improvement=-0.061617, no_improve_count=2
+2026-11-09 08:40:17,454 [INFO] Saved live AxClient checkpoint to /tmp/rituns/59076623/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
+2026-11-09 08:40:27,444 [INFO] Synced completed calibration trial to /dfs6b/pub/rituns/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj
+2026-11-09 08:40:36,472 [INFO] Bayesian optimization trial 53/80: {'op_max_wait_time': 2611.972425763143, 'op_detour_time_factor': 40.286169870734184, 'const_PUDO_duration': 300.0, 'decline_wait_time_bound_upper': 1100.0, 'diffusion_wait_time_bound_lower': 1100.0, 'max_cancel_decision_time': 200.0, 'random_term_variance': 3.4577854307838503, 'decision_threshold': 30.0, 'no_show_wait_time': 180.0, 'CV_group_1_peak': 0.47276975753861294, 'CV_group_1_offpeak': 0.1119778502956567, 'CV_group_2_peak': 0.7, 'CV_group_2_offpeak': 0.1, 'CV_group_3_peak': 0.3, 'CV_group_3_offpeak': 0.9}
+2026-11-09 08:40:36,472 [INFO] f_total evaluating: (2611.972425763143, 40.286169870734184, 300.0, 1100.0, 1100.0, 200.0, 3.4577854307838503, 30.0, 180.0, 0.47276975753861294, 0.1119778502956567, 0.7, 0.1, 0.3, 0.9)
+2026-11-09 08:40:36,473 [INFO] [31msend_instruction is being called for input tensor([[2.6120e+03, 4.0286e+01, 3.0000e+02, 1.1000e+03, 1.1000e+03, 2.0000e+02,
+         3.4578e+00, 3.0000e+01, 1.8000e+02, 4.7277e-01, 1.1198e-01, 7.0000e-01,
+         1.0000e-01, 3.0000e-01, 9.0000e-01]], dtype=torch.float64)[0m
+2026-11-09 08:40:36,473 [INFO] optimization_itr_23: evaluating input [2611.972425763143, 40.286169870734184, 300.0, 1100.0, 1100.0, 200.0, 3.4577854307838503, 30.0, 180.0, 0.47276975753861294, 0.1119778502956567, 0.7, 0.1, 0.3, 0.9]
+2026-11-09 08:40:38,488 [INFO] Running program for tuesday
+2026-11-09 09:32:09,774 [INFO] Running program for wednesday
+2026-11-09 10:25:34,445 [INFO] Running program for thursday
+2026-11-09 11:18:21,638 [INFO] optimization_itr_23: weekly_ES=-2.186070, pooled_tt_ES=-98.837436, ODT_err=-88.282742, eval_time_sec=9465.17
+2026-11-09 11:18:21,644 [INFO] f_total result: -2.186070 (weekly_ES=-2.186070, pooled_tt_ES=-98.837436, ODT_err=-88.282742)
+2026-11-09 11:18:21,662 [INFO] Convergence | trial=53, stage=Bayesian optimization, objective=-2.186070, energy_score=2.186070, best_objective=-1.816947, best_energy_score=1.816947, improvement=-0.369123, no_improve_count=3
+2026-11-09 11:18:21,736 [INFO] Saved live AxClient checkpoint to /tmp/rituns/59076623/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
+2026-11-09 11:18:58,428 [INFO] Synced completed calibration trial to /dfs6b/pub/rituns/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj
+2026-11-09 11:19:03,394 [INFO] Bayesian optimization trial 54/80: {'op_max_wait_time': 2746.3301300948774, 'op_detour_time_factor': 15.66944269141247, 'const_PUDO_duration': 30.0, 'decline_wait_time_bound_upper': 452.46943670513355, 'diffusion_wait_time_bound_lower': 739.7874096206199, 'max_cancel_decision_time': 30.0, 'random_term_variance': 0.5, 'decision_threshold': 30.0, 'no_show_wait_time': 180.0, 'CV_group_1_peak': 0.05, 'CV_group_1_offpeak': 0.05, 'CV_group_2_peak': 0.7, 'CV_group_2_offpeak': 0.1, 'CV_group_3_peak': 0.3, 'CV_group_3_offpeak': 0.9}
+2026-11-09 11:19:03,394 [INFO] f_total evaluating: (2746.3301300948774, 15.66944269141247, 30.0, 452.46943670513355, 739.7874096206199, 30.0, 0.5, 30.0, 180.0, 0.05, 0.05, 0.7, 0.1, 0.3, 0.9)
+2026-11-09 11:19:03,395 [INFO] [31msend_instruction is being called for input tensor([[2.7463e+03, 1.5669e+01, 3.0000e+01, 4.5247e+02, 7.3979e+02, 3.0000e+01,
+         5.0000e-01, 3.0000e+01, 1.8000e+02, 5.0000e-02, 5.0000e-02, 7.0000e-01,
+         1.0000e-01, 3.0000e-01, 9.0000e-01]], dtype=torch.float64)[0m
+2026-11-09 11:19:03,395 [INFO] optimization_itr_24: evaluating input [2746.3301300948774, 15.66944269141247, 30.0, 452.46943670513355, 739.7874096206199, 30.0, 0.5, 30.0, 180.0, 0.05, 0.05, 0.7, 0.1, 0.3, 0.9]
+2026-11-09 11:19:05,371 [INFO] Running program for tuesday
+2026-11-09 12:09:15,308 [INFO] Running program for wednesday
+2026-11-09 13:01:51,605 [INFO] Running program for thursday
+2026-11-09 13:53:40,814 [INFO] optimization_itr_24: weekly_ES=-2.230866, pooled_tt_ES=-61.908828, ODT_err=-96.433782, eval_time_sec=9277.42
+2026-11-09 13:53:40,819 [INFO] f_total result: -2.230866 (weekly_ES=-2.230866, pooled_tt_ES=-61.908828, ODT_err=-96.433782)
+2026-11-09 13:53:40,838 [INFO] Convergence | trial=54, stage=Bayesian optimization, objective=-2.230866, energy_score=2.230866, best_objective=-1.816947, best_energy_score=1.816947, improvement=-0.413919, no_improve_count=4
+2026-11-09 13:53:40,912 [INFO] Saved live AxClient checkpoint to /tmp/rituns/59076623/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
+2026-11-09 14:00:09,240 [INFO] Synced completed calibration trial to /dfs6b/pub/rituns/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj
+2026-11-09 14:00:17,075 [INFO] Bayesian optimization trial 55/80: {'op_max_wait_time': 2185.6086054111956, 'op_detour_time_factor': 10.0, 'const_PUDO_duration': 70.74150035679585, 'decline_wait_time_bound_upper': 1100.0, 'diffusion_wait_time_bound_lower': 1100.0, 'max_cancel_decision_time': 200.0, 'random_term_variance': 2.7913022246170502, 'decision_threshold': 30.0, 'no_show_wait_time': 20.0, 'CV_group_1_peak': 0.05, 'CV_group_1_offpeak': 0.24339674227233277, 'CV_group_2_peak': 0.7, 'CV_group_2_offpeak': 0.1, 'CV_group_3_peak': 0.399990419152562, 'CV_group_3_offpeak': 0.9}
+2026-11-09 14:00:17,075 [INFO] f_total evaluating: (2185.6086054111956, 10.0, 70.74150035679585, 1100.0, 1100.0, 200.0, 2.7913022246170502, 30.0, 20.0, 0.05, 0.24339674227233277, 0.7, 0.1, 0.399990419152562, 0.9)
+2026-11-09 14:00:17,076 [INFO] [31msend_instruction is being called for input tensor([[2.1856e+03, 1.0000e+01, 7.0742e+01, 1.1000e+03, 1.1000e+03, 2.0000e+02,
+         2.7913e+00, 3.0000e+01, 2.0000e+01, 5.0000e-02, 2.4340e-01, 7.0000e-01,
+         1.0000e-01, 3.9999e-01, 9.0000e-01]], dtype=torch.float64)[0m
+2026-11-09 14:00:17,076 [INFO] optimization_itr_25: evaluating input [2185.6086054111956, 10.0, 70.74150035679585, 1100.0, 1100.0, 200.0, 2.7913022246170502, 30.0, 20.0, 0.05, 0.24339674227233277, 0.7, 0.1, 0.399990419152562, 0.9]
+2026-11-09 14:00:19,115 [INFO] Running program for tuesday
+2026-11-09 14:50:09,583 [INFO] Running program for wednesday
+2026-11-09 15:41:21,899 [INFO] Running program for thursday
+2026-11-09 16:30:54,146 [INFO] optimization_itr_25: weekly_ES=-1.796774, pooled_tt_ES=-56.700913, ODT_err=-90.320060, eval_time_sec=9037.07
+2026-11-09 16:30:54,150 [INFO] f_total result: -1.796774 (weekly_ES=-1.796774, pooled_tt_ES=-56.700913, ODT_err=-90.320060)
+2026-11-09 16:30:54,167 [INFO] Convergence | trial=55, stage=Bayesian optimization, objective=-1.796774, energy_score=1.796774, best_objective=-1.816947, best_energy_score=1.816947, improvement=0.020173, no_improve_count=5
+2026-11-09 16:30:54,241 [INFO] Saved live AxClient checkpoint to /tmp/rituns/59076623/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
+2026-11-09 16:30:54,472 [INFO] Synced completed calibration trial to /dfs6b/pub/rituns/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj
+2026-11-09 16:30:58,830 [INFO] Bayesian optimization trial 56/80: {'op_max_wait_time': 2288.819603170215, 'op_detour_time_factor': 10.0, 'const_PUDO_duration': 79.41000817604808, 'decline_wait_time_bound_upper': 1100.0, 'diffusion_wait_time_bound_lower': 1100.0, 'max_cancel_decision_time': 187.34075866421765, 'random_term_variance': 1.0717711399462384, 'decision_threshold': 30.0, 'no_show_wait_time': 179.99999227390927, 'CV_group_1_peak': 0.7, 'CV_group_1_offpeak': 0.23129212407478475, 'CV_group_2_peak': 0.7, 'CV_group_2_offpeak': 0.1, 'CV_group_3_peak': 0.3, 'CV_group_3_offpeak': 0.9}
+2026-11-09 16:30:58,830 [INFO] f_total evaluating: (2288.819603170215, 10.0, 79.41000817604808, 1100.0, 1100.0, 187.34075866421765, 1.0717711399462384, 30.0, 179.99999227390927, 0.7, 0.23129212407478475, 0.7, 0.1, 0.3, 0.9)
+2026-11-09 16:30:58,830 [INFO] [31msend_instruction is being called for input tensor([[2.2888e+03, 1.0000e+01, 7.9410e+01, 1.1000e+03, 1.1000e+03, 1.8734e+02,
+         1.0718e+00, 3.0000e+01, 1.8000e+02, 7.0000e-01, 2.3129e-01, 7.0000e-01,
+         1.0000e-01, 3.0000e-01, 9.0000e-01]], dtype=torch.float64)[0m
+2026-11-09 16:30:58,830 [INFO] optimization_itr_26: evaluating input [2288.819603170215, 10.0, 79.41000817604808, 1100.0, 1100.0, 187.34075866421765, 1.0717711399462384, 30.0, 179.99999227390927, 0.7, 0.23129212407478475, 0.7, 0.1, 0.3, 0.9]
+2026-11-09 16:31:00,847 [INFO] Running program for tuesday
+2026-11-09 17:20:26,534 [INFO] Running program for wednesday
+2026-11-09 18:09:23,879 [INFO] Running program for thursday
+2026-11-09 18:56:30,914 [INFO] optimization_itr_26: weekly_ES=-1.794233, pooled_tt_ES=-55.171907, ODT_err=-100.186844, eval_time_sec=8732.08
+2026-11-09 18:56:30,918 [INFO] f_total result: -1.794233 (weekly_ES=-1.794233, pooled_tt_ES=-55.171907, ODT_err=-100.186844)
+2026-11-09 18:56:30,934 [INFO] Convergence | trial=56, stage=Bayesian optimization, objective=-1.794233, energy_score=1.794233, best_objective=-1.816947, best_energy_score=1.816947, improvement=0.022714, no_improve_count=6
+2026-11-09 18:56:31,004 [INFO] Saved live AxClient checkpoint to /tmp/rituns/59076623/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
+2026-11-09 18:56:31,272 [INFO] Synced completed calibration trial to /dfs6b/pub/rituns/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj
+2026-11-09 18:56:37,598 [INFO] Bayesian optimization trial 57/80: {'op_max_wait_time': 2173.8078925420014, 'op_detour_time_factor': 11.747351101294361, 'const_PUDO_duration': 117.51348388725415, 'decline_wait_time_bound_upper': 1100.0, 'diffusion_wait_time_bound_lower': 1100.0, 'max_cancel_decision_time': 200.0, 'random_term_variance': 0.8392372214441296, 'decision_threshold': 30.0, 'no_show_wait_time': 20.0, 'CV_group_1_peak': 0.7, 'CV_group_1_offpeak': 0.256767469880164, 'CV_group_2_peak': 0.7, 'CV_group_2_offpeak': 0.1, 'CV_group_3_peak': 0.3, 'CV_group_3_offpeak': 0.9}
+2026-11-09 18:56:37,598 [INFO] f_total evaluating: (2173.8078925420014, 11.747351101294361, 117.51348388725415, 1100.0, 1100.0, 200.0, 0.8392372214441296, 30.0, 20.0, 0.7, 0.256767469880164, 0.7, 0.1, 0.3, 0.9)
+2026-11-09 18:56:37,598 [INFO] [31msend_instruction is being called for input tensor([[2.1738e+03, 1.1747e+01, 1.1751e+02, 1.1000e+03, 1.1000e+03, 2.0000e+02,
+         8.3924e-01, 3.0000e+01, 2.0000e+01, 7.0000e-01, 2.5677e-01, 7.0000e-01,
+         1.0000e-01, 3.0000e-01, 9.0000e-01]], dtype=torch.float64)[0m
+2026-11-09 18:56:37,599 [INFO] optimization_itr_27: evaluating input [2173.8078925420014, 11.747351101294361, 117.51348388725415, 1100.0, 1100.0, 200.0, 0.8392372214441296, 30.0, 20.0, 0.7, 0.256767469880164, 0.7, 0.1, 0.3, 0.9]
+2026-11-09 18:56:39,613 [INFO] Running program for tuesday
+2026-11-09 19:40:29,395 [INFO] Running program for wednesday
+2026-11-09 20:25:03,905 [INFO] Running program for thursday
+2026-11-09 21:05:11,275 [INFO] optimization_itr_27: weekly_ES=-1.868915, pooled_tt_ES=-54.596225, ODT_err=-85.280412, eval_time_sec=7713.68
+2026-11-09 21:05:11,279 [INFO] f_total result: -1.868915 (weekly_ES=-1.868915, pooled_tt_ES=-54.596225, ODT_err=-85.280412)
+2026-11-09 21:05:11,293 [INFO] Convergence | trial=57, stage=Bayesian optimization, objective=-1.868915, energy_score=1.868915, best_objective=-1.816947, best_energy_score=1.816947, improvement=-0.051968, no_improve_count=7
+2026-11-09 21:05:11,360 [INFO] Saved live AxClient checkpoint to /tmp/rituns/59076623/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
+2026-11-09 21:07:38,737 [INFO] Synced completed calibration trial to /dfs6b/pub/rituns/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj
+2026-11-09 21:07:49,905 [INFO] Bayesian optimization trial 58/80: {'op_max_wait_time': 2258.867079691916, 'op_detour_time_factor': 10.17171275193765, 'const_PUDO_duration': 50.85140529185023, 'decline_wait_time_bound_upper': 1100.0, 'diffusion_wait_time_bound_lower': 1060.2287143420579, 'max_cancel_decision_time': 200.0, 'random_term_variance': 1.846498013308541, 'decision_threshold': 30.0, 'no_show_wait_time': 103.96163728008156, 'CV_group_1_peak': 0.05, 'CV_group_1_offpeak': 0.24047945576136476, 'CV_group_2_peak': 0.7, 'CV_group_2_offpeak': 0.1, 'CV_group_3_peak': 0.7860805705594943, 'CV_group_3_offpeak': 0.9}
+2026-11-09 21:07:49,905 [INFO] f_total evaluating: (2258.867079691916, 10.17171275193765, 50.85140529185023, 1100.0, 1060.2287143420579, 200.0, 1.846498013308541, 30.0, 103.96163728008156, 0.05, 0.24047945576136476, 0.7, 0.1, 0.7860805705594943, 0.9)
+2026-11-09 21:07:49,905 [INFO] [31msend_instruction is being called for input tensor([[2.2589e+03, 1.0172e+01, 5.0851e+01, 1.1000e+03, 1.0602e+03, 2.0000e+02,
+         1.8465e+00, 3.0000e+01, 1.0396e+02, 5.0000e-02, 2.4048e-01, 7.0000e-01,
+         1.0000e-01, 7.8608e-01, 9.0000e-01]], dtype=torch.float64)[0m
+2026-11-09 21:07:49,905 [INFO] optimization_itr_28: evaluating input [2258.867079691916, 10.17171275193765, 50.85140529185023, 1100.0, 1060.2287143420579, 200.0, 1.846498013308541, 30.0, 103.96163728008156, 0.05, 0.24047945576136476, 0.7, 0.1, 0.7860805705594943, 0.9]
+2026-11-09 21:07:51,847 [INFO] Running program for tuesday
+2026-11-09 21:47:13,077 [INFO] Running program for wednesday
+2026-11-09 22:33:22,676 [INFO] Running program for thursday
+2026-11-09 23:15:20,426 [INFO] optimization_itr_28: weekly_ES=-1.822010, pooled_tt_ES=-61.661383, ODT_err=-91.471051, eval_time_sec=7650.52
+2026-11-09 23:15:20,430 [INFO] f_total result: -1.822010 (weekly_ES=-1.822010, pooled_tt_ES=-61.661383, ODT_err=-91.471051)
+2026-11-09 23:15:20,444 [INFO] Convergence | trial=58, stage=Bayesian optimization, objective=-1.822010, energy_score=1.822010, best_objective=-1.816947, best_energy_score=1.816947, improvement=-0.005064, no_improve_count=8
+2026-11-09 23:15:20,704 [INFO] Saved live AxClient checkpoint to /tmp/rituns/59076623/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
+2026-11-09 23:28:20,991 [INFO] Synced completed calibration trial to /dfs6b/pub/rituns/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj
+2026-11-09 23:28:25,334 [INFO] Bayesian optimization trial 59/80: {'op_max_wait_time': 2212.0915457272094, 'op_detour_time_factor': 10.0, 'const_PUDO_duration': 30.0, 'decline_wait_time_bound_upper': 1100.0, 'diffusion_wait_time_bound_lower': 1100.0, 'max_cancel_decision_time': 169.34293199749135, 'random_term_variance': 2.7388438811194487, 'decision_threshold': 30.0, 'no_show_wait_time': 180.0, 'CV_group_1_peak': 0.05, 'CV_group_1_offpeak': 0.13832382390305012, 'CV_group_2_peak': 0.7, 'CV_group_2_offpeak': 0.1, 'CV_group_3_peak': 0.8778514717500141, 'CV_group_3_offpeak': 0.9}
+2026-11-09 23:28:25,334 [INFO] f_total evaluating: (2212.0915457272094, 10.0, 30.0, 1100.0, 1100.0, 169.34293199749135, 2.7388438811194487, 30.0, 180.0, 0.05, 0.13832382390305012, 0.7, 0.1, 0.8778514717500141, 0.9)
+2026-11-09 23:28:25,335 [INFO] [31msend_instruction is being called for input tensor([[2.2121e+03, 1.0000e+01, 3.0000e+01, 1.1000e+03, 1.1000e+03, 1.6934e+02,
+         2.7388e+00, 3.0000e+01, 1.8000e+02, 5.0000e-02, 1.3832e-01, 7.0000e-01,
+         1.0000e-01, 8.7785e-01, 9.0000e-01]], dtype=torch.float64)[0m
+2026-11-09 23:28:25,335 [INFO] optimization_itr_29: evaluating input [2212.0915457272094, 10.0, 30.0, 1100.0, 1100.0, 169.34293199749135, 2.7388438811194487, 30.0, 180.0, 0.05, 0.13832382390305012, 0.7, 0.1, 0.8778514717500141, 0.9]
+2026-11-09 23:28:27,271 [INFO] Running program for tuesday
+2026-11-10 00:06:37,672 [INFO] Running program for wednesday
+2026-11-10 00:44:46,892 [INFO] Running program for thursday
+2026-11-10 01:21:19,315 [INFO] optimization_itr_29: weekly_ES=-1.864004, pooled_tt_ES=-67.067151, ODT_err=-89.313127, eval_time_sec=6773.98
+2026-11-10 01:21:19,319 [INFO] f_total result: -1.864004 (weekly_ES=-1.864004, pooled_tt_ES=-67.067151, ODT_err=-89.313127)
+2026-11-10 01:21:19,333 [INFO] Convergence | trial=59, stage=Bayesian optimization, objective=-1.864004, energy_score=1.864004, best_objective=-1.816947, best_energy_score=1.816947, improvement=-0.047057, no_improve_count=9
+2026-11-10 01:21:19,403 [INFO] Saved live AxClient checkpoint to /tmp/rituns/59076623/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
+2026-11-10 01:24:39,720 [INFO] Synced completed calibration trial to /dfs6b/pub/rituns/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj
+2026-11-10 01:24:45,168 [INFO] Bayesian optimization trial 60/80: {'op_max_wait_time': 2215.3320464240355, 'op_detour_time_factor': 10.0, 'const_PUDO_duration': 50.224961674512144, 'decline_wait_time_bound_upper': 1100.0, 'diffusion_wait_time_bound_lower': 1100.0, 'max_cancel_decision_time': 200.0, 'random_term_variance': 1.7111991860619686, 'decision_threshold': 30.0, 'no_show_wait_time': 20.0, 'CV_group_1_peak': 0.7, 'CV_group_1_offpeak': 0.15187863388370318, 'CV_group_2_peak': 0.7, 'CV_group_2_offpeak': 0.1, 'CV_group_3_peak': 1.1, 'CV_group_3_offpeak': 0.9}
+2026-11-10 01:24:45,168 [INFO] f_total evaluating: (2215.3320464240355, 10.0, 50.224961674512144, 1100.0, 1100.0, 200.0, 1.7111991860619686, 30.0, 20.0, 0.7, 0.15187863388370318, 0.7, 0.1, 1.1, 0.9)
+2026-11-10 01:24:45,169 [INFO] [31msend_instruction is being called for input tensor([[2.2153e+03, 1.0000e+01, 5.0225e+01, 1.1000e+03, 1.1000e+03, 2.0000e+02,
+         1.7112e+00, 3.0000e+01, 2.0000e+01, 7.0000e-01, 1.5188e-01, 7.0000e-01,
+         1.0000e-01, 1.1000e+00, 9.0000e-01]], dtype=torch.float64)[0m
+2026-11-10 01:24:45,169 [INFO] optimization_itr_30: evaluating input [2215.3320464240355, 10.0, 50.224961674512144, 1100.0, 1100.0, 200.0, 1.7111991860619686, 30.0, 20.0, 0.7, 0.15187863388370318, 0.7, 0.1, 1.1, 0.9]
+2026-11-10 01:24:47,105 [INFO] Running program for tuesday
+2026-11-10 02:01:26,083 [INFO] Running program for wednesday
+2026-11-10 02:38:37,807 [INFO] Running program for thursday
+2026-11-10 03:15:22,175 [INFO] optimization_itr_30: weekly_ES=-1.813285, pooled_tt_ES=-60.864479, ODT_err=-94.560537, eval_time_sec=6637.01
+2026-11-10 03:15:22,178 [INFO] f_total result: -1.813285 (weekly_ES=-1.813285, pooled_tt_ES=-60.864479, ODT_err=-94.560537)
+2026-11-10 03:15:22,192 [INFO] Convergence | trial=60, stage=Bayesian optimization, objective=-1.813285, energy_score=1.813285, best_objective=-1.816947, best_energy_score=1.816947, improvement=0.003662, no_improve_count=10
+2026-11-10 03:15:22,263 [INFO] Saved live AxClient checkpoint to /tmp/rituns/59076623/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
+2026-11-10 03:15:22,455 [INFO] Synced completed calibration trial to /dfs6b/pub/rituns/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj
+2026-11-10 03:15:30,328 [INFO] Bayesian optimization trial 61/80: {'op_max_wait_time': 3000.0, 'op_detour_time_factor': 50.59890676284371, 'const_PUDO_duration': 115.30104069037387, 'decline_wait_time_bound_upper': 400.0, 'diffusion_wait_time_bound_lower': 400.0, 'max_cancel_decision_time': 30.0, 'random_term_variance': 0.5, 'decision_threshold': 170.0, 'no_show_wait_time': 180.0, 'CV_group_1_peak': 0.05, 'CV_group_1_offpeak': 0.05, 'CV_group_2_peak': 0.7, 'CV_group_2_offpeak': 0.1, 'CV_group_3_peak': 0.3, 'CV_group_3_offpeak': 0.9}
+2026-11-10 03:15:30,328 [INFO] f_total evaluating: (3000.0, 50.59890676284371, 115.30104069037387, 400.0, 400.0, 30.0, 0.5, 170.0, 180.0, 0.05, 0.05, 0.7, 0.1, 0.3, 0.9)
+2026-11-10 03:15:30,329 [INFO] [31msend_instruction is being called for input tensor([[3.0000e+03, 5.0599e+01, 1.1530e+02, 4.0000e+02, 4.0000e+02, 3.0000e+01,
+         5.0000e-01, 1.7000e+02, 1.8000e+02, 5.0000e-02, 5.0000e-02, 7.0000e-01,
+         1.0000e-01, 3.0000e-01, 9.0000e-01]], dtype=torch.float64)[0m
+2026-11-10 03:15:30,329 [INFO] optimization_itr_31: evaluating input [3000.0, 50.59890676284371, 115.30104069037387, 400.0, 400.0, 30.0, 0.5, 170.0, 180.0, 0.05, 0.05, 0.7, 0.1, 0.3, 0.9]
+2026-11-10 03:15:32,276 [INFO] Running program for tuesday
+2026-11-10 03:59:06,409 [INFO] Running program for wednesday
+2026-11-10 05:05:33,164 [INFO] Running program for thursday
+2026-11-10 06:11:32,791 [INFO] optimization_itr_31: weekly_ES=-2.460893, pooled_tt_ES=-129.895988, ODT_err=-105.954144, eval_time_sec=10562.46
+2026-11-10 06:11:32,797 [INFO] f_total result: -2.460893 (weekly_ES=-2.460893, pooled_tt_ES=-129.895988, ODT_err=-105.954144)
+2026-11-10 06:11:32,817 [INFO] Convergence | trial=61, stage=Bayesian optimization, objective=-2.460893, energy_score=2.460893, best_objective=-1.816947, best_energy_score=1.816947, improvement=-0.643947, no_improve_count=11
+2026-11-10 06:11:32,912 [INFO] Saved live AxClient checkpoint to /tmp/rituns/59076623/FleetPy_calibration_sc_3/calibration_outputs/calibration_sc_3_journal_Nov_3rd_no_tt_obj/ax_client_checkpoint.json
