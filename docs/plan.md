@@ -24,6 +24,10 @@ the model structure, not where the parameters landed.
    peak waits have the largest spread, so a 200 s bias counts as less than 1 σ, and the score never checks how waits
    react to load. It settles for a model that is roughly equally off on every KPI.
 
+4. **The simulation pools far less than the real service (WI-5, found in Phase 1).** About 36 % of real completed trips
+   share the van with another rider, against 10–11 % in the simulation. Real vans carry more riders at once, so the
+   simulated fleet has less effective capacity per vehicle-hour than the real one, which interacts with WI-1 and WI-2.
+
 The parameters themselves are fine: trial 32 (ES 2.040) is a sensible optimum for the current structure. The structure,
 the supply input and the objective each need changing.
 
@@ -39,13 +43,14 @@ evaluation takes about 3.5–4 h locally, so an 80-trial calibration has to run 
 | 0 | `[x]` | Housekeeping | Sobol step seeded (`model_kwargs={"seed": RANDOM_SEED}` in the no-tt-obj script; verified identical points across runs and across a checkpoint save/reload). HPC env already exists, no export needed. ODT-bin label and pooled travel-time fixes dropped by the user (auxiliary outputs only, not in the objective). | Sobol warm-start reproducible |
 | 1 | `[ ]` | **WI-4** travel time | Check whether `actual_travel_time` includes dwell time; calibrate mean link times per highway group × period (tt multipliers or `edges.csv` speeds). | Mean served in-vehicle time within ±5 % of real on the 15 validation dates (now +15 %) |
 | 2 | `[ ]` | **WI-1** supply | New script that builds availability from vehicle traces (shift span minus breaks during unmet demand), 30-min bins; switch `run_program_day` in the scripts to use it; check depot capacity and activation warnings. | Peak rejections move from 0 % toward 23 % (waits are expected to stay near 1000 s at this point) |
-| 3 | `[ ]` | **WI-2** structure (FleetPy code) | Give the decline and cancellation models an ETA-independent baseline (~15–17 %) and a flatter slope; make rejection depend on capacity instead of the ETA cap so accepted waits can reach the real range; set new parameter bounds. Done on a git branch. | Heavy peak: ~45 % served, 15–25 % rejected, ~22 % declined, AM median > 1200 s; quiet day within ±100 s |
+| 3 | `[ ]` | **WI-2** structure (FleetPy code) + **WI-5** pooling | WI-2: give the decline and cancellation models an ETA-independent baseline (~15–17 %) and a flatter slope; make rejection depend on capacity instead of the ETA cap so accepted waits can reach the real range; set new parameter bounds. WI-5: re-measure the pooled share after Phases 1–2, find which constraint blocks pooling, fix it. Done on a git branch. | WI-2: heavy peak ~45 % served, 15–25 % rejected, ~22 % declined, AM median > 1200 s; quiet day within ±100 s. WI-5: pooled share within ±5 points of real on the quick-test dates (real 36 / 35 %) |
 | 4 | `[ ]` | **WI-3** objective | Fixed or robust scale for the wait KPIs; add shape KPIs (wait-vs-load slope or peak minus off-peak, p90 wait, peak rejection share); extend `Performance_Metrics_77_269_ODT_bins.py` to produce them on the real side. | The new score ranks E3/E5-style uniform shifts worse than the baseline |
 | 5 | `[ ]` | Recalibrate + validate | Sobol + BO on the 48 calibration dates on HPC, then the 15-date validation; update `calibration_wait_time_analysis.md` with the same tables (KPI table §3.1, peak outcome mix §4.5). | Peak-wait bias < 80 s; across-date SD within 30 % of real; other KPIs no worse than now |
 
 **Why this order.** WI-4 goes before WI-1 because it is smaller and fixes vehicle capacity first; WI-1 then measures the
 supply gap against realistic vehicle speeds; WI-2 is designed against the corrected capacity; WI-3 is applied just
-before the one recalibration.
+before the one recalibration. WI-5 sits with WI-2 because both involve the insertion/feasibility logic and the ETA cap,
+and because faster vehicles (WI-4) and fewer vehicles (WI-1) both change how much pooling happens on their own.
 
 ## Decisions needed from the user
 
@@ -185,6 +190,63 @@ misleading (served-trip means are ~770 vs ~667 s); `ODT_bins_std.csv` splits bin
 `src/routing/NetworkBasic.py` (lognormal link-time sampling), `vali_script_sc_3.py`
 (`calculate_pooled_and_real_tt_means`, `calculate_ODT_std_error`),
 `calibration_script_final_sc_3_with_CV_with_tt_obj_tmpdir.py`.
+
+### WI-5 The simulation pools far less than the real service — Phase 3 (with WI-2)
+
+**Found** during the Phase 1 analysis (2026-11-15), not part of the original diagnosis.
+
+**Definition.** A completed trip counts as *pooled* if its in-vehicle interval overlaps the in-vehicle interval of
+another completed trip on the same vehicle. Real side: `VEHICLE_ID`, `ACTUAL_PICKUP_TIME`, `ACTUAL_DROPOFF_TIME` from the
+raw request file (minute resolution). Sim side: end of the rider's boarding stop to start of the alighting stop, same
+vehicle and seed, from `2-0_op-stats.csv`.
+
+**Evidence.**
+
+| | Real | Sim (trial 32, hourly network, 5 seeds) |
+|---|---|---|
+| Pooled share, all 63 cali + vali dates | 38 % (per date 27–50 %, median 38 %); 33 % overlap > 3 min | — |
+| Pooled share, 2024-05-30 | 36 % | 11.3 % |
+| Pooled share, 2024-03-26 | 35 % | 9.7 % |
+| Ride time ÷ direct-route network time, unpooled trips | 0.83 | 1.00 |
+| Ride time ÷ direct-route network time, pooled trips | 1.01 | ≈ 1.05–1.10 (detour 59–105 s) |
+
+So real pooling costs riders roughly 20 % extra ride time (1.01 vs 0.83), and the real operator accepts that often; the
+simulated operator rarely pools. Real vans carry more riders at once, so per vehicle-hour the real fleet has more
+effective capacity than the simulated one. `rides_per_veh_rev_hr` still matches only because of the compensating errors
+in WI-1 and WI-4.
+
+**Candidate causes (none confirmed yet).**
+1. **Planned stop time.** The operator plans every stop with `op_const_boarding_time` (calibrated `const_PUDO_duration`
+   = 160 s), but vehicles actually stop for the per-request boarding time from the demand file (mean ≈ 50 s) or 30 s
+   for alighting. Each extra stop for a second rider therefore looks ~3× too expensive at insertion time, both for the
+   detour limit of riders already on board and for the ETA of waiting riders.
+2. **Detour limit.** `op_max_detour_time_factor` = 21 %. Real pooled trips average ~20 % extra ride time, so the real
+   operator must often go beyond 21 %; combined with the 160 s planned stops a single insertion easily exceeds the limit.
+3. **ETA cap and declines (WI-2).** Pooling lengthens ETAs; offers near the cap are declined or never made.
+4. **Too many idle vehicles (WI-1).** With overstated supply the insertion heuristic finds an empty vehicle more often
+   than a shared one.
+5. **Slow links (WI-4).** Every detour is longer in absolute seconds, so fewer insertions stay feasible.
+6. **Control objective.** `distance_and_user_times_with_walk` with `vot` 0.45 sets how user time is traded against
+   driven distance, i.e. how attractive pooling is to the operator.
+
+**Fix.**
+1. Re-measure the pooled share on the quick test after Phases 1 and 2; causes 4 and 5 may close part of the gap.
+2. One-at-a-time sensitivity on the quick-test dates for the remaining levers: `op_const_boarding_time` 160 → 50 s,
+   `op_max_detour_time_factor` 21 → 40 / 60 %, `insertion_with_heterogenous_PUDO_duration` on, `vot`. Record pooled
+   share together with waits, rejections and declines.
+3. Apply whichever lever explains the gap: narrow the `const_PUDO_duration` bounds to the real stop duration (real
+   mean PUDO 41–56 s per the real KPI files) and/or widen the detour-factor bounds; if the cause is in the insertion
+   heuristic itself, change the code on the WI-2 branch (D4).
+4. Consider adding the pooled share as a KPI for WI-3 (real side from the raw vehicle traces, written as a column in
+   `output_for_calibration/real_data/*_real.csv` like `actual_travel_time`).
+
+**Acceptance.** Pooled share (definition above) within ±5 points of real on 2024-05-30 and 2024-03-26 with the other
+quick-test KPIs no worse; after recalibration, within the real per-date range on the validation dates.
+
+**Files.** `studies/example_study/scenarios/constant_config_depot_cali_sc_1.csv` (`op_const_boarding_time`,
+`op_max_detour_time_factor`, `insertion_with_heterogenous_PUDO_duration`, `op_vr_control_func_dict`),
+`src/fleetctrl/pooling/immediate/insertion.py`, `src/fleetctrl/PoolingIRSOnly.py`, `param_bounds` in the calibration
+script. Measurement scripts will be added to `docs/analysis/` with the Phase 1 commit.
 
 ## Practical notes for picking this up
 - Local Python: `C:/Users/ritun_uci/.conda/envs/fleetpy_Ax_client/python.exe`. From Git Bash, put the env's
