@@ -238,7 +238,7 @@ class NetworkBasic(NetworkBase):
                     peak_cv = float(data["peak_cv"])
                     off_peak_cv = float(data["offpeak_cv"])
                     self.cv_dict[(from_node, to_node)] = (peak_cv, off_peak_cv)
-                    for i in range(7, 21):
+                    for i in range(6, 21):   # hr_6..hr_20, same hours as the operator files time_21600..time_72000
                         self.hourly_tt_dict[(from_node, to_node, f"hr_{i}")] = float(data[f"hr_{i}"])
 
             stamps = scenario_parameters[G_STO_TIME_STAMPS]       #Ritun: This part is for loading the stochastic time stamps
@@ -282,8 +282,10 @@ class NetworkBasic(NetworkBase):
         if self.time_stamps:
             if simulation_time in self.time_stamps:
                 LOG.info(f"STOCHASTIC NETWORK UPDATE HAPPENED HERE FOR SIMULATION TIME {simulation_time}")
-                simulation_hr = int(round(simulation_time / 3600))
-                clamped_hr = min(max(simulation_hr, 7), 20)
+                # floor (not round): the operator loads hr_h at h:00 and keeps it until (h+1):00, so the vehicles must
+                # use the same hour; round() switched them to hr_(h+1) from about h:30 onwards
+                simulation_hr = int(simulation_time // 3600)
+                clamped_hr = min(max(simulation_hr, 6), 20)
                 for key, value in self.cv_dict.items():
                     from_node, to_node = key
                     mean_tt = self.hourly_tt_dict[(from_node, to_node, f"hr_{clamped_hr}")]
