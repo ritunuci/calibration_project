@@ -1043,6 +1043,7 @@ else:
         steps=[
             GenerationStep(
                 generator=Generators.SOBOL,
+                model_kwargs={"seed": RANDOM_SEED},  # fixed Sobol sequence -> reproducible warm-start points
                 num_trials=N_TRAIN_SOBOL,
                 min_trials_observed=N_TRAIN_SOBOL,
                 enforce_num_trials=True,
