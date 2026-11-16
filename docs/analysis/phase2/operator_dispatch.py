@@ -241,13 +241,15 @@ def report(raw, C, O, wav_set):
     return dict(road=road, overhead=overhead, c2=c2)
 
 
-def sim_records(run_dir):
+def sim_records(run_dir, dates=None):
     """Same states for FleetPy outputs (run_trial32_dates.py layout: <run_dir>/<date>_rs_<seed>/).
     carrying / queued as for the real data (FleetPy assigns at the request time); off = out of service or driving to a
     depot; free = otherwise."""
     rows = []
     for d in sorted(Path(run_dir).glob("*_rs_*")):
         date, seed = d.name.split("_rs_")
+        if dates is not None and date not in dates:
+            continue
         u = pd.read_csv(d / "1_user-stats.csv")
         o = pd.read_csv(d / "2-0_op-stats.csv", usecols=["vehicle_id", "status", "start_time", "end_time"])
         s = u[u.pickup_time.notna() & u.vehicle_id.notna()]

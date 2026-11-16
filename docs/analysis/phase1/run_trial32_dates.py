@@ -13,6 +13,8 @@ Usage (from the repo root):
 Active fleet: as in the calibration/validation scripts (fleet_availability.py, trace-based 30-min bins). Optional,
 anywhere after <out_dir>:  --fleet <dir>    trace-format files from another folder (e.g. a variant)
                            --fleet counted  the old hourly pickup counts (77_unique_vehid)
+                           --set key=value  override one constant-config parameter for this run (repeatable), e.g.
+                                            --set op_const_boarding_time=50
 """
 import shutil, subprocess, sys, tempfile
 from pathlib import Path
@@ -44,7 +46,7 @@ def dates_from_args(args):
     return args
 
 
-def run(out, dates, fleet_dir=None):
+def run(out, dates, fleet_dir=None, overrides=None):
     out.mkdir(parents=True, exist_ok=True)
     c = pd.read_csv(CFG, index_col=0)["Parameter_Value"]
     for k, v in TRIAL32.items():
@@ -68,8 +70,11 @@ def run(out, dates, fleet_dir=None):
             cfg.loc["day_dir_name", "Parameter_Value"] = day
             cfg.loc["rq_file", "Parameter_Value"] = f"{date}.csv"
             cfg.loc["op_fleet_composition", "Parameter_Value"] = f"default_vehtype:{fs}"
+            for k, v in (overrides or {}).items():
+                assert k in cfg.index, f"unknown config parameter {k}"
+                cfg.loc[k, "Parameter_Value"] = v
             cfg.to_csv(CFG)
-            print(f"running {date} ({day}, fleet {fs})", flush=True)
+            print(f"running {date} ({day}, fleet {fs}{', ' + str(overrides) if overrides else ''})", flush=True)
             with open(out / f"{date}.log", "w") as lf:
                 subprocess.run([PY, "run_examples.py"], cwd=ROOT, check=True, stdout=lf, stderr=subprocess.STDOUT)
             for s in SEEDS:
@@ -87,7 +92,9 @@ def run(out, dates, fleet_dir=None):
 
 if __name__ == "__main__":
     a = sys.argv[2:]
-    fd = None
+    fd, ov = None, {}
     if "--fleet" in a:
         k = a.index("--fleet"); fd = a[k + 1]; a = a[:k] + a[k + 2:]
-    run(Path(sys.argv[1]), dates_from_args(a), fd)
+    while "--set" in a:
+        k = a.index("--set"); key, val = a[k + 1].split("=", 1); ov[key] = val; a = a[:k] + a[k + 2:]
+    run(Path(sys.argv[1]), dates_from_args(a), fd, ov)

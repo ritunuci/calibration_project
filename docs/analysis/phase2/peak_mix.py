@@ -53,6 +53,8 @@ def main(args):
             rows.append(dict(date=date, window=w, source="real", **v))
         for lbl, d in runs.items():
             per_seed = [mix(*sim_mix(f)) for f in sorted(Path(d).glob(f"{date}_rs_*"))]
+            if not per_seed:          # this run does not include the date
+                continue
             for w in per_seed[0]:
                 rows.append(dict(date=date, window=w, source=lbl, **pd.DataFrame([s[w] for s in per_seed]).mean().to_dict()))
     R = pd.DataFrame(rows)
