@@ -1,6 +1,6 @@
 # Plan: making the calibrated sc_3 model reproduce the real KPIs
 
-Status: agreed plan, November 2026. Phases 0–2 done; Phase 3 next. Evidence and numbers behind every statement here are in
+Status: agreed plan, November 2026. Phases 0–2 done; Phase 3 code and tests done on branch `phase3-dispatch`, rejections still short (see WI-2). Evidence and numbers behind every statement here are in
 [calibration_wait_time_analysis.md](calibration_wait_time_analysis.md). This file replaces the earlier `work_items.md`;
 the per-item details are in the appendix below.
 
@@ -53,7 +53,7 @@ evaluation takes about 3.5–4 h locally, so an 80-trial calibration has to run 
 | 0 | `[x]` | Housekeeping | Sobol step seeded (`model_kwargs={"seed": RANDOM_SEED}` in the no-tt-obj script; verified identical points across runs and across a checkpoint save/reload). HPC env already exists, no export needed. ODT-bin label and pooled travel-time fixes dropped by the user (auxiliary outputs only, not in the objective). | Sobol warm-start reproducible |
 | 1 | `[x]` | **WI-4** travel time | Operator plans on hourly link means (user, fed83bf); vehicles use the same hour as the operator (floor instead of round, 2c3e598); hourly link means scaled by 7 per-period factors estimated from real unpooled trips (6c08717). Per-hour factors tried and not adopted (1b982ef). Details in the WI-4 appendix. | **Met** (condition adjusted, see WI-4): ride time on requests the real operator served unpooled within ±5 % on all 15 validation dates (overall −0.3 %, worst date 4.5 %). The all-trip mean (−12 %) moves to WI-5. |
 | 2 | `[x]` | **WI-1** supply | Availability built from the vehicle traces (shift span minus breaks with unmet demand) in 30-min bins (`docs/analysis/phase2/build_availability.py` → `data/fleetctrl/trace_availability/`). All calibration and validation scripts now read it through `fleet_availability.py`. Depot capacity and activations checked. Details in the WI-1 appendix and `docs/analysis/phase2/findings.md`. | **Not reachable through supply.** Effective supply is 0.947 of counted; six of seven KPIs move toward real, but peak rejections stay at 1.8 / 3.1 % (AM / PM; real 7.0 / 8.2 %) even at the upper bound (0.843). The real refusals and long waits come from dispatch, which is Phase 3. |
-| 3 | `[ ]` | **WI-2** structure (FleetPy code) + **WI-5** pooling | WI-2: give the decline and cancellation models an ETA-independent baseline (~15–17 %) and a flatter slope; make rejection depend on capacity instead of the ETA cap so accepted waits can reach the real range; set new parameter bounds. WI-5: re-measure the pooled share after Phases 1–2, find which constraint blocks pooling, fix it. Done on a git branch. | WI-2: heavy peak ~45 % served, 15–25 % rejected, ~22 % declined, AM median > 1200 s; quiet day within ±100 s. WI-5: pooled share within ±5 points of real on the quick-test dates (real 36 / 35 %) |
+| 3 | `[~]` | **WI-2** structure (FleetPy code) + **WI-5** pooling | Three switches on the branch, all off by default and regression-checked: rider decline `base_slope` (baseline + slope per offered minute), `op_dispatch_delay` (no vehicle sets off before request + delay), `op_fifo_pickups` (new pickups only after the queued ones). Pooling unblocked by planning stops with each rider's own stop time (`insertion_with_heterogenous_PUDO_duration`). Details in `docs/analysis/phase3/findings.md`. | WI-2: heavy peak ~45 % served, 15–25 % rejected, ~22 % declined, AM median > 1200 s; quiet day within ±100 s. WI-5: pooled share within ±5 points of real on the quick-test dates (real 36 / 35 %). **Result (15 validation dates):** pooled 34 % (real 36), ride time −2.9 %, mean wait error halved in all periods, queue depth and wait by riders ahead as real; **not met:** rejections 2.9 % vs 5.3 % (2024-05-30 AM 4 % vs 22.5 %) |
 | 4 | `[ ]` | **WI-3** objective | Fixed or robust scale for the wait KPIs; add shape KPIs (wait-vs-load slope or peak minus off-peak, p90 wait, peak rejection share); extend `Performance_Metrics_77_269_ODT_bins.py` to produce them on the real side. | The new score ranks E3/E5-style uniform shifts worse than the baseline |
 | 5 | `[ ]` | Recalibrate + validate | Sobol + BO on the 48 calibration dates on HPC, then the 15-date validation; update `calibration_wait_time_analysis.md` with the same tables (KPI table §3.1, peak outcome mix §4.5). | Peak-wait bias < 80 s; across-date SD within 30 % of real; other KPIs no worse than now |
 
@@ -339,6 +339,22 @@ all-trip mean within ±5 % moves to WI-5's acceptance.
 `tt_scaling_factors.csv`), `data/networks/example_network_periodic/` (unscaled reference), `src/routing/NetworkBasic.py`,
 `docs/analysis/phase1/` (`real_vs_network_tt.py`, `estimate_tt_factors.py`, `apply_tt_factors.py`,
 `run_trial32_dates.py`, `evaluate_runs.py`, `compare_factor_options.py`, `factor_options.md`).
+
+**Phase 3 result (branch `phase3-dispatch`; details in `docs/analysis/phase3/findings.md`).**
+- The real decline rate rises only slightly with the offered wait: 13.6 % + 0.68 points per minute. The new
+  `rider_decline_model = base_slope` uses that; the cap-linear model stays the default.
+- Rejection was not decoupled through a load limit. Real refusals show no hard load limit (findings §9). Instead, three
+  changes let waits build up the way they do in reality:
+  - riders are picked up in the order they were assigned (`op_fifo_pickups`);
+  - a short dispatch delay;
+  - a higher cancellation lower bound (`waiting_time_lower_bound` 1400 s), so riders tolerate longer queues.
+- On the 15 validation dates the best setting:
+  - halves the wait error in every period (AM/PM/off-peak bias −56 / −87 / +2 s);
+  - matches declines, cancellations, served riders, queue depth and the wait by riders ahead.
+- Still short:
+  - rejections, 2.9 % against 5.3 %, worst in heavy AM peaks;
+  - the fixed wait for a free vehicle, 2.8 min against 7.1 min. It is compensated by longer waits in the queue.
+- The values were set by hand to show that the structure can reach reality. Phase 5 calibrates them.
 
 ### WI-5 The simulation pools far less than the real service — Phase 3 (with WI-2)
 
