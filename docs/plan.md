@@ -1,6 +1,6 @@
 # Plan: making the calibrated sc_3 model reproduce the real KPIs
 
-Status: agreed plan, November 2026. Nothing implemented yet. Evidence and numbers behind every statement here are in
+Status: agreed plan, November 2026. Phases 0 and 1 done; Phase 2 next. Evidence and numbers behind every statement here are in
 [calibration_wait_time_analysis.md](calibration_wait_time_analysis.md). This file replaces the earlier `work_items.md`;
 the per-item details are in the appendix below.
 
@@ -18,14 +18,15 @@ the model structure, not where the parameters landed.
    same time; reality has both. Raising the cap (E3/E5) only shifts every wait upward, so off-peak and quiet days
    overshoot.
 2. **Two input errors that cancel each other out.** Supply is overstated: about 30 % of counted vehicle-hours are idle
-   gaps (WI-1). Vehicles also drive about 15 % too slowly (WI-4). Together they make rides per vehicle-hour look right
-   (3.02 vs 3.00) for the wrong reasons. Fixing only one would make the fit look worse.
+   gaps (WI-1). Vehicles also drove about 15 % too slowly (WI-4, fixed in Phase 1). Together they made rides per
+   vehicle-hour look right (3.02 vs 3.00) for the wrong reasons. With only WI-4 fixed the fit looks worse (fleet now
+   oversized: rides per vehicle-hour 3.4, rejections ~1 %), as expected until WI-1 is done.
 3. **The objective cannot see the problem (WI-3).** The Energy Score scales each KPI by its real day-to-day spread, and
    peak waits have the largest spread, so a 200 s bias counts as less than 1 σ, and the score never checks how waits
    react to load. It settles for a model that is roughly equally off on every KPI.
 
 4. **The simulation pools far less than the real service (WI-5, found in Phase 1).** About 36 % of real completed trips
-   share the van with another rider, against 10–11 % in the simulation. Real vans carry more riders at once, so the
+   share the van with another rider, against 10–11 % in the simulation before Phase 1 and 5–9 % after it. Real vans carry more riders at once, so the
    simulated fleet has less effective capacity per vehicle-hour than the real one, which interacts with WI-1 and WI-2.
 
 The parameters themselves are fine: trial 32 (ES 2.040) is a sensible optimum for the current structure. The structure,
@@ -41,7 +42,7 @@ evaluation takes about 3.5–4 h locally, so an 80-trial calibration has to run 
 | Phase | Status | Item | What we do | Done when |
 |---|---|---|---|---|
 | 0 | `[x]` | Housekeeping | Sobol step seeded (`model_kwargs={"seed": RANDOM_SEED}` in the no-tt-obj script; verified identical points across runs and across a checkpoint save/reload). HPC env already exists, no export needed. ODT-bin label and pooled travel-time fixes dropped by the user (auxiliary outputs only, not in the objective). | Sobol warm-start reproducible |
-| 1 | `[ ]` | **WI-4** travel time | Check whether `actual_travel_time` includes dwell time; calibrate mean link times per highway group × period (tt multipliers or `edges.csv` speeds). | Mean served in-vehicle time within ±5 % of real on the 15 validation dates (now +15 %) |
+| 1 | `[x]` | **WI-4** travel time | Operator plans on hourly link means (user, fed83bf); vehicles use the same hour as the operator (floor instead of round, 2c3e598); hourly link means scaled by 7 per-period factors estimated from real unpooled trips (6c08717). Per-hour factors tried and not adopted (1b982ef). Details in the WI-4 appendix. | **Met** (condition adjusted, see WI-4): ride time on requests the real operator served unpooled within ±5 % on all 15 validation dates (overall −0.3 %, worst date 4.5 %). The all-trip mean (−12 %) moves to WI-5. |
 | 2 | `[ ]` | **WI-1** supply | New script that builds availability from vehicle traces (shift span minus breaks during unmet demand), 30-min bins; switch `run_program_day` in the scripts to use it; check depot capacity and activation warnings. | Peak rejections move from 0 % toward 23 % (waits are expected to stay near 1000 s at this point) |
 | 3 | `[ ]` | **WI-2** structure (FleetPy code) + **WI-5** pooling | WI-2: give the decline and cancellation models an ETA-independent baseline (~15–17 %) and a flatter slope; make rejection depend on capacity instead of the ETA cap so accepted waits can reach the real range; set new parameter bounds. WI-5: re-measure the pooled share after Phases 1–2, find which constraint blocks pooling, fix it. Done on a git branch. | WI-2: heavy peak ~45 % served, 15–25 % rejected, ~22 % declined, AM median > 1200 s; quiet day within ±100 s. WI-5: pooled share within ±5 points of real on the quick-test dates (real 36 / 35 %) |
 | 4 | `[ ]` | **WI-3** objective | Fixed or robust scale for the wait KPIs; add shape KPIs (wait-vs-load slope or peak minus off-peak, p90 wait, peak rejection share); extend `Performance_Metrics_77_269_ODT_bins.py` to produce them on the real side. | The new score ranks E3/E5-style uniform shifts worse than the baseline |
@@ -66,6 +67,20 @@ and because faster vehicles (WI-4) and fewer vehicles (WI-1) both change how muc
 Baseline reference (trial 32, 2024-05-30, 5 seeds): rejected 2.9 % (real 6.6), declined 25.3 % (24.8), wait AM/PM/off
 987/899/827 s (1414/1044/715), cancel 7.6 % (6.0), served 321 (314). Peak-window outcome mix sim vs real:
 served 46/44 %, rejected 0/23 %, declined 43/22 %, cancelled 7/9 %.
+
+Baseline after Phase 1 (trial 32, per-period scaled network, 5 seeds; the reference for Phase 2):
+
+| | 2024-05-30 sim (real) | 2024-03-26 sim (real) | 15 validation dates, mean sim (real) |
+|---|---|---|---|
+| Rejected % | 0.6 (6.6) | 0.4 (4.3) | 1.1 (5.3) |
+| Declined % | 19.1 (24.8) | 13.6 (24.9) | 18.5 (23.4) |
+| Cancelled % | 7.0 (6.0) | 5.8 (5.9) | 6.2 (7.1) |
+| Rides per veh-rev-h | 3.42 (2.97) | 3.16 (2.62) | 3.4 (3.0) |
+| Wait AM / PM / off-peak s | 971 / 841 / 626 (1414 / 1044 / 715) | 633 / 841 / 623 (763 / 952 / 740) | 819 / 857 / 658 (1057 / 1125 / 794) |
+| Served | 362 (314) | 356 (294) | 340 (299) |
+| Pooled share | 6.0 % (36) | 5.7 % (35) | 7.2 % (38) |
+
+Per-date values: `docs/analysis/phase1/eval_vali_period.csv`.
 
 ### WI-1 Supply is overstated (full-hour availability from pickup counts) — Phase 2
 
@@ -158,38 +173,72 @@ across-date SD within 30 % of real.
 `read_FleetPy_replications_outputs_and_build_kpi_vec`, `compute_day_wise_standardized_mu_sigma_from_real`,
 `compute_energy_score_file`); real KPI files (new columns via `Performance_Metrics_77_269_ODT_bins.py`).
 
-### WI-4 Travel-time bias runs against the wait deficit (compensating errors) — Phase 1
+### WI-4 Travel-time bias runs against the wait deficit (compensating errors) — Phase 1 `[x]`
 
-**Problem.** Simulated in-vehicle time 756 s vs real `actual_travel_time` 639 s on 2024-05-30 (771 vs 667 s over the 15
-validation dates, +15 % on every date). The network's shortest-path time for the same ODs is 657 s, i.e. real trips are
-*faster than the simulated free-flow path*; boarding (160 s) and pooling detours add ~100 s on top. The CV parameters
-only scale link-time variability, not the mean, and the travel-time objective is off (`no_tt_obj`), so nothing constrains
-it. Slower vehicles are busy longer → waits are pushed *up*, so this error masks part of the wait deficit, and together
-with the overstated supply (WI-1) it makes `rides_per_veh_rev_hr` come out right (3.02 vs 3.00) for the wrong reasons.
-Fixing it will lower simulated waits further and increase apparent capacity, so it must be followed by WI-1/2.
+**Problem (as diagnosed).** Simulated in-vehicle time 756 s vs real `actual_travel_time` 639 s on 2024-05-30 (771 vs
+667 s over the 15 validation dates, +15 % on every date). Slower vehicles are busy longer → waits are pushed *up*, so this
+error masked part of the wait deficit, and together with the overstated supply (WI-1) it made `rides_per_veh_rev_hr`
+come out right (3.02 vs 3.00) for the wrong reasons. The CV parameters only set the spread of the lognormal link-time
+draws, not their mean, and the travel-time objective is off (`no_tt_obj`), so nothing constrained it.
 
-Side issues (Phase 0): `travel_time_comparison.csv` divides by all requests incl. unserved (~35 % NaN) → 509 vs 433 s is
-misleading (served-trip means are ~770 vs ~667 s); `ODT_bins_std.csv` splits bins into 256 string labels
-(`(0, 4, 'peak')` vs `(0, 4.0, 'peak')`) instead of 72, many with SD 0 — its summary is unreliable; only seed 42 is used.
+Side issues (Phase 0, not fixed, auxiliary outputs only): `travel_time_comparison.csv` divides by all requests incl.
+unserved; `ODT_bins_std.csv` splits bins into 256 string labels instead of 72 and uses only seed 42. Phase 1 computes
+served-trip means directly from the FleetPy outputs instead (`docs/analysis/phase1/evaluate_runs.py`).
 
-**Fix.**
-1. Definition settled (user, 2026-11-15): `actual_travel_time` = actual dropoff − actual pickup, **no dwell time**. The
-   sim side must therefore exclude boarding/alighting dwell before comparing. The observed per-date mean (served trips)
-   is now the `actual_travel_time` column in `output_for_calibration/real_data/{day}_real.csv` (48 calibration dates;
-   the ODT-bin columns were removed from those files).
-2. Calibrate mean link travel times (per highway group × peak/off-peak) against `actual_travel_time` — the
-   `morning/evening/off_peak_hr_tt_multiplier` config parameters (currently all 1) or `edges.csv` speeds — before or
-   jointly with the CV calibration; consider re-enabling the pooled travel-time objective (D3).
-3. ~~Normalise `odt_bin` labels and pool all 5 seeds~~ — dropped (2026-11-15); compute served-trip means directly
-   from the FleetPy outputs instead of relying on `travel_time_comparison.csv` / `ODT_bins_std.csv`.
+**What the +15 % was made of (Phase 1 analysis).**
+1. **Dwell in the sim measurement.** FleetPy's `pickup_time` is the *start* of the boarding stop and `dropoff_time` the
+   start of the alighting stop, so `dropoff_time − pickup_time` contains the rider's own boarding dwell (~50 s). Real
+   `actual_travel_time` has no dwell (user, 2026-11-15). The comparable sim quantity is start of alighting stop − end of
+   boarding stop (from `2-0_op-stats.csv`).
+2. **Operator and vehicles on different link times.** The operator planned on 5 period means while vehicles drove on
+   hourly means; and vehicles switched to `hr_(h+1)` from about h:30 (`round()` in `NetworkBasic.py`). Fixed: the
+   operator now plans on hourly means (`time_21600`…`time_72000` = `hr_6`…`hr_20`, user, fed83bf), and vehicles use
+   `floor()` with the hour clamped to 6–20 (2c3e598).
+3. **Network means too slow.** Real unpooled trips take 0.83 × the direct-route network time on `hr_<pickup hour>`
+   (calibration and validation dates alike); real routes are only 3.7 % longer than the shortest path, so the real vans
+   are faster, not taking shorter routes. Free-flow times would be too fast (1.48 ×). After fixes 1–2 the paired
+   (same-request) error was still +12 / +14 % on the quick-test dates.
+4. **Not a lever:** the `morning/evening/off_peak_tt_multiplier` config parameters scale only the operator's planning
+   times, not the vehicles' — using them would re-create the mismatch of point 2.
 
-**Acceptance.** Per-date mean served in-vehicle time (excluding dwell) within ±5 % of real on the 15 validation dates
-(currently +15 %).
+**What was done.**
+1. Definition settled: `actual_travel_time` = actual dropoff − actual pickup, no dwell. The per-date observed mean (served
+   trips) is the `actual_travel_time` column in `output_for_calibration/real_data/{day}_real.csv`.
+2. Hourly link means in `example_network` scaled by per-period factors = Σ real time / Σ network direct time over the
+   trips the real operator served **unpooled** on the 48 calibration dates; periods 7 | 8 | 9–11 | 12–13 | 14 | 15–16 |
+   17–18 (user's boundaries, 15–18 split in two); hour 19 and outside operating hours unscaled. Factors 0.78–0.93
+   (`docs/analysis/phase1/tt_factors_period.csv`, copied to `example_network/tt_scaling_factors.csv`); the unscaled
+   reference is `example_network_periodic/base/edges.csv`. Operator files regenerated from the scaled `hr_h`.
+3. Per-hour factors were tested on the same 15 dates and gave the same result (log:
+   `docs/analysis/phase1/factor_options.md`); per-period kept.
 
-**Files.** `data/networks/example_network/base/edges.csv`, `constant_config_depot_cali_sc_1.csv` (tt multipliers),
-`src/routing/NetworkBasic.py` (lognormal link-time sampling), `vali_script_sc_3.py`
-(`calculate_pooled_and_real_tt_means`, `calculate_ODT_std_error`),
-`calibration_script_final_sc_3_with_CV_with_tt_obj_tmpdir.py`.
+**Results (15 validation dates, 5 seeds, trial 32).**
+
+| ride time, sim vs real (no dwell) | Before scaling (fixes 1–2 only; quick-test dates) | After Phase 1 (15 validation dates) |
+|---|---|---|
+| Requests the real operator served unpooled, overall | +22 % | −0.3 % |
+| … worst date / dates outside ±5 % | — | 4.5 % / 0 of 15 |
+| … by pickup hour | — | within ±4.5 % for hours 8–18; hour 7 +8.8 %; hour 19 −8.5 % (~9 trips per date) |
+| Requests the real operator pooled | −1 % | −19 % |
+| All served trips, per-date mean | +3 % / +12 % (05-30 / 03-26) | −12 % (range −3 to −21 %) |
+
+(Before Phase 1 entirely, with dwell included and the old network: +15 % on every validation date.)
+
+**Acceptance (adjusted 2026-11-15).** The original condition (all-trip mean within ±5 %) mixes two effects: link speed
+and pooling. Real pooled trips take 1.01 × direct time against 0.83 × for unpooled ones, and the simulation pools only
+5–9 % of trips against 38 % (WI-5), so the all-trip mean cannot match until pooling does. WI-4's condition is therefore
+**ride time on requests the real operator served unpooled within ±5 % per date on the 15 validation dates — met**. The
+all-trip mean within ±5 % moves to WI-5's acceptance.
+
+**Open points.**
+- Hour 7 is +8.8 % in both factor options (validation dates faster than the calibration dates in that hour). Re-check
+  after WI-1, when the early-morning fleet changes; refine the hour-7 factor only if it persists.
+- Fleet now looks oversized (see baseline after Phase 1 above) — expected; WI-1 is next.
+
+**Files.** `data/networks/example_network/` (`base/edges.csv` `hr_*`, `time_*/operator_exp_tt.csv`,
+`tt_scaling_factors.csv`), `data/networks/example_network_periodic/` (unscaled reference), `src/routing/NetworkBasic.py`,
+`docs/analysis/phase1/` (`real_vs_network_tt.py`, `estimate_tt_factors.py`, `apply_tt_factors.py`,
+`run_trial32_dates.py`, `evaluate_runs.py`, `compare_factor_options.py`, `factor_options.md`).
 
 ### WI-5 The simulation pools far less than the real service — Phase 3 (with WI-2)
 
@@ -205,8 +254,9 @@ vehicle and seed, from `2-0_op-stats.csv`.
 | | Real | Sim (trial 32, hourly network, 5 seeds) |
 |---|---|---|
 | Pooled share, all 63 cali + vali dates | 38 % (per date 27–50 %, median 38 %); 33 % overlap > 3 min | — |
-| Pooled share, 2024-05-30 | 36 % | 11.3 % |
-| Pooled share, 2024-03-26 | 35 % | 9.7 % |
+| Pooled share, 2024-05-30 | 36 % | 11.3 % (after Phase 1: 6.0 %) |
+| Pooled share, 2024-03-26 | 35 % | 9.7 % (after Phase 1: 5.7 %) |
+| Pooled share, 15 validation dates (after Phase 1) | 38 % | 7.2 % (per date 4.7–9.0 %) |
 | Ride time ÷ direct-route network time, unpooled trips | 0.83 | 1.00 |
 | Ride time ÷ direct-route network time, pooled trips | 1.01 | ≈ 1.05–1.10 (detour 59–105 s) |
 
@@ -225,12 +275,15 @@ in WI-1 and WI-4.
 3. **ETA cap and declines (WI-2).** Pooling lengthens ETAs; offers near the cap are declined or never made.
 4. **Too many idle vehicles (WI-1).** With overstated supply the insertion heuristic finds an empty vehicle more often
    than a shared one.
-5. **Slow links (WI-4).** Every detour is longer in absolute seconds, so fewer insertions stay feasible.
+5. **Slow links (WI-4).** Every detour is longer in absolute seconds, so fewer insertions stay feasible. *Not supported:*
+   after the Phase 1 speed-up the pooled share fell (10–11 % → 6 %), consistent with cause 4 — faster vehicles free up
+   more empty capacity.
 6. **Control objective.** `distance_and_user_times_with_walk` with `vot` 0.45 sets how user time is traded against
    driven distance, i.e. how attractive pooling is to the operator.
 
 **Fix.**
-1. Re-measure the pooled share on the quick test after Phases 1 and 2; causes 4 and 5 may close part of the gap.
+1. Re-measure the pooled share on the quick test after Phase 2 (after Phase 1 it is 6 %); cause 4 may close part of
+   the gap.
 2. One-at-a-time sensitivity on the quick-test dates for the remaining levers: `op_const_boarding_time` 160 → 50 s,
    `op_max_detour_time_factor` 21 → 40 / 60 %, `insertion_with_heterogenous_PUDO_duration` on, `vot`. Record pooled
    share together with waits, rejections and declines.
@@ -241,12 +294,15 @@ in WI-1 and WI-4.
    `output_for_calibration/real_data/*_real.csv` like `actual_travel_time`).
 
 **Acceptance.** Pooled share (definition above) within ±5 points of real on 2024-05-30 and 2024-03-26 with the other
-quick-test KPIs no worse; after recalibration, within the real per-date range on the validation dates.
+quick-test KPIs no worse; after recalibration, within the real per-date range on the validation dates. Also (moved here
+from WI-4): per-date mean ride time over all served trips (no dwell) within ±5 % of real on the 15 validation dates
+(−12 % after Phase 1), while the WI-4 condition on real-unpooled requests stays met.
 
 **Files.** `studies/example_study/scenarios/constant_config_depot_cali_sc_1.csv` (`op_const_boarding_time`,
 `op_max_detour_time_factor`, `insertion_with_heterogenous_PUDO_duration`, `op_vr_control_func_dict`),
 `src/fleetctrl/pooling/immediate/insertion.py`, `src/fleetctrl/PoolingIRSOnly.py`, `param_bounds` in the calibration
-script. Measurement scripts will be added to `docs/analysis/` with the Phase 1 commit.
+script. Measurement: `docs/analysis/phase1/evaluate_runs.py` (sim pooled share, ride times, KPIs per date) and
+`real_vs_network_tt.py` (real pooled flag per trip).
 
 ## Practical notes for picking this up
 - Local Python: `C:/Users/ritun_uci/.conda/envs/fleetpy_Ax_client/python.exe`. From Git Bash, put the env's
@@ -254,4 +310,8 @@ script. Measurement scripts will be added to `docs/analysis/` with the Phase 1 c
 - `run_examples.py` runs 5 seeds in parallel, ~4–5 min per date locally; full 15-date validation ~85 min.
 - The scripts overwrite `constant_config_depot_cali_sc_1.csv`, `edges.csv` and `example_active_fleetsize.csv` in place —
   snapshot them before any experiment and restore afterwards.
-- Analysis scripts and result tables: `docs/analysis/`.
+- Analysis scripts and result tables: `docs/analysis/`. For a trial-32 test run use
+  `docs/analysis/phase1/run_trial32_dates.py <out_dir> quick|vali` (backs up and restores the three input files itself),
+  then `evaluate_runs.py <out_dir>`.
+- `example_network` holds **scaled** link times; never re-scale it in place — `apply_tt_factors.py` always starts from
+  the unscaled `example_network_periodic/base/edges.csv`.
