@@ -21,6 +21,7 @@ from ax.generation_strategy.generation_strategy import GenerationStrategy, Gener
 from ax.adapter.registry import Generators
 
 from fleet_availability import write_active_fleet_file
+from calibration_kpis import EXTRA_KPI_COLS, KPI_SCALES, sim_extra_kpis   # Phase 4 (WI-3) objective
 # from ax.storage.json_store.save import save_experiment
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -82,6 +83,12 @@ KPI_COLS = [
     "cancellation_rate_percent",
 ]                               # Here put the KPI column names same as in the real data files
 # KPI_COLS = KPI_COLS + unique_bins_2
+KPI_COLS = KPI_COLS + EXTRA_KPI_COLS    # Phase 4: wait_p90_peak, peak_rejected_pct, pooled_pct (calibration_kpis.py)
+
+# Phase 4 (WI-3): how each KPI is scaled in the energy score.
+#   "fixed"       divide sim - real by a fixed tolerance per KPI (calibration_kpis.KPI_SCALES)
+#   "weekday_sd"  the earlier z-score by the real across-date mean and SD per weekday
+OBJECTIVE_SCALING = "fixed"
 
 # ----------------------------------------------------------------------------------------------------------------------
 # Logging
@@ -305,6 +312,7 @@ def read_FleetPy_replications_outputs_and_build_kpi_vec(pooled_tt_mean_dict, fil
             # float((morning_peak_wait_time + evening_peak_wait_time)/2),        # wait time peak
             float(df.loc["waiting time for off-peak"]["MoD_0"]) if not pd.isna(df.loc["waiting time for off-peak"]["MoD_0"]) else 900,        # wait time off-peak
             float((df_user_stats["diffusion_cancelled"].sum()/num_offers_created)*100) if num_offers_created > 0 else 0.0,        # % of offers cancelled
+            *sim_extra_kpis(df_user_stats, df_op_stats),   # Phase 4: wait_p90_peak, peak_rejected_pct, pooled_pct
         ], dtype=float)
         file_Z_samples_raw.append(kpi_vec)
 
@@ -382,8 +390,11 @@ def calculate_ODT_std_error(ODT_bins_std_folder_path):
 def compute_day_wise_standardized_mu_sigma_from_real(day):
     """
     mu_k, sigma_k computed over all observed (real) dates for a particualr day of the week (for exmaple: for all the dates having Monday), KPI-wise.
-    Returns (mu, sigma) arrays of shape (4,).
+    Returns (mu, sigma) arrays of shape (len(KPI_COLS),).
+    With OBJECTIVE_SCALING = "fixed": mu = 0 and sigma = the fixed tolerance per KPI (Phase 4, WI-3).
     """
+    if OBJECTIVE_SCALING == "fixed":
+        return np.zeros(len(KPI_COLS)), np.array([KPI_SCALES[k] for k in KPI_COLS], dtype=float)
     rows = []
     df_real = pd.read_csv(real_data_dir / f"{day}_real.csv")
     mat = df_real[KPI_COLS].to_numpy(dtype=float)

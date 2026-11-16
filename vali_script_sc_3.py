@@ -21,6 +21,7 @@ from ax.generation_strategy.generation_strategy import GenerationStrategy, Gener
 from ax.adapter.registry import Generators
 
 from fleet_availability import write_active_fleet_file
+from calibration_kpis import EXTRA_KPI_COLS, sim_extra_kpis   # Phase 4 (WI-3) objective KPIs
 # from ax.storage.json_store.save import save_experiment
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -69,6 +70,7 @@ KPI_COLS = [
     "avg_travel_time",
 ]                               # Here put the KPI column names same as in the real data files
 # KPI_COLS = KPI_COLS + unique_bins_2
+KPI_COLS = KPI_COLS + EXTRA_KPI_COLS    # Phase 4: wait_p90_peak, peak_rejected_pct, pooled_pct (calibration_kpis.py)
 # ----------------------------------------------------------------------------------------------------------------------
 # Logging
 # ----------------------------------------------------------------------------------------------------------------------
@@ -178,7 +180,8 @@ def read_FleetPy_replications_outputs_and_build_kpi_vec(day_kpi_vec, pooled_tt_m
             evening_peak_wait_time,
             float(df.loc["waiting time for off-peak"]["MoD_0"]) if not pd.isna(df.loc["waiting time for off-peak"]["MoD_0"]) else 900,        # wait time off-peak
             float((df_user_stats["diffusion_cancelled"].sum()/num_offers_created)*100) if num_offers_created > 0 else 0.0,
-            np.mean(df_user_stats["travel_time_sim"])
+            np.mean(df_user_stats["travel_time_sim"]),
+            *sim_extra_kpis(df_user_stats, pd.read_csv(fleetpy_replication_output_path / f"example_depot_time_pool_irsonly_rs_{rs}" / "2-0_op-stats.csv")),
         ])
 
     avg_kpis = np.mean(seed_kpis, axis=0)
