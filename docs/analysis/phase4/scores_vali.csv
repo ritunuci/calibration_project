@@ -1,0 +1,5 @@
+run,dates,current,fixed-7,fixed-10,share percentage_rejected,share percentage_of_offer_declined_by_rider,share rides_per_veh_rev_hr,share wait_time_morning_peak,share wait_time_evening_peak,share wait_time_off_peak,share cancellation_rate_percent,share wait_p90_peak,share peak_rejected_pct,share pooled_pct,rank current,rank fixed-7,rank fixed-10
+phase1_hourly,15,3.4798,5.5319,8.3633,7.4045,4.3721,5.0882,12.0406,13.7592,3.488,0.9805,7.3027,4.4287,41.1355,4,4,4
+phase1_period,15,3.3944,5.4697,8.3182,7.3166,4.3998,5.1788,12.2037,13.5048,3.5003,0.8612,7.5466,4.4496,41.0385,3,3,3
+phase2_base,15,2.7494,4.8151,7.8484,5.9217,2.7403,3.4119,13.532,13.8202,2.483,0.7058,7.4542,3.8257,46.1051,2,2,2
+phase3_f60_lb1400,15,1.7809,2.461,3.0146,15.2499,4.5798,10.0135,14.2267,13.6306,3.5614,6.7284,13.9807,12.2156,5.8135,1,1,1
