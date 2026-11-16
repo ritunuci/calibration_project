@@ -1,6 +1,6 @@
 # Plan: making the calibrated sc_3 model reproduce the real KPIs
 
-Status: agreed plan, November 2026. Phases 0–2 done; Phase 3 code and tests done on branch `phase3-dispatch`, rejections still short (see WI-2). Evidence and numbers behind every statement here are in
+Status: agreed plan, November 2026. Phases 0–2 done; Phase 3 code and tests done on branch `phase3-dispatch`, rejections still short (see WI-2); Phase 4 objective done on the same branch. Evidence and numbers behind every statement here are in
 [calibration_wait_time_analysis.md](calibration_wait_time_analysis.md). This file replaces the earlier `work_items.md`;
 the per-item details are in the appendix below.
 
@@ -54,7 +54,7 @@ evaluation takes about 3.5–4 h locally, so an 80-trial calibration has to run 
 | 1 | `[x]` | **WI-4** travel time | Operator plans on hourly link means (user, fed83bf); vehicles use the same hour as the operator (floor instead of round, 2c3e598); hourly link means scaled by 7 per-period factors estimated from real unpooled trips (6c08717). Per-hour factors tried and not adopted (1b982ef). Details in the WI-4 appendix. | **Met** (condition adjusted, see WI-4): ride time on requests the real operator served unpooled within ±5 % on all 15 validation dates (overall −0.3 %, worst date 4.5 %). The all-trip mean (−12 %) moves to WI-5. |
 | 2 | `[x]` | **WI-1** supply | Availability built from the vehicle traces (shift span minus breaks with unmet demand) in 30-min bins (`docs/analysis/phase2/build_availability.py` → `data/fleetctrl/trace_availability/`). All calibration and validation scripts now read it through `fleet_availability.py`. Depot capacity and activations checked. Details in the WI-1 appendix and `docs/analysis/phase2/findings.md`. | **Not reachable through supply.** Effective supply is 0.947 of counted; six of seven KPIs move toward real, but peak rejections stay at 1.8 / 3.1 % (AM / PM; real 7.0 / 8.2 %) even at the upper bound (0.843). The real refusals and long waits come from dispatch, which is Phase 3. |
 | 3 | `[~]` | **WI-2** structure (FleetPy code) + **WI-5** pooling | Three switches on the branch, all off by default and regression-checked: rider decline `base_slope` (baseline + slope per offered minute), `op_dispatch_delay` (no vehicle sets off before request + delay), `op_fifo_pickups` (new pickups only after the queued ones). Pooling unblocked by planning stops with each rider's own stop time (`insertion_with_heterogenous_PUDO_duration`). Details in `docs/analysis/phase3/findings.md`. | WI-2: heavy peak ~45 % served, 15–25 % rejected, ~22 % declined, AM median > 1200 s; quiet day within ±100 s. WI-5: pooled share within ±5 points of real on the quick-test dates (real 36 / 35 %). **Result (15 validation dates):** pooled 34 % (real 36), ride time −2.9 %, mean wait error halved in all periods, queue depth and wait by riders ahead as real; **not met:** rejections 2.9 % vs 5.3 % (2024-05-30 AM 4 % vs 22.5 %) |
-| 4 | `[ ]` | **WI-3** objective | Fixed or robust scale for the wait KPIs; add shape KPIs (wait-vs-load slope or peak minus off-peak, p90 wait, peak rejection share); extend `Performance_Metrics_77_269_ODT_bins.py` to produce them on the real side. | The new score ranks E3/E5-style uniform shifts worse than the baseline |
+| 4 | `[x]` | **WI-3** objective | Each KPI scaled by a fixed tolerance instead of the weekday SD (`OBJECTIVE_SCALING`); three KPIs added: peak p90 wait, peak rejection share, pooled share (`calibration_kpis.py`, real columns via `docs/analysis/phase4/add_real_kpis.py`). Calibration and validation scripts updated. Details in `docs/analysis/phase4/findings.md`. | The new score ranks E3/E5-style uniform shifts worse than the baseline. **Met:** on 2024-03-26 E5/E3 score 6.53/6.84 against baseline 6.40; per-date score vs date load Spearman 0.81 (was 0.38); ranking stable under 0.5–2× tolerances |
 | 5 | `[ ]` | Recalibrate + validate | Sobol + BO on the 48 calibration dates on HPC, then the 15-date validation; update `calibration_wait_time_analysis.md` with the same tables (KPI table §3.1, peak outcome mix §4.5). | Peak-wait bias < 80 s; across-date SD within 30 % of real; other KPIs no worse than now |
 
 **Why this order.** WI-4 goes before WI-1 because it is smaller and fixes vehicle capacity first; WI-1 then measures the
@@ -271,6 +271,21 @@ across-date SD within 30 % of real.
 **Files.** `calibration_script_final_sc_3_with_CV_no_tt_obj_tmpdir.py` (`KPI_COLS`,
 `read_FleetPy_replications_outputs_and_build_kpi_vec`, `compute_day_wise_standardized_mu_sigma_from_real`,
 `compute_energy_score_file`); real KPI files (new columns via `Performance_Metrics_77_269_ODT_bins.py`).
+
+**Phase 4 result (details in `docs/analysis/phase4/findings.md`).**
+- Fixed tolerances per KPI (`calibration_kpis.KPI_SCALES`):
+  - rejected 2, declined 3, cancelled 2 points; rides 0.2;
+  - each wait 90 s; peak p90 wait 150 s;
+  - peak rejected 4, pooled 5 points.
+- The energy score is otherwise unchanged.
+- Tested offline on stored runs:
+  - The new score puts the baseline's error on the heavy dates (Spearman with real AM wait 0.81, was 0.38).
+  - It sees pooling and the peak rejection/tail signature, which the old score missed. The old score ranked
+    no-pooling variants and E3/E5 above the variants that restore pooling.
+  - It ranks Phase 3 `f60_lb1400` best, as the old score does.
+- No across-date term was added: per-date matching covers it, and Phase 5 checks the across-date SD.
+- The Sobol re-normalisation step is moot, because `sobol_stds` are fixed at 1.
+- Phase 5 needs a new `calibration_study_folder_name`, because the old checkpoints use the old scale.
 
 ### WI-4 Travel-time bias runs against the wait deficit (compensating errors) — Phase 1 `[x]`
 
