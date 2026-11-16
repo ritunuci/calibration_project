@@ -17,9 +17,13 @@ the model structure, not where the parameters landed.
    serves riders with median waits of 1400–1550 s. The model cannot produce long accepted waits and rejections at the
    same time; reality has both. Raising the cap (E3/E5) only shifts every wait upward, so off-peak and quiet days
    overshoot. Phase 2 confirmed that this is the main lever. Less supply barely moves peak rejections (1.8 % vs real
-   7 % in the AM peak over the 15 validation dates) or peak waits. The real operator dispatches differently: it chains
-   70 % of riders onto vehicles that are already busy, although an idle vehicle exists for 95 % of requests, and 64 % of
-   its refusals happen while a vehicle is free.
+   7 % in the AM peak over the 15 validation dates) or peak waits. The vehicle traces show the mechanism directly
+   ([real_operator_dispatch.md](real_operator_dispatch.md)):
+   - Real vehicles take a new rider with 2–4 riders already ahead, and waits keep rising, about 5 min per rider ahead
+     (9 → 26 min).
+   - In the simulation queues stop at 1–2 riders and waits level off at about 13 min.
+   - The simulation assigns riders to busy vehicles about as often as the real operator, so the assignment rule is not
+     the problem.
 2. **Two input errors that partly cancelled each other out.** Vehicles drove about 15 % too slowly (WI-4, fixed in
    Phase 1). Supply was overstated, but only by about 5 % (WI-1, fixed in Phase 2). The diagnosis assumed 30 %, because
    it counted every idle gap over 20 min as a break; the traces show that real vehicles were idle but available in most
@@ -63,9 +67,9 @@ and because faster vehicles (WI-4) and fewer vehicles (WI-1) both change how muc
 | # | Decision | Why it matters | Blocks | Answer |
 |---|---|---|---|---|
 | D1 | Does the operator have **shift or driver logs**? | If yes, WI-1 should use them; the trace-based method is a stand-in for that data. | Phase 2 | **No logs** (user, 2026-11-15); the trace-based availability is the supply input. |
-| D2 | Confirm what **"Not Accepted"** means in `TRIP_OUTCOME` (expected: rider declined an offer). | WI-2's baseline decline rate is calibrated against it. | Phase 3 | _open_ |
+| D2 | Confirm what **"Not Accepted"** means in `TRIP_OUTCOME` (expected: rider declined an offer). | WI-2's baseline decline rate is calibrated against it. | Phase 3 | **Rider turned down an offer** (user, 2026-11-15). |
 | D3 | In Phase 5, **bring back the travel-time objective** (`with_tt_obj` script) or keep the waits-only variant? | Affects which script and objective are recalibrated. | Phase 5 | **Keep waits-only** (`no_tt_obj`). User has a backup plan if a travel-time objective is needed later. (2026-11-15) |
-| D4 | OK to **change FleetPy code** (`TravelerModels.py`, insertion feasibility) on a branch? | Phase 3 is a structural change; the current model stays runnable on `main` for comparison. | Phase 3 | _open_ |
+| D4 | OK to **change FleetPy code** (`TravelerModels.py`, insertion feasibility) on a branch? | Phase 3 is a structural change; the current model stays runnable on `main` for comparison. | Phase 3 | **Yes, on a branch** (user, 2026-11-15). |
 
 ## Appendix: work item details
 
@@ -202,18 +206,30 @@ Real rider behaviour for reference: decline rate 17–32 % with weak load depend
 wait; corr with load 0.70); cancellation median 180 s after request (sim: all at 200 s — timing is fine, ETA-selectivity
 is the issue).
 
-**How the real operator dispatches (Phase 2, `docs/analysis/phase2/dispatch_checks.py`, 63 dates).** This sets the
-target for the fix.
-- **It chains riders onto busy vehicles.** At least one vehicle was idle at request time for 95 % of completed
-  requests, yet 70 % of riders were given a vehicle that was already carrying riders (42 %, median wait 16 min) or had
-  other pickups queued (28 %, 18 min). Only 31 % got an empty, free vehicle (9 min = approach + ~3 min).
-- **It refuses while vehicles are free.** For 64 % of `Seat Unavailable` refusals (and 72 % of declined offers) at least
-  one vehicle was inside its shift, empty, with nothing queued.
-  - Possible reasons are a distance or ETA limit per vehicle, zone rules, or breaks the traces cannot see.
+**How the real operator assigns riders (Phase 2; full report in [real_operator_dispatch.md](real_operator_dispatch.md),
+63 dates). This sets the target for the fix.**
+- **Riders on busy vehicles, real and simulated alike.** 71 % of real riders get a vehicle that is carrying riders or
+  has pickups queued, often while another vehicle is free. The simulation does the same on the validation dates: 29 %
+  vs 31 % get an empty vehicle with nothing queued, with the same pattern by number of free vehicles. No change is
+  needed here.
+- **Deeper queues, longer waits.**
+  - 22 % of real riders join a vehicle with 2 or more riders ahead (simulation 10 %).
+  - Real waits rise with queue depth: median 9 / 15 / 20 / 22 / 26 min for 0 / 1 / 2 / 3 / 4+ riders ahead.
+  - Simulated waits stop at about 13 min, because the wait-time cap blocks deeper insertions and riders near the cap
+    decline.
+- **Refusals.** 83 % happen with no free vehicle (agreed availability rule; up to 67 % *with* a free vehicle if long
+  idle gaps are not breaks). Half are in the PM peak. When a vehicle is free it is usually far away (median 3.1
+  straight-line miles vs 1.7 for served riders). Wheelchair need and group size do not explain refusals.
+- **Declines.** The decline rate is 20.9 % when the offered vehicle is empty with nothing queued, and 24.8 / 26.4 %
+  when it is carrying riders or has pickups queued, although those offers mean 7–9 min longer waits. The baseline is
+  about 20 % with a shallow slope.
 
-The long real waits therefore come from chaining (and pooling, WI-5), not from a lack of vehicles. A rejection rule
-based only on "no vehicle with capacity" will not reproduce the real refusals either. Fix step 2 should allow for
-refusals while some vehicles are free, e.g. a per-vehicle distance or ETA limit.
+Implications for the fix:
+- Step 1: baseline decline about 20 %, flat slope.
+- Step 2: decouple the accepted wait from the decline point, so queues can grow to the real 2–4 riders ahead. Refuse
+  when no vehicle, free or busy, can pick the rider up within a separate limit; that rule covers both the peak
+  capacity refusals and the far-away free vehicles.
+- Check: rerun `docs/analysis/phase2/operator_dispatch.py --sim <run>` and compare Figure 8 (riders ahead and wait).
 
 **Fix (model structure, code change, on a branch — D4).**
 1. Rider-decline model: add an ETA-independent baseline probability (~15–17 %, the quiet-day real level) and a much
@@ -359,8 +375,10 @@ in WI-1 and WI-4.
 3. **ETA cap and declines (WI-2).** Pooling lengthens ETAs; offers near the cap are declined or never made.
 4. **Too many idle vehicles (WI-1).** With overstated supply the insertion heuristic finds an empty vehicle more often
    than a shared one. *Not supported:* the trace-based supply left the pooled share unchanged (7.2 → 6.9 % on the 15
-   validation dates). The real operator also pools and chains while idle vehicles exist (WI-2, dispatch findings), so
-   the gap is in the operator's choice, not in vehicle availability.
+   validation dates). The simulation also assigns riders to busy vehicles about as often as the real operator
+   ([real_operator_dispatch.md](real_operator_dispatch.md) §3.7). The pooling gap is therefore in which insertions
+   are feasible (causes 1–3), not in vehicle availability or assignment preference. At the moment of their own pickup,
+   18 % of real riders share the vehicle with a rider already on board.
 5. **Slow links (WI-4).** Every detour is longer in absolute seconds, so fewer insertions stay feasible. *Not supported:*
    after the Phase 1 speed-up the pooled share fell (10–11 % → 6 %), consistent with cause 4 — faster vehicles free up
    more empty capacity.

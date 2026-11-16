@@ -3,7 +3,7 @@
 **Outcome.**
 - **Supply is overstated by about 5 %, not 30 %.**
 - The trace-based availability files are now the supply input for calibration and validation (`fleet_availability.py`).
-- **Reducing supply does not produce the real peak rejections or waits**, even at the upper bound. The real long waits and refusals come from how the operator dispatches, which is the subject of WI-2 and WI-5.
+- **Reducing supply does not produce the real peak rejections or waits**, even at the upper bound. Real vehicles take on deeper queues of riders and let waits grow with them; the simulation's wait-time cap stops this (WI-2, see `docs/real_operator_dispatch.md`).
 - No shift or driver logs exist (D1), so the traces are the only source.
 
 ## 1. Availability from the vehicle traces (`build_availability.py`)
@@ -38,23 +38,33 @@ Most of the reduction comes at the shift edges:
 
 On 2024-05-30 AM, the diagnosis expected 3.5–5 effective vehicles against 6 counted. The traces show 3.3 effective vehicles for 7:00–7:30 and 6 for 7:30–9:00.
 
-## 2. How the real operator dispatches (`dispatch_checks.py`)
+## 2. How the real operator dispatches
 
-**Idle vehicles were really available.** When a rider got a vehicle that was empty with nothing queued, the wait was the approach drive plus about 3 min (median). The overall median wait in that case was 9 min.
+Full report: [docs/real_operator_dispatch.md](../../real_operator_dispatch.md) (`operator_dispatch.py`).
 
-The state of the serving vehicle at request time (18 417 completed requests):
+> **Corrected.** The first version of this section (from `dispatch_checks.py`) said:
+> - "an idle vehicle existed for 95 % of requests";
+> - "64 % of refusals (72 % of declined offers) happened while a vehicle was free".
+>
+> That check counted vehicles with a pickup already queued as idle, and it ignored breaks. With one strict definition the shares are 67–82 % and 17–67 % (declined offers 52–73 %). The lower bound uses the agreed break rule, the upper bound ignores breaks; the rule is partly circular for refusals (see the report, §2.2).
+
+**Idle vehicles were really available.** A rider given an empty vehicle with nothing queued waited the approach drive plus about 3 min (median).
+
+**State of the serving vehicle at request time** (18 417 completed requests, 63 dates):
 
 | Serving vehicle | Share | Median wait | p75 wait |
 |---|---|---|---|
-| Empty, nothing queued | 31 % | 9 min | 13 min |
+| Empty, nothing queued | 29 % | 9 min | 13 min |
 | Carrying riders | 42 % | 16 min | 23 min |
-| Empty, other pickups queued | 28 % | 18 min | 25 min |
+| Empty, other pickups queued | 27 % | 18 min | 25 min |
+| Starting its shift | 3 % | 11 min | 18 min |
 
-- **The operator usually chains riders onto busy vehicles.** At least one vehicle was idle at the request time for 95 % of requests, yet 70 % of riders went to a vehicle that was already carrying riders or had pickups queued.
-- **It also refuses while vehicles are free.** For 64 % of `Seat Unavailable` refusals, and for 72 % of declined offers, at least one vehicle was inside its shift, empty, with nothing queued.
-  - Possible reasons are distance or ETA limits, zone rules, or breaks that the traces can't see.
-
-So the real long waits and refusals come from the operator's dispatch rules, not from fewer vehicles than counted.
+- **The real operator assigns 71 % of riders to busy vehicles,** in about half the cases while another vehicle is free. **The simulation does the same** (on the 15 validation dates: 29 % vs 31 % given an empty vehicle with nothing queued), so this is not a model error.
+- **The difference is queue depth.**
+  - 22 % of real riders joined a vehicle with 2 or more riders ahead, against 10 % in the simulation.
+  - Real waits rise about 5 min per rider ahead (9 → 15 → 20 → 26 min); simulated waits level off at about 13 min.
+- **Refusals:** 83 % came with no free vehicle (agreed rule), half of them in the PM peak. When a vehicle was free it was usually far away (median 3.1 miles).
+- **Declines:** 21 % of offers from an empty vehicle are declined, against 25–26 % from a busy one, so declining depends only weakly on the wait.
 
 ## 3. Quick tests (trial 32, 2024-05-30 and 2024-03-26, 5 seeds)
 

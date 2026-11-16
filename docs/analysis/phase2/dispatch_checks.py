@@ -1,4 +1,7 @@
-"""Phase 2: were idle real vehicles available, and how did the real operator dispatch? (63 cali + vali dates)
+"""SUPERSEDED by operator_dispatch.py (docs/real_operator_dispatch.md). This first check counts a vehicle with a
+pickup already queued as idle and ignores breaks in check 3, so its shares (95 %, 64 %, 72 %) are upper bounds.
+
+Phase 2: were idle real vehicles available, and how did the real operator dispatch? (63 cali + vali dates)
 
 1. Requests vs idle vehicles: for every completed request, is any vehicle idle (available, not busy; rule of
    build_availability.py) at request time, and how long did the rider wait?
