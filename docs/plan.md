@@ -1,6 +1,6 @@
 # Plan: making the calibrated sc_3 model reproduce the real KPIs
 
-Status: agreed plan, November 2026. Phases 0 and 1 done; Phase 2 next. Evidence and numbers behind every statement here are in
+Status: agreed plan, November 2026. Phases 0–2 done; Phase 3 next. Evidence and numbers behind every statement here are in
 [calibration_wait_time_analysis.md](calibration_wait_time_analysis.md). This file replaces the earlier `work_items.md`;
 the per-item details are in the appendix below.
 
@@ -16,11 +16,16 @@ the model structure, not where the parameters landed.
    900–1000 s whatever the load, and nobody is ever rejected. The real system rejects about 22 % in heavy peaks and still
    serves riders with median waits of 1400–1550 s. The model cannot produce long accepted waits and rejections at the
    same time; reality has both. Raising the cap (E3/E5) only shifts every wait upward, so off-peak and quiet days
-   overshoot.
-2. **Two input errors that cancel each other out.** Supply is overstated: about 30 % of counted vehicle-hours are idle
-   gaps (WI-1). Vehicles also drove about 15 % too slowly (WI-4, fixed in Phase 1). Together they made rides per
-   vehicle-hour look right (3.02 vs 3.00) for the wrong reasons. With only WI-4 fixed the fit looks worse (fleet now
-   oversized: rides per vehicle-hour 3.4, rejections ~1 %), as expected until WI-1 is done.
+   overshoot. Phase 2 confirmed that this is the main lever. Less supply barely moves peak rejections (1.8 % vs real
+   7 % in the AM peak over the 15 validation dates) or peak waits. The real operator dispatches differently: it chains
+   70 % of riders onto vehicles that are already busy, although an idle vehicle exists for 95 % of requests, and 64 % of
+   its refusals happen while a vehicle is free.
+2. **Two input errors that partly cancelled each other out.** Vehicles drove about 15 % too slowly (WI-4, fixed in
+   Phase 1). Supply was overstated, but only by about 5 % (WI-1, fixed in Phase 2). The diagnosis assumed 30 %, because
+   it counted every idle gap over 20 min as a break; the traces show that real vehicles were idle but available in most
+   of those gaps. Together the two errors made rides per vehicle-hour look right (3.02 vs 3.00) for the wrong reasons.
+   After both fixes it is 3.3, because the simulated fleet carries more riders than the real one with the same vehicles.
+   The causes are the dispatch and pooling differences in points 1 and 4.
 3. **The objective cannot see the problem (WI-3).** The Energy Score scales each KPI by its real day-to-day spread, and
    peak waits have the largest spread, so a 200 s bias counts as less than 1 σ, and the score never checks how waits
    react to load. It settles for a model that is roughly equally off on every KPI.
@@ -43,7 +48,7 @@ evaluation takes about 3.5–4 h locally, so an 80-trial calibration has to run 
 |---|---|---|---|---|
 | 0 | `[x]` | Housekeeping | Sobol step seeded (`model_kwargs={"seed": RANDOM_SEED}` in the no-tt-obj script; verified identical points across runs and across a checkpoint save/reload). HPC env already exists, no export needed. ODT-bin label and pooled travel-time fixes dropped by the user (auxiliary outputs only, not in the objective). | Sobol warm-start reproducible |
 | 1 | `[x]` | **WI-4** travel time | Operator plans on hourly link means (user, fed83bf); vehicles use the same hour as the operator (floor instead of round, 2c3e598); hourly link means scaled by 7 per-period factors estimated from real unpooled trips (6c08717). Per-hour factors tried and not adopted (1b982ef). Details in the WI-4 appendix. | **Met** (condition adjusted, see WI-4): ride time on requests the real operator served unpooled within ±5 % on all 15 validation dates (overall −0.3 %, worst date 4.5 %). The all-trip mean (−12 %) moves to WI-5. |
-| 2 | `[ ]` | **WI-1** supply | New script that builds availability from vehicle traces (shift span minus breaks during unmet demand), 30-min bins; switch `run_program_day` in the scripts to use it; check depot capacity and activation warnings. | Peak rejections move from 0 % toward 23 % (waits are expected to stay near 1000 s at this point) |
+| 2 | `[x]` | **WI-1** supply | Availability built from the vehicle traces (shift span minus breaks with unmet demand) in 30-min bins (`docs/analysis/phase2/build_availability.py` → `data/fleetctrl/trace_availability/`). All calibration and validation scripts now read it through `fleet_availability.py`. Depot capacity and activations checked. Details in the WI-1 appendix and `docs/analysis/phase2/findings.md`. | **Not reachable through supply.** Effective supply is 0.947 of counted; six of seven KPIs move toward real, but peak rejections stay at 1.8 / 3.1 % (AM / PM; real 7.0 / 8.2 %) even at the upper bound (0.843). The real refusals and long waits come from dispatch, which is Phase 3. |
 | 3 | `[ ]` | **WI-2** structure (FleetPy code) + **WI-5** pooling | WI-2: give the decline and cancellation models an ETA-independent baseline (~15–17 %) and a flatter slope; make rejection depend on capacity instead of the ETA cap so accepted waits can reach the real range; set new parameter bounds. WI-5: re-measure the pooled share after Phases 1–2, find which constraint blocks pooling, fix it. Done on a git branch. | WI-2: heavy peak ~45 % served, 15–25 % rejected, ~22 % declined, AM median > 1200 s; quiet day within ±100 s. WI-5: pooled share within ±5 points of real on the quick-test dates (real 36 / 35 %) |
 | 4 | `[ ]` | **WI-3** objective | Fixed or robust scale for the wait KPIs; add shape KPIs (wait-vs-load slope or peak minus off-peak, p90 wait, peak rejection share); extend `Performance_Metrics_77_269_ODT_bins.py` to produce them on the real side. | The new score ranks E3/E5-style uniform shifts worse than the baseline |
 | 5 | `[ ]` | Recalibrate + validate | Sobol + BO on the 48 calibration dates on HPC, then the 15-date validation; update `calibration_wait_time_analysis.md` with the same tables (KPI table §3.1, peak outcome mix §4.5). | Peak-wait bias < 80 s; across-date SD within 30 % of real; other KPIs no worse than now |
@@ -57,7 +62,7 @@ and because faster vehicles (WI-4) and fewer vehicles (WI-1) both change how muc
 
 | # | Decision | Why it matters | Blocks | Answer |
 |---|---|---|---|---|
-| D1 | Does the operator have **shift or driver logs**? | If yes, WI-1 should use them; the trace-based method is a stand-in for that data. | Phase 2 | _open_ |
+| D1 | Does the operator have **shift or driver logs**? | If yes, WI-1 should use them; the trace-based method is a stand-in for that data. | Phase 2 | **No logs** (user, 2026-11-15); the trace-based availability is the supply input. |
 | D2 | Confirm what **"Not Accepted"** means in `TRIP_OUTCOME` (expected: rider declined an offer). | WI-2's baseline decline rate is calibrated against it. | Phase 3 | _open_ |
 | D3 | In Phase 5, **bring back the travel-time objective** (`with_tt_obj` script) or keep the waits-only variant? | Affects which script and objective are recalibrated. | Phase 5 | **Keep waits-only** (`no_tt_obj`). User has a backup plan if a travel-time objective is needed later. (2026-11-15) |
 | D4 | OK to **change FleetPy code** (`TravelerModels.py`, insertion feasibility) on a branch? | Phase 3 is a structural change; the current model stays runnable on `main` for comparison. | Phase 3 | _open_ |
@@ -82,9 +87,26 @@ Baseline after Phase 1 (trial 32, per-period scaled network, 5 seeds; the refere
 
 Per-date values: `docs/analysis/phase1/eval_vali_period.csv`.
 
-### WI-1 Supply is overstated (full-hour availability from pickup counts) — Phase 2
+Baseline after Phase 2 (as above, plus the trace-based supply; **the reference for Phase 3**):
 
-**Problem.** `data/fleetctrl/77_unique_vehid/{day}/{date}.csv` counts a vehicle as active for a whole hour if it had any
+| | 2024-05-30 sim (real) | 2024-03-26 sim (real) | 15 validation dates, mean sim (real) |
+|---|---|---|---|
+| Rejected % | 1.0 (6.6) | 1.8 (4.3) | 1.8 (5.3) |
+| Declined % | 20.6 (24.8) | 18.3 (24.9) | 20.5 (23.4) |
+| Cancelled % | 6.4 (6.0) | 6.9 (5.9) | 6.5 (7.1) |
+| Rides per veh-rev-h | 3.28 (2.97) | 3.00 (2.62) | 3.3 (3.0) |
+| Wait AM / PM / off-peak s | 955 / 816 / 670 (1414 / 1044 / 715) | 659 / 807 / 668 (763 / 952 / 740) | 836 / 867 / 692 (1057 / 1125 / 794) |
+| Served | 355 (314) | 326 (294) | 327 (299) |
+| Pooled share | 5.5 % (36) | 4.7 % (35) | 6.9 % (38) |
+| AM peak mix: served / rejected / declined % | 54.7 / 1.4 / 33.3 (43.8 / 22.5 / 21.3) | — | 68.4 / 1.8 / 23.1 (63.2 / 7.0 / 21.2) |
+| PM peak mix: served / rejected / declined % | — | — | 62.6 / 3.1 / 26.1 (58.3 / 8.2 / 22.9) |
+
+The quick-test dates give the same values in the quick test and in the validation run (same seeds). Per-date values:
+`docs/analysis/phase2/eval_vali_trace.csv`; peak mix from `docs/analysis/phase2/peak_mix.py`.
+
+### WI-1 Supply is overstated (full-hour availability from pickup counts) — Phase 2 `[x]`
+
+**Problem (as diagnosed; the 30 % turned out to be about 5 %, see Results).** `data/fleetctrl/77_unique_vehid/{day}/{date}.csv` counts a vehicle as active for a whole hour if it had any
 pickup in that hour; `TimeBasedFS` then provides that many vehicles for the full hour. Ride traces show that 30 % of the
 counted vehicle-hours are idle gaps > 20 min (15–21 % at 7–9 h, 25 % at 10 h, 32–36 % at 11–13 h, 25–30 % at 14–17 h;
 busy share of counted hours only 51 %). 2024-05-30 AM: 6–7 counted vehicles, 3.5–5 effective. The real operator
@@ -112,8 +134,56 @@ demand are currently *not* counted (opposite bias in quiet hours).
 (E1 uniform ×0.7 already gave 9.1 % daily); `rides_per_veh_rev_hr` stays comparable (both sides count vehicles with a
 pickup per hour). Expect waits to stay ~1000 s until WI-2 is done.
 
-**Files.** New preprocessing script (raw file → availability files); `calibration_script_final_sc_3_*.py`,
-`vali_script_sc_3.py` (`run_program_day`); `data/fleetctrl/elastic_fleet_size/`, depot file.
+**What was done.**
+1. `docs/analysis/phase2/build_availability.py` (needs the raw request file) builds the availability rule:
+   - busy = pickup minus the approach drive (`EMPTY_MILES_BEFORE` at 27 km/h, capped at 20 min), up to dropoff;
+   - shift = earliest to latest busy time, or request time of a declined or cancelled offer assigned to the vehicle;
+   - break = idle stretch > 20 min with at least one `Seat Unavailable` inside it.
+
+   It writes `data/fleetctrl/trace_availability/{day}/{date}.csv` (63 dates; `time`, `eff_vehicles`, `n_active` per
+   30-min bin, 6:00–21:00).
+2. `fleet_availability.py` (repo root) writes FleetPy's active-fleet file from these, with fleet size = the max of
+   `n_active`. It is used by both calibration scripts, `vali_script_sc_3.py` and `run_trial32_dates.py`.
+   `source="counted"` (or `--fleet counted`) reproduces the old hourly input exactly. The retry fallback in
+   `run_fleetpy_replications` (fleet share 0.5 if FleetPy fails) is unchanged.
+3. Measured how the real operator dispatches (`docs/analysis/phase2/dispatch_checks.py`); the results are under WI-2.
+
+**Results.** Details are in `docs/analysis/phase2/findings.md`.
+- **Effective ÷ counted vehicle-hours (hours 7–18, 63 dates):**
+
+  | Rule | Ratio |
+  |---|---|
+  | Agreed rule | 0.947 |
+  | Gap > 30 min | 0.956 |
+  | Every idle gap > 20 min removed (upper bound) | 0.843 |
+  | Shift span, no breaks | 1.007 |
+
+  The reduction is mostly at the shift edges (hour 7: 6.7 → 5.5 vehicles; hour 18: 8.8 → 6.8; hours 8–17 at most −6 %).
+  The diagnosed 30 % counted every idle gap as lost supply, but real vehicles idle in those gaps were available: a rider
+  given an empty, free vehicle waited the approach drive plus about 3 min.
+- **Quick tests:**
+  - Agreed rule on 2024-05-30: AM-peak rejections 1.4 % vs real 22.5 %.
+  - Upper bound on 2024-05-30: 2.8 %, and off-peak waits overshoot on both dates (805 / 817 s vs 715 / 740).
+  - Less supply shows up mainly as more declines, not rejections.
+- **15 validation dates:**
+  - Six of seven KPIs move toward real (rejected, declined, cancelled, rides per veh-rev-h, PM and off-peak wait); the AM
+    wait does not change.
+  - Served falls 340 → 327 (real 299).
+  - Peak rejections stay at 1.8 / 3.1 % (AM / PM; real 7.0 / 8.2 %), and peak declines now overshoot.
+  - Baseline table above.
+- **FleetPy mechanics:**
+  - Depots hold 95 vehicles against a largest fleet of 13.
+  - Failed activations (a vehicle deactivated at a sharp drop has not reached a depot when the next bin reactivates it;
+    no retry) cost 0.26 % of planned vehicle-hours.
+  - Deactivation lag adds back up to 2.8 %. Net simulated cut ≈ 2–3 %.
+  - Left as is.
+
+**Acceptance outcome.** The condition (peak rejections on 2024-05-30 toward 23 %) **cannot be reached through supply**:
+even the upper bound gives 2.8 %. The input is now right; the remaining gap belongs to WI-2/WI-5.
+
+**Files.** `docs/analysis/phase2/` (`build_availability.py`, `dispatch_checks.py`, `peak_mix.py`, `findings.md`,
+`availability_summary.csv`, `eval_*.csv`), `data/fleetctrl/trace_availability/`, `fleet_availability.py`,
+`calibration_script_final_sc_3_*.py`, `vali_script_sc_3.py`, `docs/analysis/phase1/run_trial32_dates.py`.
 
 ### WI-2 One ETA cap governs both rejections and accepted waits (E3/E5 finding) — Phase 3
 
@@ -131,6 +201,19 @@ optimizer cannot escape by tuning (ES correlations show it pushing the cap and t
 Real rider behaviour for reference: decline rate 17–32 % with weak load dependence (+1.9 points per 100 s off-peak
 wait; corr with load 0.70); cancellation median 180 s after request (sim: all at 200 s — timing is fine, ETA-selectivity
 is the issue).
+
+**How the real operator dispatches (Phase 2, `docs/analysis/phase2/dispatch_checks.py`, 63 dates).** This sets the
+target for the fix.
+- **It chains riders onto busy vehicles.** At least one vehicle was idle at request time for 95 % of completed
+  requests, yet 70 % of riders were given a vehicle that was already carrying riders (42 %, median wait 16 min) or had
+  other pickups queued (28 %, 18 min). Only 31 % got an empty, free vehicle (9 min = approach + ~3 min).
+- **It refuses while vehicles are free.** For 64 % of `Seat Unavailable` refusals (and 72 % of declined offers) at least
+  one vehicle was inside its shift, empty, with nothing queued.
+  - Possible reasons are a distance or ETA limit per vehicle, zone rules, or breaks the traces cannot see.
+
+The long real waits therefore come from chaining (and pooling, WI-5), not from a lack of vehicles. A rejection rule
+based only on "no vehicle with capacity" will not reproduce the real refusals either. Fix step 2 should allow for
+refusals while some vehicles are free, e.g. a per-vehicle distance or ETA limit.
 
 **Fix (model structure, code change, on a branch — D4).**
 1. Rider-decline model: add an ETA-independent baseline probability (~15–17 %, the quiet-day real level) and a much
@@ -231,9 +314,10 @@ and pooling. Real pooled trips take 1.01 × direct time against 0.83 × for unpo
 all-trip mean within ±5 % moves to WI-5's acceptance.
 
 **Open points.**
-- Hour 7 is +8.8 % in both factor options (validation dates faster than the calibration dates in that hour). Re-check
-  after WI-1, when the early-morning fleet changes; refine the hour-7 factor only if it persists.
-- Fleet now looks oversized (see baseline after Phase 1 above) — expected; WI-1 is next.
+- Hour 7 is +8.8 % in both factor options (validation dates faster than the calibration dates in that hour). Still
+  +8.8 % with the Phase 2 supply, so it is not a supply effect; refine the hour-7 factor if it matters after Phase 3.
+- Fleet looked oversized after Phase 1. Phase 2 showed supply was only ~5 % overstated; the rest of the
+  rides-per-vehicle-hour gap is dispatch and pooling (WI-2/WI-5).
 
 **Files.** `data/networks/example_network/` (`base/edges.csv` `hr_*`, `time_*/operator_exp_tt.csv`,
 `tt_scaling_factors.csv`), `data/networks/example_network_periodic/` (unscaled reference), `src/routing/NetworkBasic.py`,
@@ -274,7 +358,9 @@ in WI-1 and WI-4.
    operator must often go beyond 21 %; combined with the 160 s planned stops a single insertion easily exceeds the limit.
 3. **ETA cap and declines (WI-2).** Pooling lengthens ETAs; offers near the cap are declined or never made.
 4. **Too many idle vehicles (WI-1).** With overstated supply the insertion heuristic finds an empty vehicle more often
-   than a shared one.
+   than a shared one. *Not supported:* the trace-based supply left the pooled share unchanged (7.2 → 6.9 % on the 15
+   validation dates). The real operator also pools and chains while idle vehicles exist (WI-2, dispatch findings), so
+   the gap is in the operator's choice, not in vehicle availability.
 5. **Slow links (WI-4).** Every detour is longer in absolute seconds, so fewer insertions stay feasible. *Not supported:*
    after the Phase 1 speed-up the pooled share fell (10–11 % → 6 %), consistent with cause 4 — faster vehicles free up
    more empty capacity.
@@ -282,8 +368,8 @@ in WI-1 and WI-4.
    driven distance, i.e. how attractive pooling is to the operator.
 
 **Fix.**
-1. Re-measure the pooled share on the quick test after Phase 2 (after Phase 1 it is 6 %); cause 4 may close part of
-   the gap.
+1. ~~Re-measure the pooled share after Phase 2~~ Done: 5.5 / 4.7 % on the quick-test dates, 6.9 % over the 15
+   validation dates. Cause 4 does not close the gap.
 2. One-at-a-time sensitivity on the quick-test dates for the remaining levers: `op_const_boarding_time` 160 → 50 s,
    `op_max_detour_time_factor` 21 → 40 / 60 %, `insertion_with_heterogenous_PUDO_duration` on, `vot`. Record pooled
    share together with waits, rejections and declines.
@@ -313,5 +399,9 @@ script. Measurement: `docs/analysis/phase1/evaluate_runs.py` (sim pooled share, 
 - Analysis scripts and result tables: `docs/analysis/`. For a trial-32 test run use
   `docs/analysis/phase1/run_trial32_dates.py <out_dir> quick|vali` (backs up and restores the three input files itself),
   then `evaluate_runs.py <out_dir>`.
+- Active fleet: `fleet_availability.py` (default: trace-based files in `data/fleetctrl/trace_availability/`).
+  `run_trial32_dates.py` uses the same default; add `--fleet counted` for the old hourly input (Phase 1 runs) or
+  `--fleet <dir>` for another set of trace-format files. Rebuild the files with
+  `docs/analysis/phase2/build_availability.py` if the rule changes.
 - `example_network` holds **scaled** link times; never re-scale it in place — `apply_tt_factors.py` always starts from
   the unscaled `example_network_periodic/base/edges.csv`.
