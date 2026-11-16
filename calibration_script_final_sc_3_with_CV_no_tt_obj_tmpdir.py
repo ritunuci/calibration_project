@@ -259,8 +259,8 @@ def safe_std(series, default=120):
 def run_fleetpy_replications(file_name, day, active_fleetsize_path):
     # runs one FleetPy replication and returns raw KPI vector
     try:
-        # subprocess.run(["/data/homezvol2/rituns/.conda/envs/fleetpy_hpc/bin/python", "run_examples.py"], check=True)
-        subprocess.run(["C:/Users/ritun_uci/.conda/envs/fleetpy_Ax_client/python", "run_examples.py"], check=True)
+        subprocess.run(["/data/homezvol2/rituns/.conda/envs/fleetpy_hpc/bin/python", "run_examples.py"], check=True)
+        # subprocess.run(["C:/Users/ritun_uci/.conda/envs/fleetpy_Ax_client/python", "run_examples.py"], check=True)
     except Exception as e:
         # print(f"{Fore.GREEN}FleetPy failed for {str(file_name)} of {day}: {e},\n "
         #         f"Retrying with fleet fraction = 0.5 for all times...{Style.RESET_ALL}")
@@ -270,8 +270,8 @@ def run_fleetpy_replications(file_name, day, active_fleetsize_path):
         df_fix.iloc[:, 1] = 0.5
         df_fix.to_csv(active_fleetsize_path, index=False)
         time.sleep(1)
-        # subprocess.run(["/data/homezvol2/rituns/.conda/envs/fleetpy_hpc/bin/python", "run_examples.py"], check=True)
-        subprocess.run(["C:/Users/ritun_uci/.conda/envs/fleetpy_Ax_client/python", "run_examples.py"], check=True)
+        subprocess.run(["/data/homezvol2/rituns/.conda/envs/fleetpy_hpc/bin/python", "run_examples.py"], check=True)
+        # subprocess.run(["C:/Users/ritun_uci/.conda/envs/fleetpy_Ax_client/python", "run_examples.py"], check=True)
         logger.info(f"{Fore.GREEN}FleetPy retry successful for {str(file_name)} of {day} with fleet fraction = 0.5 for all times{Style.RESET_ALL}")
     time.sleep(1)
 

@@ -16,7 +16,7 @@ set -Eeuo pipefail
 # Adjust --tmp above to the actual size of your staged project and outputs.
 # All files in TMPDIR are disposable when SLURM ends the job.
 SOURCE_DIR=/dfs6b/pub/rituns/FleetPy_calibration_sc_3
-STUDY_NAME=calibration_sc_3_journal_Nov_3rd_no_tt_obj
+STUDY_NAME=calibration_sc_3_journal_Nov_16th_no_tt_obj_claude
 PYTHON_SCRIPT=calibration_script_final_sc_3_with_CV_no_tt_obj_tmpdir.py
 
 : "${TMPDIR:?SLURM did not provide TMPDIR}"
