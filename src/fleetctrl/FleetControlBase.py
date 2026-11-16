@@ -144,6 +144,8 @@ class FleetControlBase(metaclass=ABCMeta):
         self.min_dtw = operator_attributes.get(G_OP_MIN_DTW, None)
         self.const_bt = operator_attributes.get(G_OP_CONST_BT, 0)
         self.add_bt = operator_attributes.get(G_OP_ADD_BT, 0)
+        self.dispatch_delay = operator_attributes.get(G_OP_DISPATCH_DELAY, 0) or 0   # Phase 3, see globals.py
+        self.fifo_pickups = bool(operator_attributes.get(G_OP_FIFO_PICKUPS, 0) or 0)  # Phase 3, see globals.py
         # early locking/constraining of request pickup
         # --------------------------------------------
         self.early_lock_time = operator_attributes.get(G_RA_LOCK_TIME, 0)

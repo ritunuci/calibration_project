@@ -29,6 +29,8 @@ op_max_constant_detour_time,
 op_min_detour_time_window,
 op_const_boarding_time,160.01
 op_add_boarding_time,0
+op_dispatch_delay,0
+op_fifo_pickups,0
 op_base_fare,0
 op_distance_fare,0.1
 op_time_fare,0
@@ -85,6 +87,10 @@ evening_hr_end,64800
 ##10,rider decline model config
 stochastic_rider_service_decline,TRUE
 rider_service_decline_wait_upper,1017.28
+rider_decline_model,cap_linear
+rider_decline_base,0.136
+rider_decline_slope_per_min,0.0068
+rider_decline_max,1
 deterministic_user_cancel_prob,0.07997
 morning_hr_tt_multiplier,1
 evening_hr_tt_multiplier,1

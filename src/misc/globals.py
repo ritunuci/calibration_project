@@ -124,6 +124,19 @@ G_AR_MAX_DEC_T = "user_max_decision_time"
 G_AR_PRICE_F = "user_price_sensitivity_func_dict"
 G_OP_STO_RIDER_DECLINE = "stochastic_rider_service_decline" # Ritun added for stochastic rider decline model
 G_OP_RIDER_DECLINE_WAIT_UPPER = "rider_service_decline_wait_upper" # Ritun added for stochastic rider decline model
+# Phase 3 (WI-2): rider decline model independent of the operator's wait cap
+#   "cap_linear" (default, original): P = 0 below rider_service_decline_wait_upper, linear to 1 at op_max_wait_time
+#   "base_slope": P = min(rider_decline_max, rider_decline_base + rider_decline_slope_per_min * offered wait [min])
+G_OP_RIDER_DECLINE_MODEL = "rider_decline_model"
+G_OP_RIDER_DECLINE_BASE = "rider_decline_base"
+G_OP_RIDER_DECLINE_SLOPE = "rider_decline_slope_per_min"
+G_OP_RIDER_DECLINE_MAX = "rider_decline_max"
+# Phase 3: a vehicle may not set off towards a new rider's pickup earlier than request time + op_dispatch_delay [s]
+# (real system: ~4-5 min fixed delay before the vehicle arrives; default 0 = off)
+G_OP_DISPATCH_DELAY = "op_dispatch_delay"
+# Phase 3: 1 = a new rider's pick-up may not be planned before pick-ups already planned (real operator: only ~9 % of
+# queued riders are overtaken; FleetPy's free insertion ~36 %). Drop-offs can still be interleaved. 0 = off (default)
+G_OP_FIFO_PICKUPS = "op_fifo_pickups"
 
 # traveler mode choice attributes
 G_MC_VOT = "value_of_time"

@@ -14,6 +14,19 @@ import logging
 LOG = logging.getLogger(__name__)
 
 
+def earliest_pickup_with_dispatch_delay(routing_engine : NetworkBase, prq : PlanRequest, prev_pos : tuple, t_pu_earliest : float) -> float:
+    """Phase 3 dispatch delay: a vehicle may not set off from prev_pos (its current position or the stop before the
+    pickup) towards the pickup of prq before prq.t_depart_earliest (request time + op_dispatch_delay). Expressed as an
+    earliest pick-up time, so the pick-up is planned at max(t_pu_earliest, t_depart_earliest + travel time); the vehicle
+    then waits at the pickup instead of at prev_pos, which gives the same pick-up time."""
+    t_dep = getattr(prq, "t_depart_earliest", None)
+    if t_dep is None:
+        return t_pu_earliest
+    o_pos = prq.get_o_stop_info()[0]
+    tt = 0 if prev_pos == o_pos else routing_engine.return_travel_costs_1to1(prev_pos, o_pos)[1]
+    return max(t_pu_earliest, t_dep + tt)
+
+
 def simple_insert(routing_engine : NetworkBase, sim_time : int, veh_obj : SimulationVehicle, orig_veh_plan : VehiclePlan, 
                   new_prq_obj : PlanRequest, std_bt : int, add_bt : int,
                   skip_first_position_insertion : bool=False) -> List[VehiclePlan]:
@@ -60,10 +73,19 @@ def simple_insert(routing_engine : NetworkBase, sim_time : int, veh_obj : Simula
     skip_next = -1
     if skip_first_position_insertion:
         skip_next = 0
+    # Phase 3 FIFO pick-ups: index of the last stop with a planned pick-up; the new pick-up may join that stop or come
+    # after it, but not before it (-1 = no planned pick-ups, no restriction)
+    last_pu_index = -1
+    if getattr(new_prq_obj, "fifo_pickups", False):
+        for k, ps in enumerate(orig_veh_plan.list_plan_stops):
+            if len(ps.get_list_boarding_rids()) > 0:
+                last_pu_index = k
     first_iterator = range(number_stops)
     for i in first_iterator:
         if not o_prq_feasible:
             break
+        if i < last_pu_index:
+            continue
         if orig_veh_plan.list_plan_stops[i].is_locked() or orig_veh_plan.list_plan_stops[i].is_infeasible_locked():
             continue
         next_o_plan = orig_veh_plan.copy()
@@ -74,7 +96,8 @@ def simple_insert(routing_engine : NetworkBase, sim_time : int, veh_obj : Simula
             new_boarding_dict = {-1:old_pstop.get_list_alighting_rids(), 1:new_boarding_list}
             ept_dict, lpt_dict, mtt_dict, lat_dict = old_pstop.get_boarding_time_constraint_dicts()
             new_earliest_pickup_time_dict = ept_dict.copy()
-            new_earliest_pickup_time_dict[new_rid_struct] = prq_t_pu_earliest
+            prev_pos = veh_obj.pos if i == 0 else orig_veh_plan.list_plan_stops[i - 1].get_pos()
+            new_earliest_pickup_time_dict[new_rid_struct] = earliest_pickup_with_dispatch_delay(routing_engine, new_prq_obj, prev_pos, prq_t_pu_earliest)
             new_latest_pickup_time_dict = lpt_dict.copy()
             new_latest_pickup_time_dict[new_rid_struct] = prq_t_pu_latest
 
@@ -103,8 +126,12 @@ def simple_insert(routing_engine : NetworkBase, sim_time : int, veh_obj : Simula
             # add it before this stop else > planned departure after boarding time
             if i == skip_next:
                 continue
+            if i <= last_pu_index:   # FIFO pick-ups: a new stop before stop i would precede the last planned pick-up
+                continue
             #new_earliest_departure = max(prq_t_pu_earliest+std_bt, sim_time + std_bt)
-            new_plan_stop = BoardingPlanStop(prq_o_stop_pos, boarding_dict={1:[new_rid_struct]}, earliest_pickup_time_dict={new_rid_struct : prq_t_pu_earliest},
+            prev_pos = veh_obj.pos if i == 0 else orig_veh_plan.list_plan_stops[i - 1].get_pos()
+            ept = earliest_pickup_with_dispatch_delay(routing_engine, new_prq_obj, prev_pos, prq_t_pu_earliest)
+            new_plan_stop = BoardingPlanStop(prq_o_stop_pos, boarding_dict={1:[new_rid_struct]}, earliest_pickup_time_dict={new_rid_struct : ept},
                                              latest_pickup_time_dict={new_rid_struct : prq_t_pu_latest}, change_nr_pax=new_prq_obj.nr_pax,
                                              duration=boarding_time)
             next_o_plan.list_plan_stops[i:i] = [new_plan_stop]
@@ -124,7 +151,9 @@ def simple_insert(routing_engine : NetworkBase, sim_time : int, veh_obj : Simula
     if o_prq_feasible and skip_next != number_stops and (number_stops == 0 or not orig_veh_plan.list_plan_stops[-1].is_locked_end()):
         i = number_stops
         #new_earliest_departure = max(prq_t_pu_earliest + std_bt, sim_time + std_bt)
-        new_plan_stop = BoardingPlanStop(prq_o_stop_pos, boarding_dict={1:[new_rid_struct]}, earliest_pickup_time_dict={new_rid_struct : prq_t_pu_earliest},
+        prev_pos = veh_obj.pos if i == 0 else orig_veh_plan.list_plan_stops[i - 1].get_pos()
+        ept = earliest_pickup_with_dispatch_delay(routing_engine, new_prq_obj, prev_pos, prq_t_pu_earliest)
+        new_plan_stop = BoardingPlanStop(prq_o_stop_pos, boarding_dict={1:[new_rid_struct]}, earliest_pickup_time_dict={new_rid_struct : ept},
                                             latest_pickup_time_dict={new_rid_struct : prq_t_pu_latest}, change_nr_pax=new_prq_obj.nr_pax,
                                             duration=boarding_time)
         next_o_plan = orig_veh_plan.copy()
@@ -461,7 +490,8 @@ def single_insertion(veh_obj_list : List[SimulationVehicle], current_vid_to_vehp
                     current_best_obj_delta = delta_obj
         else:
             rid = prq_to_insert.get_rid_struct()
-            pu_stop = BoardingPlanStop(prq_o_stop_pos, boarding_dict={1 : [rid]}, earliest_pickup_time_dict={rid: prq_t_pu_earliest},
+            ept = earliest_pickup_with_dispatch_delay(routing_engine, prq_to_insert, veh_obj.pos, prq_t_pu_earliest)
+            pu_stop = BoardingPlanStop(prq_o_stop_pos, boarding_dict={1 : [rid]}, earliest_pickup_time_dict={rid: ept},
                                        latest_pickup_time_dict={rid : prq_t_pu_latest}, duration=std_bt)
             do_stop = BoardingPlanStop(d_stop_pos, boarding_dict={-1 : [rid]}, max_trip_time_dict={rid : prq_max_trip_time}, duration=std_bt)
             new_veh_plan = VehiclePlan(veh_obj, sim_time, routing_engine, [pu_stop, do_stop])

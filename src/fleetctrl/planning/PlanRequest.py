@@ -50,6 +50,11 @@ class PlanRequest:
         else:
             self.sub_rid_struct = self.rid
         self.rq_time = rq.rq_time
+        # Phase 3 dispatch delay: earliest time a vehicle may set off towards this pickup (None = no constraint);
+        # set by the fleet control after creation, used in insertion.simple_insert
+        self.t_depart_earliest = None
+        # Phase 3: if True, the pick-up of this request may only be inserted after all pick-ups already planned
+        self.fifo_pickups = False
         #
         if pickup_pos is None:
             self.o_pos = rq.o_pos

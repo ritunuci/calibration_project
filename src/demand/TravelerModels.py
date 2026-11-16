@@ -661,6 +661,21 @@ class BasicRequest_no_show(RequestBase):
         elif len(opts) == 1:
             # -------------- Stochastic Rider Decline ---------------
             if sc_parameters[G_OP_STO_RIDER_DECLINE]:
+                if not self.no_show and sc_parameters.get(G_OP_RIDER_DECLINE_MODEL) == "base_slope":
+                    # Phase 3 (WI-2): baseline decline probability plus a shallow slope in the offered wait,
+                    # independent of op_max_wait_time (real: ~20 % at 9 min, ~27 % at 20-25 min)
+                    offered_wait_time = self.offer[opts[0]][G_OFFER_WAIT]
+                    prob_decline = sc_parameters[G_OP_RIDER_DECLINE_BASE] + \
+                        sc_parameters[G_OP_RIDER_DECLINE_SLOPE] * offered_wait_time / 60
+                    prob_decline = min(max(prob_decline, 0.0), sc_parameters.get(G_OP_RIDER_DECLINE_MAX, 1.0))
+                    if np.random.random() < prob_decline:
+                        LOG.debug(f" -> decline (base_slope, p={prob_decline:.3f})")
+                        self.rider_declined = True
+                        return -1
+                    LOG.debug(f" -> accept (base_slope, p={prob_decline:.3f})")
+                    self.fare = self.offer[opts[0]].get(G_OFFER_FARE, 0)
+                    self.chosen_operator_id = opts[0]
+                    return opts[0]
                 if not self.no_show:
                     offered_wait_time = self.offer[opts[0]][G_OFFER_WAIT]
                     if offered_wait_time <= sc_parameters[G_OP_RIDER_DECLINE_WAIT_UPPER]:
