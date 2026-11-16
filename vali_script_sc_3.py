@@ -22,6 +22,7 @@ from ax.adapter.registry import Generators
 
 from fleet_availability import write_active_fleet_file
 from calibration_kpis import EXTRA_KPI_COLS, sim_extra_kpis   # Phase 4 (WI-3) objective KPIs
+from calibration_params import write_parameters   # Phase 5: parameter set -> FleetPy inputs
 # from ax.storage.json_store.save import save_experiment
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -310,43 +311,9 @@ def run_program_day(day, pooled_tt_mean_dict, real_tt_mean_dict):
 
 
 
-def update_csv_with_train_x(values):
-    op_max_wait, detour_factor, pudo_dur, decline_wait_time_bound_upper, diffusion_wait_time_bound_lower, max_cancel_decision_time, random_term_variance, decision_threshold, no_show_wait_time, cv1_pk, cv1_off, cv2_pk, cv2_off, cv3_pk, cv3_off = values
-
-    # cv1_pk, cv1_off, cv2_pk, cv2_off, cv3_pk, cv3_off = 0.7, 0.5, 0.7, 0.6, 0.8, 0.9
-
-    input_csv_path = fleetpy_const_config_input_file_path
-    input_csv_df = pd.read_csv(input_csv_path, index_col=0)
-    input_csv_df.loc["op_max_wait_time", "Parameter_Value"] = float(op_max_wait)
-    input_csv_df.loc["op_max_detour_time_factor", "Parameter_Value"] = float(detour_factor)
-    input_csv_df.loc["op_const_boarding_time", "Parameter_Value"] = float(pudo_dur)
-    input_csv_df.loc["rider_service_decline_wait_upper", "Parameter_Value"] = float(decline_wait_time_bound_upper)
-    input_csv_df.loc["waiting_time_upper_bound", "Parameter_Value"] = float(op_max_wait)
-    input_csv_df.loc["waiting_time_lower_bound", "Parameter_Value"] = float(diffusion_wait_time_bound_lower)
-    input_csv_df.loc["max_decision_time", "Parameter_Value"] = float(max_cancel_decision_time)
-    input_csv_df.loc["random_term_variance", "Parameter_Value"] = float(random_term_variance)
-    input_csv_df.loc["decision_threshold_upper", "Parameter_Value"] = float(decision_threshold)
-    input_csv_df.loc["decision_threshold_lower", "Parameter_Value"] = -float(decision_threshold)
-    input_csv_df.loc["no_show_wait_time", "Parameter_Value"] = float(no_show_wait_time)
-
-    edge_csv_df = pd.read_csv(fleetpy_edge_input_file_path)
-    peak_cv_list = []
-    offpeak_cv_list = []
-    for _, row in edge_csv_df.iterrows():
-        if row["highway_group"] == "group_1":
-            peak_cv_list.append(cv1_pk)
-            offpeak_cv_list.append(cv1_off)
-        elif row["highway_group"] == "group_2":
-            peak_cv_list.append(cv2_pk)
-            offpeak_cv_list.append(cv2_off)
-        else:
-            peak_cv_list.append(cv3_pk)
-            offpeak_cv_list.append(cv3_off)
-    
-    edge_csv_df["peak_cv"] = peak_cv_list
-    edge_csv_df["offpeak_cv"] = offpeak_cv_list
-    edge_csv_df.to_csv(fleetpy_edge_input_file_path, index=False)
-    input_csv_df.to_csv(input_csv_path)
+def update_csv_with_train_x(params):
+    # params: dict name -> value; Phase 3 structure (FIXED_SETTINGS) included -- see calibration_params.py
+    write_parameters(params, fleetpy_const_config_input_file_path, fleetpy_edge_input_file_path)
     time.sleep(1)
 
 
@@ -370,17 +337,35 @@ def collect_output():
     calculate_ODT_std_error(ODT_bins_std_folder_path)
 
 
-def send_instruction(train_x):
-    train_x_array = train_x.numpy()
-    for values in train_x_array:
-        update_csv_with_train_x(values)
-        collect_output()
+def send_instruction(params):
+    update_csv_with_train_x(params)
+    collect_output()
 
-# 1942.511704	20	190.7707223	1054.434725	1100	200	0.5	154.6159749	20	0.7	0.5	0.7	0.6	0.8	0.9
-# 2288.819603	10	79.41000818	1100	1100	187.3407587	1.07177114	30	179.9999923	0.7	0.231292124	0.7	0.1	0.3	0.9
+# Phase 2 validation (old model structure, 15 positional values; still runnable on the main branch):
+# op_max_wait, detour_factor, pudo_dur, decline_wait_time_bound_upper, diffusion_wait_time_bound_lower, max_cancel_decision_time, random_term_variance, decision_threshold, no_show_wait_time, cv1_pk, cv1_off, cv2_pk, cv2_off, cv3_pk, cv3_off
 # 2203.83,	21.17,	160.01,	1017.28,	1012.21,	200,	1.73,	106.07,	79.62,	0.24,	0.24,	0.43,	0.1,	0.38,	0.74
 
-# op_max_wait, detour_factor, pudo_dur, decline_wait_time_bound_upper, diffusion_wait_time_bound_lower, max_cancel_decision_time, random_term_variance, decision_threshold, no_show_wait_time, cv1_pk, cv1_off, cv2_pk, cv2_off, cv3_pk, cv3_off
-
-train_x = torch.tensor([[2203.83, 21.17, 160.01, 1017.28, 1012.21, 200, 1.73, 106.07, 79.62, 0.24, 0.24, 0.43, 0.1, 0.38, 0.74]], dtype=torch.float64)
-send_instruction(train_x)
+# Parameter set to validate, by name (param_names of the calibration script).
+# Now: trial 32 with the Phase 3 hand setting (docs/analysis/phase3/findings.md, f60_lb1400).
+# Replace by the best parameters of the Phase 5 calibration.
+VALI_PARAMS = {
+    "op_max_wait_time": 2203.83,
+    "op_detour_time_factor": 21.17,
+    "const_PUDO_duration": 160.01,
+    "diffusion_wait_time_bound_lower": 1400.0,
+    "max_cancel_decision_time": 200.0,
+    "random_term_variance": 1.73,
+    "decision_threshold": 106.07,
+    "no_show_wait_time": 79.62,
+    "CV_group_1_peak": 0.24,
+    "CV_group_1_offpeak": 0.24,
+    "CV_group_2_peak": 0.43,
+    "CV_group_2_offpeak": 0.1,
+    "CV_group_3_peak": 0.38,
+    "CV_group_3_offpeak": 0.74,
+    "rider_decline_base": 0.136,
+    "rider_decline_slope_per_min": 0.0068,
+    "rider_decline_max": 1.0,
+    "op_dispatch_delay": 60.0,
+}
+send_instruction(VALI_PARAMS)

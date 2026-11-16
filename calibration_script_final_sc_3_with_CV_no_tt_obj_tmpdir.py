@@ -22,13 +22,14 @@ from ax.adapter.registry import Generators
 
 from fleet_availability import write_active_fleet_file
 from calibration_kpis import EXTRA_KPI_COLS, KPI_SCALES, sim_extra_kpis   # Phase 4 (WI-3) objective
+from calibration_params import write_parameters   # Phase 5: parameter set -> FleetPy inputs
 # from ax.storage.json_store.save import save_experiment
 
 # ----------------------------------------------------------------------------------------------------------------------
 # Paths and setup
 # ----------------------------------------------------------------------------------------------------------------------
 PROJECT_ROOT = Path(__file__).resolve().parent
-calibration_study_folder_name = "calibration_sc_3_journal_Nov_10th_no_tt_obj"
+calibration_study_folder_name = "calibration_sc_3_journal_Nov_16th_no_tt_obj_claude"
 # calibration_study_folder_name = "testing_TBD"
 
 fleetpy_input_file_path = PROJECT_ROOT / "studies/example_study/scenarios/example_depot.csv"
@@ -164,7 +165,6 @@ param_names = [
     "op_max_wait_time",
     "op_detour_time_factor",
     "const_PUDO_duration",
-    "decline_wait_time_bound_upper",
     "diffusion_wait_time_bound_lower",
     "max_cancel_decision_time",
     "random_term_variance",
@@ -175,15 +175,20 @@ param_names = [
     "CV_group_2_peak",
     "CV_group_2_offpeak",
     "CV_group_3_peak",
-    "CV_group_3_offpeak"
+    "CV_group_3_offpeak",
+    # Phase 3 (docs/analysis/phase3/findings.md); decline_wait_time_bound_upper was dropped: it only acts in the
+    # cap_linear decline model, which FIXED_SETTINGS replaces by base_slope
+    "rider_decline_base",
+    "rider_decline_slope_per_min",
+    "rider_decline_max",
+    "op_dispatch_delay",
 ]
 
 param_bounds = {
     "op_max_wait_time": (1300.0, 3000.0),
     "op_detour_time_factor": (10.0, 100.0),
     "const_PUDO_duration": (30.0, 300.0),
-    "decline_wait_time_bound_upper": (400.0, 1200.0),
-    "diffusion_wait_time_bound_lower": (400.0, 1200.0),
+    "diffusion_wait_time_bound_lower": (400.0, 2000.0),   # Phase 3: widened from 1200 (best hand setting 1400 s)
     "max_cancel_decision_time": (30.0, 200.0),
     "random_term_variance": (0.5, 5.0),
     "decision_threshold": (30.0, 170.0),
@@ -194,7 +199,19 @@ param_bounds = {
     "CV_group_2_offpeak": (0.1, 0.7),
     "CV_group_3_peak": (0.3, 1.1),
     "CV_group_3_offpeak": (0.2, 0.9),
+    # Phase 3 parameters. Real decline fit: 0.136 + 0.0068 per offered minute; real decline never above ~30 %.
+    "rider_decline_base": (0.05, 0.25),            # P(decline) at zero offered wait
+    "rider_decline_slope_per_min": (0.0, 0.015),   # added P(decline) per minute of offered wait
+    "rider_decline_max": (0.3, 1.0),               # cap on P(decline)
+    "op_dispatch_delay": (0.0, 300.0),             # s before a vehicle may set off towards a new pickup
 }
+assert list(param_bounds) == param_names, "param_bounds must list the parameters in param_names order"
+
+# The cancellation model's lower wait bound must stay below its upper bound (= op_max_wait_time, see
+# update_csv_with_train_x); above it the offer-quality curve degenerates into a step.
+PARAMETER_CONSTRAINTS = ["diffusion_wait_time_bound_lower <= op_max_wait_time"]
+
+# Phase 3 model structure: calibration_params.FIXED_SETTINGS, written before every evaluation
 
 ax_parameters = [
     {"name": name, "type": "range", "bounds": [lb, ub], "value_type": "float"}
@@ -512,42 +529,8 @@ def run_program_day(day, pooled_tt_mean_dict, real_tt_mean_dict):
 
 
 def update_csv_with_train_x(values):
-    op_max_wait, detour_factor, pudo_dur, decline_wait_time_bound_upper, diffusion_wait_time_bound_lower, max_cancel_decision_time, random_term_variance, decision_threshold, no_show_wait_time, cv1_pk, cv1_off, cv2_pk, cv2_off, cv3_pk, cv3_off = values
-
-    # cv1_pk, cv1_off, cv2_pk, cv2_off, cv3_pk, cv3_off = 0.7, 0.5, 0.7, 0.6, 0.8, 0.9
-
-    input_csv_path = fleetpy_const_config_input_file_path
-    input_csv_df = pd.read_csv(input_csv_path, index_col=0)
-    input_csv_df.loc["op_max_wait_time", "Parameter_Value"] = float(op_max_wait)
-    input_csv_df.loc["op_max_detour_time_factor", "Parameter_Value"] = float(detour_factor)
-    input_csv_df.loc["op_const_boarding_time", "Parameter_Value"] = float(pudo_dur)
-    input_csv_df.loc["rider_service_decline_wait_upper", "Parameter_Value"] = float(decline_wait_time_bound_upper)
-    input_csv_df.loc["waiting_time_upper_bound", "Parameter_Value"] = float(op_max_wait)
-    input_csv_df.loc["waiting_time_lower_bound", "Parameter_Value"] = float(diffusion_wait_time_bound_lower)
-    input_csv_df.loc["max_decision_time", "Parameter_Value"] = float(max_cancel_decision_time)
-    input_csv_df.loc["random_term_variance", "Parameter_Value"] = float(random_term_variance)
-    input_csv_df.loc["decision_threshold_upper", "Parameter_Value"] = float(decision_threshold)
-    input_csv_df.loc["decision_threshold_lower", "Parameter_Value"] = -float(decision_threshold)
-    input_csv_df.loc["no_show_wait_time", "Parameter_Value"] = float(no_show_wait_time)
-
-    edge_csv_df = pd.read_csv(fleetpy_edge_input_file_path)
-    peak_cv_list = []
-    offpeak_cv_list = []
-    for _, row in edge_csv_df.iterrows():
-        if row["highway_group"] == "group_1":
-            peak_cv_list.append(cv1_pk)
-            offpeak_cv_list.append(cv1_off)
-        elif row["highway_group"] == "group_2":
-            peak_cv_list.append(cv2_pk)
-            offpeak_cv_list.append(cv2_off)
-        else:
-            peak_cv_list.append(cv3_pk)
-            offpeak_cv_list.append(cv3_off)
-    
-    edge_csv_df["peak_cv"] = peak_cv_list
-    edge_csv_df["offpeak_cv"] = offpeak_cv_list
-    edge_csv_df.to_csv(fleetpy_edge_input_file_path, index=False)
-    input_csv_df.to_csv(input_csv_path)
+    # parameters by name; Phase 3 structure (FIXED_SETTINGS) included -- see calibration_params.py
+    write_parameters(dict(zip(param_names, values)), fleetpy_const_config_input_file_path, fleetpy_edge_input_file_path)
     time.sleep(1)
 
 
@@ -640,6 +623,7 @@ def rebuild_ax_client_for_bo():
         name="single_obj_exp",
         parameters=ax_parameters,
         objectives={"total_negative_error": ObjectiveProperties(minimize=False)},
+        parameter_constraints=PARAMETER_CONSTRAINTS,
     )
 
     # Rescale every Sobol observation and re-attach to the new client.
@@ -1066,6 +1050,7 @@ else:
         objectives={
             "total_negative_error": ObjectiveProperties(minimize=False),
         },
+        parameter_constraints=PARAMETER_CONSTRAINTS,
     )
 
 # Clean up stale RUNNING trials after resume.
