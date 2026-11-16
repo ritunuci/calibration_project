@@ -1,6 +1,6 @@
 """Run FleetPy (5 seeds, run_examples.py) with the trial-32 parameters on a list of dates; keep the full outputs.
 
-Mirrors the per-date setup of vali_script_sc_3.py (fleet share file from 77_unique_vehid, rq_file, op_fleet_composition,
+Mirrors the per-date setup of vali_script_sc_3.py (active fleet file, rq_file, op_fleet_composition,
 trial-32 CVs written into edges.csv) but leaves the model parameters in the constant config as they are (they must
 already be the trial-32 values) and writes nothing into calibration_outputs/.
 The three input files FleetPy reads (constant config, active fleet-size file, edges.csv) are backed up before and
@@ -10,12 +10,17 @@ Usage (from the repo root):
   python docs/analysis/phase1/run_trial32_dates.py <out_dir> quick      # 2024-05-30, 2024-03-26
   python docs/analysis/phase1/run_trial32_dates.py <out_dir> vali       # the 15 validation dates
   python docs/analysis/phase1/run_trial32_dates.py <out_dir> 2024-05-30 2024-04-09 ...
+Active fleet: as in the calibration/validation scripts (fleet_availability.py, trace-based 30-min bins). Optional,
+anywhere after <out_dir>:  --fleet <dir>    trace-format files from another folder (e.g. a variant)
+                           --fleet counted  the old hourly pickup counts (77_unique_vehid)
 """
 import shutil, subprocess, sys, tempfile
 from pathlib import Path
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[3]
+sys.path.insert(0, str(ROOT))
+from fleet_availability import write_active_fleet_file  # noqa: E402
 PY = sys.executable
 CFG = ROOT / "studies/example_study/scenarios/constant_config_depot_cali_sc_1.csv"
 FLEET = ROOT / "data/fleetctrl/elastic_fleet_size/example_active_fleetsize.csv"
@@ -39,7 +44,7 @@ def dates_from_args(args):
     return args
 
 
-def run(out, dates):
+def run(out, dates, fleet_dir=None):
     out.mkdir(parents=True, exist_ok=True)
     c = pd.read_csv(CFG, index_col=0)["Parameter_Value"]
     for k, v in TRIAL32.items():
@@ -55,13 +60,10 @@ def run(out, dates):
         for date in dates:
             day = pd.Timestamp(date).day_name().lower()
             assert (DEMAND / day / f"{date}.csv").exists(), date
-            v = pd.read_csv(ROOT / "data/fleetctrl/77_unique_vehid" / day / f"{date}.csv")
-            shares, vl = {}, []
-            for _, row in v.iterrows():
-                for i in range(7, 19):
-                    vl.append(max(int(row[f"Hour_{i}"]), 1)); shares[i * 3600] = int(row[f"Hour_{i}"])
-            fs = max(vl)
-            pd.DataFrame({"time": list(shares), "share_active_fleet_size": [s / fs for s in shares.values()]}).to_csv(FLEET, index=False)
+            if fleet_dir == "counted":
+                fs = write_active_fleet_file(day, date, FLEET, source="counted")
+            else:
+                fs = write_active_fleet_file(day, date, FLEET, fleet_dir=fleet_dir)
             cfg = pd.read_csv(CFG, index_col=0)
             cfg.loc["day_dir_name", "Parameter_Value"] = day
             cfg.loc["rq_file", "Parameter_Value"] = f"{date}.csv"
@@ -84,4 +86,8 @@ def run(out, dates):
 
 
 if __name__ == "__main__":
-    run(Path(sys.argv[1]), dates_from_args(sys.argv[2:]))
+    a = sys.argv[2:]
+    fd = None
+    if "--fleet" in a:
+        k = a.index("--fleet"); fd = a[k + 1]; a = a[:k] + a[k + 2:]
+    run(Path(sys.argv[1]), dates_from_args(a), fd)

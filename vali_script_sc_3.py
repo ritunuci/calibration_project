@@ -19,6 +19,8 @@ from ax.service.ax_client import AxClient, ObjectiveProperties
 from ax.service.utils.report_utils import exp_to_df
 from ax.generation_strategy.generation_strategy import GenerationStrategy, GenerationStep
 from ax.adapter.registry import Generators
+
+from fleet_availability import write_active_fleet_file
 # from ax.storage.json_store.save import save_experiment
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -287,20 +289,8 @@ def run_program_day(day, pooled_tt_mean_dict, real_tt_mean_dict):
         file_name = p.name
         file_name_without_ext = p.stem
         date = pd.to_datetime(file_name_without_ext).date()
-        veh_file = veh_folder / f"{city_id}_unique_vehid" / day / file_name
-        veh_file_df = pd.read_csv(veh_file)
-        veh_list = []
-        active_fleetsize_dict = {}
-        for _, row in veh_file_df.iterrows():
-            for i in list(range(7, 19)):   # from 7am to 6pm
-                veh_list.append(max(int(row[f"Hour_{i}"]), 1))
-                active_fleetsize_dict[i*3600] = int(row[f"Hour_{i}"])
-        fleet_size = max(veh_list)
-        for key, value in active_fleetsize_dict.items():
-            active_fleetsize_dict[key] = value/fleet_size
-        active_fleetsize_df = pd.DataFrame({"time": active_fleetsize_dict.keys(),
-                                            "share_active_fleet_size": active_fleetsize_dict.values()})
-        active_fleetsize_df.to_csv(active_fleetsize_path, index=False)
+        # active fleet per 30-min bin from the real vehicle traces (Phase 2, WI-1; see fleet_availability.py)
+        fleet_size = write_active_fleet_file(day, file_name_without_ext, active_fleetsize_path)
         fleetpy_input_file_df = pd.read_csv(fleetpy_const_config_input_file_path, index_col=0)
         fleetpy_input_file_df.loc["rq_file", "Parameter_Value", ] = str(file_name)
         fleetpy_input_file_df.loc["op_fleet_composition", "Parameter_Value", ] = f"default_vehtype:{fleet_size}"
