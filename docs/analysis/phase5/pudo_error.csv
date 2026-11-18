@@ -1,0 +1,24 @@
+stat,kpi,0,30,65.6,100,real
+mean,percentage_rejected,1.92,1.62,2.392,2.625,5.435
+mean,percentage_of_offer_declined_by_rider,24.578,25.919,25.03,24.444,24.861
+mean,rides_per_veh_rev_hr,3.126,3.069,3.069,3.113,2.797
+mean,wait_time_morning_peak,1036.59,984.201,1032.192,1025.755,1088.625
+mean,wait_time_evening_peak,981.405,932.999,979.89,961.946,998.034
+mean,wait_time_off_peak,788.233,773.625,774.142,784.736,727.669
+mean,cancellation_rate_percent,6.471,6.099,6.55,6.484,5.932
+mean,wait_p90_peak,1587.452,1558.171,1597.411,1617.742,1674.0
+mean,peak_rejected_pct,2.318,1.827,3.279,3.355,9.251
+mean,pooled_pct,32.371,30.597,32.142,31.948,35.511
+mean,score 2024-03-26,1.943,1.85,1.514,1.816,
+mean,score 2024-05-30,3.419,4.266,3.719,3.417,
+mean,score,2.681,3.058,2.617,2.617,
+seed_sd,percentage_rejected,0.575,0.598,0.784,0.673,
+seed_sd,percentage_of_offer_declined_by_rider,2.385,1.819,2.044,1.444,
+seed_sd,rides_per_veh_rev_hr,0.088,0.052,0.08,0.044,
+seed_sd,wait_time_morning_peak,42.681,54.536,51.485,73.442,
+seed_sd,wait_time_evening_peak,80.342,60.616,55.395,44.993,
+seed_sd,wait_time_off_peak,33.9,29.589,27.138,46.172,
+seed_sd,cancellation_rate_percent,0.932,1.01,1.045,1.357,
+seed_sd,wait_p90_peak,76.284,72.325,32.508,45.671,
+seed_sd,peak_rejected_pct,1.022,1.06,1.394,1.069,
+seed_sd,pooled_pct,2.627,1.877,1.611,2.247,
