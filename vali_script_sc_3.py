@@ -1,4 +1,23 @@
+"""Run one parameter set on a date set (5 seeds per date) and write the simulated KPIs.
+
+Usage (from the repo root; run it where no calibration is running, since it edits the FleetPy inputs in place --
+they are backed up and restored):
+  python vali_script_sc_3.py --dates vali --params hand        # hand setting f60_lb1400 on the 15 validation dates
+  python vali_script_sc_3.py --dates cali --params best        # best trial so far of --study on the 48 calibration dates
+  python vali_script_sc_3.py --dates vali --params 4           # trial 4 (trial_number in convergence_log.csv)
+Options:
+  --study NAME   calibration study folder to take trials from (default: the Phase 5 study)
+  --name NAME    output folder in calibration_outputs/ (default: vali_fit_of_<study>_<params>_<dates>)
+  --only D1,D2   run only these dates (for tests)
+Outputs in calibration_outputs/<name>/: <weekday>_sim.csv (seed means per date), kpis_by_seed.csv (one row per date and
+seed, for the energy score), params.json (the parameters run), travel_time_comparison.csv, ODT_bins_std.csv, run_log.txt.
+Compare with the real data: python vali_compare_sc_3.py label=calibration_outputs/<name> ...
+"""
+import argparse
 import ast
+import shutil
+import sys
+import tempfile
 from colorama import Fore, Style
 import time
 import csv
@@ -29,11 +48,41 @@ from calibration_params import write_parameters   # Phase 5: parameter set -> Fl
 # Paths and setup
 # ----------------------------------------------------------------------------------------------------------------------
 PROJECT_ROOT = Path(__file__).resolve().parent
-calibration_study_folder_name = "vali_fit_of_calibration_sc_3_journal_Nov_10th_no_tt_obj_claude"
+CALI_STUDY = "calibration_sc_3_journal_Nov_16th_no_tt_obj_claude"   # Phase 5 calibration
+
+ap = argparse.ArgumentParser(description="Run one parameter set on the validation or calibration dates.")
+ap.add_argument("--dates", choices=["vali", "cali"], default="vali", help="15 validation or 48 calibration dates")
+ap.add_argument("--params", default="hand", help="'hand' (f60_lb1400), 'best' (best trial of --study) or a trial number")
+ap.add_argument("--study", default=CALI_STUDY, help="calibration study folder in calibration_outputs/")
+ap.add_argument("--name", default=None, help="output folder name in calibration_outputs/")
+ap.add_argument("--only", default=None, help="comma-separated dates (YYYY-MM-DD) to run, for tests")
+ARGS = ap.parse_args()
+ONLY_DATES = set(ARGS.only.split(",")) if ARGS.only else None
+
+calibration_study_folder_name = ARGS.name or f"vali_fit_of_{ARGS.study}_" \
+    f"{'trial' + ARGS.params if ARGS.params.isdigit() else ARGS.params}_{ARGS.dates}"
 
 fleetpy_input_file_path = PROJECT_ROOT / "studies/example_study/scenarios/example_depot.csv"
 fleetpy_const_config_input_file_path = PROJECT_ROOT / "studies/example_study/scenarios/constant_config_depot_cali_sc_1.csv"
-fleetpy_demand_folder_path_main = PROJECT_ROOT / "data/demand/example_demand/matched/example_network"
+real_cali_dir = PROJECT_ROOT / "output_for_calibration/real_data"
+
+
+def find_demand_folder(date_set):
+    """FleetPy reads demand from matched/example_network/<day_dir_name>. The 15 validation and 48 calibration dates sit in
+    example_network and example_network_cali_set; on the HPC the two are swapped for the calibration. Pick the folder by
+    its dates (the calibration dates are those of the real calibration files), so either layout works."""
+    matched = PROJECT_ROOT / "data/demand/example_demand/matched"
+    cali_dates = set()
+    for f in real_cali_dir.glob("*_real.csv"):
+        cali_dates |= {pd.to_datetime(x).strftime("%Y-%m-%d") for x in pd.read_csv(f)["date"]}
+    for name in ("example_network", "example_network_cali_set"):
+        dates = {Path(f).stem for f in glob.glob(str(matched / name / "*" / "*.csv"))}
+        if dates and (dates <= cali_dates) == (date_set == "cali"):
+            return matched / name
+    raise FileNotFoundError(f"no demand folder with the {date_set} dates in {matched}")
+
+
+fleetpy_demand_folder_path_main = find_demand_folder(ARGS.dates)
 fleetpy_edge_input_file_path = PROJECT_ROOT / "data/networks/example_network/base/edges.csv"
 # fleetpy_output_folder_path = PROJECT_ROOT / "studies/example_study/results/example_depot_time_pool_irsonly_sc_1"
 fleetpy_replication_output_path = PROJECT_ROOT / "studies/example_study/results/"
@@ -52,7 +101,7 @@ result_intermediate_path = cali_output_folder_path / "result_intermediate.csv"
 
 veh_folder = PROJECT_ROOT / "data/fleetctrl"
 active_fleetsize_path = PROJECT_ROOT / "data/fleetctrl/elastic_fleet_size/example_active_fleetsize.csv"
-real_data_dir = PROJECT_ROOT / "output_for_calibration/real_data"
+real_data_dir = real_cali_dir
 
 days = ["tuesday", "wednesday", "thursday"]
 # days = ["tuesday"]
@@ -93,6 +142,7 @@ logger = logging.getLogger(__name__)
 RANDOM_SEEDS_FOR_FLEETPY = []
 for i in range(42, 47):
     RANDOM_SEEDS_FOR_FLEETPY.append(i)
+SEED_ROWS = []   # one KPI row per date and seed -> kpis_by_seed.csv
 
 # ----------------------------------------------------------------------------------------------------------------------
 # Extra utility functions for Scenario 2 calibration
@@ -112,7 +162,7 @@ def run_fleetpy_replications(file_name, day, active_fleetsize_path):
     # runs one FleetPy replication and returns raw KPI vector
     try:
         # subprocess.run(["/data/homezvol2/rituns/.conda/envs/fleetpy_hpc/bin/python", "run_examples.py"], check=True)
-        subprocess.run(["C:/Users/ritun_uci/.conda/envs/fleetpy_Ax_client/python", "run_examples.py"], check=True)
+        subprocess.run([sys.executable, "run_examples.py"], check=True)   # the Python running this script (local or HPC)
     except Exception as e:
         # print(f"{Fore.GREEN}FleetPy failed for {str(file_name)} of {day}: {e},\n "
         #         f"Retrying with fleet fraction = 0.5 for all times...{Style.RESET_ALL}")
@@ -123,7 +173,7 @@ def run_fleetpy_replications(file_name, day, active_fleetsize_path):
         df_fix.to_csv(active_fleetsize_path, index=False)
         time.sleep(1)
         # subprocess.run(["/data/homezvol2/rituns/.conda/envs/fleetpy_hpc/bin/python", "run_examples.py"], check=True)
-        subprocess.run(["C:/Users/ritun_uci/.conda/envs/fleetpy_Ax_client/python", "run_examples.py"], check=True)
+        subprocess.run([sys.executable, "run_examples.py"], check=True)   # the Python running this script (local or HPC)
         logger.info(f"{Fore.GREEN}FleetPy retry successful for {str(file_name)} of {day} with fleet fraction = 0.5 for all times{Style.RESET_ALL}")
     time.sleep(1)
 
@@ -184,6 +234,7 @@ def read_FleetPy_replications_outputs_and_build_kpi_vec(day_kpi_vec, pooled_tt_m
             np.mean(df_user_stats["travel_time_sim"]),
             *sim_extra_kpis(df_user_stats, pd.read_csv(fleetpy_replication_output_path / f"example_depot_time_pool_irsonly_rs_{rs}" / "2-0_op-stats.csv")),
         ])
+        SEED_ROWS.append({"date": file_name_without_ext, "seed": rs, **dict(zip(KPI_COLS[1:], seed_kpis[-1]))})
 
     avg_kpis = np.mean(seed_kpis, axis=0)
     kpi_vec = np.array([file_name_without_ext, *avg_kpis])
@@ -282,11 +333,16 @@ def run_program_day(day, pooled_tt_mean_dict, real_tt_mean_dict):
 
     fleetpy_demand_folder_path = fleetpy_demand_folder_path_main / day
     fleetpy_input_df = pd.read_csv(fleetpy_const_config_input_file_path, index_col=0)
-    fleetpy_input_df.loc["day_dir_name", "Parameter_Value"] = str(day)
+    # FleetPy looks in matched/example_network/<day_dir_name>; reach the other date folder through it
+    day_dir = str(day) if fleetpy_demand_folder_path_main.name == "example_network" \
+        else f"../{fleetpy_demand_folder_path_main.name}/{day}"
+    fleetpy_input_df.loc["day_dir_name", "Parameter_Value"] = day_dir
     fleetpy_input_df.to_csv(fleetpy_const_config_input_file_path)
     time.sleep(1)
 
-    demand_csv_files = glob.glob(str(fleetpy_demand_folder_path / "*.csv"))
+    demand_csv_files = sorted(glob.glob(str(fleetpy_demand_folder_path / "*.csv")))
+    if ONLY_DATES is not None:
+        demand_csv_files = [f for f in demand_csv_files if Path(f).stem in ONLY_DATES]
     for file in demand_csv_files:
         # file_Z_samples_raw = []
         p = Path(file)
@@ -330,25 +386,38 @@ def collect_output():
     real_tt_mean_dict = {}
     for day in days:
         day_kpi_vec, pooled_tt_mean_dict, real_tt_mean_dict = run_program_day(day, pooled_tt_mean_dict, real_tt_mean_dict)
+        if not day_kpi_vec:   # no dates of this weekday (--only)
+            continue
         day_kpi_vec_array = np.array(day_kpi_vec)
         df_kpi = pd.DataFrame(day_kpi_vec_array, columns=KPI_COLS)
         df_kpi.to_csv(cali_output_folder_path / f"{day}_sim.csv", index=False)
+        pd.DataFrame(SEED_ROWS).to_csv(cali_output_folder_path / "kpis_by_seed.csv", index=False)   # after each weekday
     calculate_pooled_and_real_tt_means(pooled_tt_mean_dict, real_tt_mean_dict)
     calculate_ODT_std_error(ODT_bins_std_folder_path)
 
 
 def send_instruction(params):
-    update_csv_with_train_x(params)
-    collect_output()
+    # the run edits these FleetPy inputs in place; put them back afterwards, also on failure
+    inputs = [fleetpy_const_config_input_file_path, fleetpy_edge_input_file_path, active_fleetsize_path]
+    bak = Path(tempfile.mkdtemp(prefix="vali_inputs_"))
+    for f in inputs:
+        shutil.copy2(f, bak / f.name)
+    try:
+        update_csv_with_train_x(params)
+        collect_output()
+    finally:
+        for f in inputs:
+            shutil.copy2(bak / f.name, f)
+        shutil.rmtree(bak)
+        logger.info("FleetPy input files restored")
 
 # Phase 2 validation (old model structure, 15 positional values; still runnable on the main branch):
 # op_max_wait, detour_factor, pudo_dur, decline_wait_time_bound_upper, diffusion_wait_time_bound_lower, max_cancel_decision_time, random_term_variance, decision_threshold, no_show_wait_time, cv1_pk, cv1_off, cv2_pk, cv2_off, cv3_pk, cv3_off
 # 2203.83,	21.17,	160.01,	1017.28,	1012.21,	200,	1.73,	106.07,	79.62,	0.24,	0.24,	0.43,	0.1,	0.38,	0.74
 
-# Parameter set to validate, by name (param_names of the calibration script).
-# Now: trial 32 with the Phase 3 hand setting (docs/analysis/phase3/findings.md, f60_lb1400).
-# Replace by the best parameters of the Phase 5 calibration.
-VALI_PARAMS = {
+# Parameter sets by name (param_names of the calibration script).
+# --params hand: trial 32 with the Phase 3 hand setting (docs/analysis/phase3/findings.md, f60_lb1400).
+HAND_PARAMS = {
     "op_max_wait_time": 2203.83,
     "op_detour_time_factor": 21.17,
     "const_PUDO_duration": 160.01,
@@ -368,4 +437,23 @@ VALI_PARAMS = {
     "rider_decline_max": 1.0,
     "op_dispatch_delay": 60.0,
 }
+
+
+def params_from_study(study, which):
+    """--params best / <trial number>: the parameters of one trial in the study's convergence_log.csv."""
+    log = pd.read_csv(PROJECT_ROOT / "calibration_outputs" / study / "convergence_log.csv")
+    row = log.loc[log.energy_score.idxmin()] if which == "best" else log[log.trial_number == int(which)].iloc[0]
+    info = {"study": study, "trial_number": int(row.trial_number), "stage": row.stage,
+            "calibration_energy_score": float(row.energy_score), "trials_in_log": len(log)}
+    return {k: float(row[k]) for k in HAND_PARAMS}, info
+
+
+if ARGS.params == "hand":
+    VALI_PARAMS, info = dict(HAND_PARAMS), {"source": "hand setting f60_lb1400"}
+else:
+    VALI_PARAMS, info = params_from_study(ARGS.study, ARGS.params)
+info.update({"dates": ARGS.dates, "demand_folder": fleetpy_demand_folder_path_main.name, "only": ARGS.only,
+             "params": VALI_PARAMS})
+(cali_output_folder_path / "params.json").write_text(json.dumps(info, indent=2))
+logger.info(f"Validation run {calibration_study_folder_name}: {json.dumps(info)}")
 send_instruction(VALI_PARAMS)
