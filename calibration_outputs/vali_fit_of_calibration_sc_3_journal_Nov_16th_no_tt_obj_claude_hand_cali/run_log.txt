@@ -1,0 +1,5 @@
+2026-11-19 23:54:48,189 [INFO] Validation run vali_fit_of_calibration_sc_3_journal_Nov_16th_no_tt_obj_claude_hand_cali: {"source": "hand setting f60_lb1400", "dates": "cali", "demand_folder": "example_network_cali_set", "only": null, "params": {"op_max_wait_time": 2203.83, "op_detour_time_factor": 21.17, "const_PUDO_duration": 160.01, "diffusion_wait_time_bound_lower": 1400.0, "max_cancel_decision_time": 200.0, "random_term_variance": 1.73, "decision_threshold": 106.07, "no_show_wait_time": 79.62, "CV_group_1_peak": 0.24, "CV_group_1_offpeak": 0.24, "CV_group_2_peak": 0.43, "CV_group_2_offpeak": 0.1, "CV_group_3_peak": 0.38, "CV_group_3_offpeak": 0.74, "rider_decline_base": 0.136, "rider_decline_slope_per_min": 0.0068, "rider_decline_max": 1.0, "op_dispatch_delay": 60.0}}
+2026-11-19 23:54:50,082 [INFO] Running program for tuesday
+2026-11-20 01:08:42,855 [INFO] Running program for wednesday
+2026-11-20 02:20:56,239 [INFO] Running program for thursday
+2026-11-20 03:25:27,541 [INFO] FleetPy input files restored
