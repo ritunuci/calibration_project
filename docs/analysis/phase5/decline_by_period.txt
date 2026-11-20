@@ -1,0 +1,42 @@
+vali_fit_of_calibration_sc_3_journal_Nov_16th_no_tt_obj_claude_trial37_cali: 48 dates, sim seed 42
+          real decline %  sim decline %  run model %  real-fit model on sim offers %  sim offered wait min  real wait (completed) min   n real    n sim
+AM peak             26.1           25.2         25.4                            27.0                  19.7                       17.1   3241.0   3379.0
+PM peak             25.2           25.2         25.7                            28.1                  21.4                       18.9   5964.0   6278.0
+off-peak            22.7           24.9         24.9                            24.7                  16.3                       13.8  11208.0  11373.0
+all                 24.0           25.0         25.2                            26.1                  18.3                       15.7  20413.0  21030.0
+
+Sim offers by offered wait (min), decline %:
+          n   sim  run_model  real_fit  share of offers %
+band                                                     
+0-5     824  19.8       23.1      16.2                3.9
+5-10   3571  22.8       23.7      18.9               17.0
+10-15  4294  24.7       24.4      22.1               20.4
+15-20  3864  26.5       25.1      25.5               18.4
+20-25  3154  24.9       25.8      28.8               15.0
+25-30  2542  26.5       26.6      32.2               12.1
+30-40  2781  26.8       27.5      36.5               13.2
+per-date decline, sim draws (seed 42): SD 2.29 (real 3.56), corr with real 0.30
+per-date decline, run model, expected: SD 0.32 (real 3.56), corr with real 0.66
+per-date decline, real fit, expected: SD 1.46 (real 3.56), corr with real 0.66
+
+vali_fit_of_calibration_sc_3_journal_Nov_16th_no_tt_obj_claude_hand_cali: 48 dates, sim seed 42
+          real decline %  sim decline %  run model %  real-fit model on sim offers %  sim offered wait min  real wait (completed) min   n real    n sim
+AM peak             26.1           25.9         26.5                            26.5                  19.0                       17.1   3241.0   3363.0
+PM peak             25.2           26.8         27.6                            27.6                  20.5                       18.9   5964.0   6239.0
+off-peak            22.7           23.8         24.0                            24.0                  15.3                       13.8  11208.0  11316.0
+all                 24.0           25.1         25.5                            25.5                  17.5                       15.7  20413.0  20918.0
+
+Sim offers by offered wait (min), decline %:
+          n   sim  run_model  real_fit  share of offers %
+band                                                     
+0-5    1478  14.4       15.8      15.8                7.1
+5-10   3677  18.4       18.8      18.8               17.6
+10-15  3965  22.2       22.1      22.1               19.0
+15-20  3848  26.1       25.5      25.5               18.4
+20-25  3124  27.9       28.9      28.9               14.9
+25-30  2514  31.9       32.2      32.2               12.0
+30-40  2312  34.4       36.2      36.2               11.1
+per-date decline, sim draws (seed 42): SD 2.44 (real 3.56), corr with real 0.42
+per-date decline, run model, expected: SD 1.48 (real 3.56), corr with real 0.74
+per-date decline, real fit, expected: SD 1.48 (real 3.56), corr with real 0.74
+
