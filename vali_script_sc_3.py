@@ -56,6 +56,9 @@ ap.add_argument("--params", default="hand", help="'hand' (f60_lb1400), 'best' (b
 ap.add_argument("--study", default=CALI_STUDY, help="calibration study folder in calibration_outputs/")
 ap.add_argument("--name", default=None, help="output folder name in calibration_outputs/")
 ap.add_argument("--only", default=None, help="comma-separated dates (YYYY-MM-DD) to run, for tests")
+ap.add_argument("--set", action="append", default=[], metavar="PARAM=VALUE",
+                help="override one parameter of the chosen set (repeatable), e.g. --set op_dispatch_delay=60; "
+                     "combine with --name so the run gets its own folder")
 ARGS = ap.parse_args()
 ONLY_DATES = set(ARGS.only.split(",")) if ARGS.only else None
 
@@ -452,6 +455,15 @@ if ARGS.params == "hand":
     VALI_PARAMS, info = dict(HAND_PARAMS), {"source": "hand setting f60_lb1400"}
 else:
     VALI_PARAMS, info = params_from_study(ARGS.study, ARGS.params)
+if ARGS.set:
+    overrides = {}
+    for kv in ARGS.set:
+        key, val = kv.split("=", 1)
+        if key not in VALI_PARAMS:
+            raise SystemExit(f"--set: unknown parameter {key!r}; known: {', '.join(VALI_PARAMS)}")
+        overrides[key] = float(val)
+    VALI_PARAMS.update(overrides)
+    info["overrides"] = overrides
 info.update({"dates": ARGS.dates, "demand_folder": fleetpy_demand_folder_path_main.name, "only": ARGS.only,
              "params": VALI_PARAMS})
 (cali_output_folder_path / "params.json").write_text(json.dumps(info, indent=2))
