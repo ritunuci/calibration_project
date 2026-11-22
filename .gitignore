@@ -24,3 +24,7 @@ __pycache__/
 .idea/
 Thumbs.db
 .DS_Store
+
+# Parity plots from parity_plot_sc_3.py (kept local, regenerated per run)
+calibration_outputs/*/parity*.png
+calibration_outputs/*/parity*_stats.csv
