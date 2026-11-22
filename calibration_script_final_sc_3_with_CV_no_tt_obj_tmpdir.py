@@ -29,7 +29,9 @@ from calibration_params import write_parameters   # Phase 5: parameter set -> Fl
 # Paths and setup
 # ----------------------------------------------------------------------------------------------------------------------
 PROJECT_ROOT = Path(__file__).resolve().parent
-calibration_study_folder_name = "calibration_sc_3_journal_Nov_16th_no_tt_obj_claude"
+# Phase 6 (docs/plan.md): new model structure and parameter set -> new study folder (Phase 5 study:
+# calibration_sc_3_journal_Nov_16th_no_tt_obj_claude). Change the day to the launch date if needed.
+calibration_study_folder_name = "calibration_sc_3_phase6-recalibration_Nov_21st_no_tt_obj_claude"
 # calibration_study_folder_name = "testing_TBD"
 
 fleetpy_input_file_path = PROJECT_ROOT / "studies/example_study/scenarios/example_depot.csv"
@@ -137,8 +139,8 @@ def sync_completed_trial_to_persistent_storage():  # ADDED: back up completed op
 # ----------------------------------------------------------------------------------------------------------------------
 # Optimization settings
 # ----------------------------------------------------------------------------------------------------------------------
-N_TRAIN_SOBOL = 30           # Number of Sobol sample trial #25
-N_BATCH = 50                 # number of BO trials after Sobol warm start #75
+N_TRAIN_SOBOL = 25           # Number of Sobol sample trials (Phase 6: 25; Phase 5: 30)
+N_BATCH = 40                 # number of BO trials after the Sobol warm start (Phase 6: 40; Phase 5: 50)
 TOTAL_TRIALS = N_TRAIN_SOBOL + N_BATCH
 BATCH_SIZE = 1               # keep sequential generation/evaluation
 
@@ -161,57 +163,64 @@ RANDOM_SEED = 42
 np.random.seed(RANDOM_SEED)
 torch.manual_seed(RANDOM_SEED)
 
+# Phase 6 (docs/plan.md D5, D7-D9, D13, D15, D18; 2026-11-21, revised 2026-11-22): 9 free parameters (Phase 5: 18). Fixed
+# parameters are in FIXED_PARAMS below; both are written by calibration_params.write_parameters before every evaluation.
 param_names = [
     "op_max_wait_time",
     "op_detour_time_factor",
-    "const_PUDO_duration",
     "diffusion_wait_time_bound_lower",
-    "max_cancel_decision_time",
-    "random_term_variance",
+    "decision_time_constant",       # D18: how fast the cancellation decision builds up (seconds)
     "decision_threshold",
-    "no_show_wait_time",
-    "CV_group_1_peak",
-    "CV_group_1_offpeak",
-    "CV_group_2_peak",
-    "CV_group_2_offpeak",
-    "CV_group_3_peak",
-    "CV_group_3_offpeak",
-    # Phase 3 (docs/analysis/phase3/findings.md); decline_wait_time_bound_upper was dropped: it only acts in the
-    # cap_linear decline model, which FIXED_SETTINGS replaces by base_slope
+    "random_term_variance",
     "rider_decline_base",
-    "rider_decline_slope_per_min",
-    "rider_decline_max",
-    "op_dispatch_delay",
+    "op_dispatch_delay",            # peak-window delay (AM 8-10 h, PM 15-18 h; calibration_params.PEAK_WINDOWS)
+    "op_dispatch_delay_offpeak",    # delay outside the peak windows (D15)
 ]
 
 param_bounds = {
-    "op_max_wait_time": (1300.0, 3000.0),
-    "op_detour_time_factor": (10.0, 100.0),
-    "const_PUDO_duration": (30.0, 300.0),
-    "diffusion_wait_time_bound_lower": (400.0, 2000.0),   # Phase 3: widened from 1200 (best hand setting 1400 s)
-    "max_cancel_decision_time": (30.0, 200.0),
-    "random_term_variance": (0.5, 5.0),
-    "decision_threshold": (30.0, 170.0),
-    "no_show_wait_time": (20.0, 200.0),
-    "CV_group_1_peak": (0.05, 0.7),
-    "CV_group_1_offpeak": (0.05, 0.5),
-    "CV_group_2_peak": (0.05, 0.7),
-    "CV_group_2_offpeak": (0.1, 0.7),
-    "CV_group_3_peak": (0.3, 1.1),
-    "CV_group_3_offpeak": (0.2, 0.9),
-    # Phase 3 parameters. Real decline fit: 0.136 + 0.0068 per offered minute; real decline never above ~30 %.
-    "rider_decline_base": (0.05, 0.25),            # P(decline) at zero offered wait
-    "rider_decline_slope_per_min": (0.0, 0.015),   # added P(decline) per minute of offered wait
-    "rider_decline_max": (0.3, 1.0),               # cap on P(decline)
-    "op_dispatch_delay": (0.0, 300.0),             # s before a vehicle may set off towards a new pickup
+    "op_max_wait_time": (1700.0, 2700.0),                 # D13 (Phase 5 best: 2031-2217)
+    "op_detour_time_factor": (15.0, 70.0),                # D13, lower bound 15 (2026-11-22): with the ride-time
+                                                          # constant fixed at 30 s it is the only allowance knob
+    "diffusion_wait_time_bound_lower": (1000.0, 1900.0),  # D13 (Phase 5 best: 1486-1713)
+    "decision_time_constant": (30.0, 600.0),              # D18 (2026-11-22): Phase 5 model fixed at about 5 s;
+                                                          # real cancellations: median 180 s
+    "decision_threshold": (10.0, 100.0),                  # D18: on the state's +/-100 scale; above 100 the slowed
+                                                          # state reaches it only through noise
+    "random_term_variance": (0.5, 5.0),                   # D13: kept calibrated
+    "rider_decline_base": (0.05, 0.20),                   # D8: with the slope fixed at 0.0075 per min (refit: 0.09-0.11)
+    "op_dispatch_delay": (60.0, 200.0),                   # D15: peak delay, kept narrow (D14 not yet addressed)
+    "op_dispatch_delay_offpeak": (0.0, 120.0),            # D15: off-peak delay
 }
+
+# Fixed in Phase 6 (not calibrated). Reasons in docs/plan.md.
+FIXED_PARAMS = {
+    "max_cancel_decision_time": 1800.0,      # D9 / D18 (2026-11-22): a cut-off only; real cancellations 97 % within
+                                             #     1800 s of the request
+    "no_show_wait_time": 200.0,              # D13: not identified by the objective; trial 54's value
+    "rider_decline_slope_per_min": 0.0075,   # D8: refit on the sim's offered waits (phase5/findings.md §8)
+    "rider_decline_max": 1.0,                # D8: never acts with a base <= 0.20 and this slope
+    "const_PUDO_duration": 30.0,             # D7 (revised 2026-11-22): only sets the max ride time,
+                                             #     (direct + 30 s) x (1 + detour factor / 100); Phase 5: at the 30 s
+                                             #     lower bound in 9 of the 10 best trials, trial 54 included
+    "CV_group_1_peak": 0.05,                 # D5: the six CVs fixed at trial 54's values; the stochastic travel
+    "CV_group_1_offpeak": 0.05,              #     times themselves are unchanged
+    "CV_group_2_peak": 0.05,
+    "CV_group_2_offpeak": 0.10,
+    "CV_group_3_peak": 0.30,
+    "CV_group_3_offpeak": 0.20,
+}
+assert not set(FIXED_PARAMS) & set(param_names), "a parameter cannot be both free and fixed"
 assert list(param_bounds) == param_names, "param_bounds must list the parameters in param_names order"
 
 # The cancellation model's lower wait bound must stay below its upper bound (= op_max_wait_time, see
 # update_csv_with_train_x); above it the offer-quality curve degenerates into a step.
 PARAMETER_CONSTRAINTS = ["diffusion_wait_time_bound_lower <= op_max_wait_time"]
 
-# Phase 3 model structure: calibration_params.FIXED_SETTINGS, written before every evaluation
+# Model structure: calibration_params.FIXED_SETTINGS, written before every evaluation
+
+# Record the fixed parameters with the study, so vali_script_sc_3.py can rebuild full parameter sets from the logs
+with open(cali_output_folder_path / "fixed_params.json", "w") as _fp:
+    json.dump(FIXED_PARAMS, _fp, indent=2)
 
 ax_parameters = [
     {"name": name, "type": "range", "bounds": [lb, ub], "value_type": "float"}
@@ -530,7 +539,8 @@ def run_program_day(day, pooled_tt_mean_dict, real_tt_mean_dict):
 
 def update_csv_with_train_x(values):
     # parameters by name; Phase 3 structure (FIXED_SETTINGS) included -- see calibration_params.py
-    write_parameters(dict(zip(param_names, values)), fleetpy_const_config_input_file_path, fleetpy_edge_input_file_path)
+    write_parameters({**FIXED_PARAMS, **dict(zip(param_names, values))}, fleetpy_const_config_input_file_path,
+                     fleetpy_edge_input_file_path)
     time.sleep(1)
 
 
