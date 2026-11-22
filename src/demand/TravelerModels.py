@@ -26,6 +26,19 @@ from src.misc.globals import *
 LOG = logging.getLogger(__name__)
 LARGE_INT = 100000
 
+# Phase 6 (docs/plan.md D18): scale of the cancellation decision state and the feedback rate that random_term_variance
+# refers to, both from the Phase 5 model (decision_feedback_rate 0.99: the state settles at 100 x offer quality)
+DIFFUSION_STATE_SCALE = 100.0
+DIFFUSION_NOISE_REFERENCE_RATE = 0.99
+
+
+def _optional_float(value):
+    """A config value that may be missing, empty or NaN -> float, or None if missing."""
+    if value is None or (isinstance(value, str) and value.strip() in ("", "nan", "None")):
+        return None
+    value = float(value)
+    return None if np.isnan(value) else value
+
 
 # -------------------------------------------------------------------------------------------------------------------- #
 
@@ -485,6 +498,10 @@ class RequestBase(metaclass=ABCMeta):
             offer_quality = 1-2*((t_w - t_w_1)/(t_w_2 - t_w_1))
         else:
             offer_quality = -1
+        decision_time_constant = _optional_float(scenario_parameters.get(G_DECISION_TIME_CONSTANT))
+        if decision_time_constant is not None:   # Phase 6 (D18)
+            return self._decision_model_time_constant(offer_quality, decision_time_constant, scenario_parameters,
+                                                      sim_time)
         # if self.ETA_update_flag:
         #     self.diffusion_state_t = 0.0
         #     self.ETA_update_flag = False
@@ -505,6 +522,58 @@ class RequestBase(metaclass=ABCMeta):
             self.max_diffusion_decision_time_reached = True
             self.diffusion_decision_time = self.rq_time + max_diffusion_decision_time
 
+        return self.diffusion_state_t
+
+    def _decision_model_time_constant(self, offer_quality, time_constant, scenario_parameters, sim_time):
+        """Phase 6 (docs/plan.md D18): the decision state with a calibrated time constant (seconds).
+
+        Same model as decision_model, x <- r * x + drift + noise every diffusion_model_time_step dt, but:
+        - r = 1 - dt / time_constant, so the state takes about time_constant seconds to move 63 % of the way to its
+          settled value (decision_feedback_rate is not used);
+        - the state keeps the scale of the Phase 5 model whatever the time constant: it settles at
+          DIFFUSION_STATE_SCALE * offer_quality (drift = DIFFUSION_STATE_SCALE * (1 - r) * offer_quality), so the
+          thresholds (+/- decision_threshold) and the end-of-window cut (max_dec_time_def_state_lower_bound) keep
+          their meaning;
+        - random_term_variance keeps its Phase 5 meaning too: the noise per step is scaled so that the state's
+          stationary SD is sqrt(random_term_variance / (1 - DIFFUSION_NOISE_REFERENCE_RATE**2)) (about
+          7.09 * sqrt(random_term_variance)) for every time constant.
+        With time_constant = dt / (1 - 0.99) (5 s at dt = 0.05 s) this is the Phase 5 model in distribution (the
+        random draws come in blocks, so not draw for draw).
+
+        Each call runs from the state's time stamp to the end of the current simulation step, or to the end of the
+        decision window if that comes first, as one vectorised block. A rider who reaches the window end without an
+        early decision is marked here (the Phase 5 model marks it at the next call); the caller then cancels the
+        rider if the state is below max_dec_time_def_state_lower_bound.
+        """
+        from scipy.signal import lfilter
+        dt = scenario_parameters[G_DIFF_TIME_STEP]
+        if time_constant <= dt:
+            raise ValueError(f"{G_DECISION_TIME_CONSTANT} ({time_constant}) must be larger than "
+                             f"{G_DIFF_TIME_STEP} ({dt})")
+        window_end = self.rq_time + scenario_parameters[G_MAX_DEC_TIME]
+        block_end = min(sim_time + scenario_parameters[G_SIM_TIME_STEP], window_end)
+        n_steps = int(np.ceil((block_end - self.diffusion_time_stamp) / dt - 1e-9))
+        if n_steps > 0:
+            rate = 1.0 - dt / time_constant
+            noise_sd = np.sqrt(float(scenario_parameters[G_RAND_TERM_VARIANCE]) * (1.0 - rate ** 2)
+                               / (1.0 - DIFFUSION_NOISE_REFERENCE_RATE ** 2))
+            increments = (DIFFUSION_STATE_SCALE * (1.0 - rate) * offer_quality
+                          + np.random.normal(0.0, noise_sd, n_steps))
+            states = lfilter([1.0], [1.0, -rate], increments, zi=[rate * self.diffusion_state_t])[0]
+            crossed = np.flatnonzero((states >= scenario_parameters[G_DECISION_THRESHOLD_UPPER])
+                                     | (states <= scenario_parameters[G_DECISION_THRESHOLD_LOWER]))
+            if crossed.size > 0:
+                k = int(crossed[0])
+                self.diffusion_state_t = float(states[k])
+                self.diffusion_decision_time = self.diffusion_time_stamp + k * dt
+                self.cancellation_decision_in_progress = False
+                return self.diffusion_state_t
+            self.diffusion_state_t = float(states[-1])
+            self.diffusion_time_stamp += n_steps * dt
+        if self.diffusion_time_stamp >= window_end - 1e-9:
+            self.cancellation_decision_in_progress = False
+            self.max_diffusion_decision_time_reached = True
+            self.diffusion_decision_time = window_end
         return self.diffusion_state_t
 
 # -------------------------------------------------------------------------------------------------------------------- #

@@ -459,6 +459,8 @@ G_DECISION_THRESHOLD_UPPER = "decision_threshold_upper"
 G_DECISION_THRESHOLD_LOWER = "decision_threshold_lower"
 G_MAX_DEC_TIME_DEF_LOWER_BOUND = "max_dec_time_def_state_lower_bound"
 G_ETA_UPDATE_INTERVAL = "ETA_update_interval"
+# Phase 6 (docs/plan.md D18): time constant of the decision state in seconds; empty = the decision_feedback_rate model
+G_DECISION_TIME_CONSTANT = "decision_time_constant"
 
 # Deterministic post-match cancellation model for Scenario 1 and 2 in the calibration paper # Ritun added
 G_AR_CANCEL_PROB = "deterministic_user_cancel_prob"     # this is calculated as the percentage of requests that got an offer from the operator but cancelled later in the real-world data.
