@@ -24,7 +24,8 @@ class PlanRequest:
                  max_wait_time : int=LARGE_INT, max_detour_time_factor : float=None,
                  max_constant_detour_time : int=None, add_constant_detour_time : int=None, min_detour_time_window : int=None,
                  boarding_time : int=0, pickup_pos : tuple=None, dropoff_pos : tuple=None, 
-                 walking_time_start : float=0, walking_time_end : float=0, sub_rid_id=None):
+                 walking_time_start : float=0, walking_time_end : float=0, sub_rid_id=None,
+                 max_trip_time_with_predicted_boarding : bool=False):
         """
         :param rq: reference to traveller object which is requesting a trip
         :param routing_engine: reference to network object
@@ -40,6 +41,9 @@ class PlanRequest:
         :param walking_time_start: walking time from origin to pickup
         :param walking_time_end: walking time from dropoff to destination
         :param sub_rid_id: id of this plan request that differs from the traveller id; usefull if one customer can be represented by multiple plan requests
+        :param max_trip_time_with_predicted_boarding: Phase 6 (plan.md D7). If True and heterogeneous PUDO durations
+            are on, the maximum trip time is computed with the rider's predicted boarding duration instead of
+            boarding_time (default False: original behaviour)
         """
         # copy from rq
         self.traveler_rq_obj = rq                    # Ritun added
@@ -84,6 +88,29 @@ class PlanRequest:
             self.t_pu_latest = self.t_pu_earliest + max_wait_time
         else:
             self.t_pu_latest = min(self.t_pu_earliest + max_wait_time, rq.latest_start_time)
+        # stop durations: real (from the demand file) and, with heterogeneous PUDO durations, the operator's prediction.
+        # Drawn here, before the maximum trip time, so that the trip time can use the same predicted boarding (Phase 6)
+        self.real_duration_boarding = rq.duration_pudo_boarding
+        self.real_duration_alighting = rq.duration_pudo_alighting
+
+        self.insertion_with_heterogenous_PUDO_duration = rq.insertion_with_heterogenous_PUDO_duration  # Not needed here, but in the insertion.py file
+        if self.insertion_with_heterogenous_PUDO_duration:
+            self.max_rel_error_black_box_PUDO_duration = rq.max_rel_error_black_box_PUDO_duration  # Not needed here, but in the insertion.py file
+            self.predicted_duration_boarding = self.__durationPUDOprediction_model(self.real_duration_boarding,
+                                                                                   self.max_rel_error_black_box_PUDO_duration,
+                                                                                   lower_bound_black_box=rq.lower_bound_black_box_PUDO_dur,
+                                                                                   upper_bound_black_box=rq.upper_bound_black_box_PUDO_dur)  # Initialized in this step to make sure that the same value is used in every iteration within insertion.py
+            self.predicted_duration_alighting = self.__durationPUDOprediction_model(self.real_duration_alighting,
+                                                                                    self.max_rel_error_black_box_PUDO_duration,
+                                                                                    lower_bound_black_box=rq.lower_bound_black_box_PUDO_dur,
+                                                                                    upper_bound_black_box=rq.upper_bound_black_box_PUDO_dur)
+
+            rq.op_predicted_boarding_time = self.predicted_duration_boarding
+            rq.op_predicted_alighting_time = self.predicted_duration_alighting
+            # Phase 6 (plan.md D7): the maximum trip time uses the rider's predicted boarding duration (the value the
+            # operator plans the pickup stop with) instead of the constant op_const_boarding_time
+            if max_trip_time_with_predicted_boarding:
+                boarding_time = self.predicted_duration_boarding
         self.t_do_latest = LARGE_INT
         if rq.max_trip_time is not None:
             self.max_trip_time = rq.max_trip_time
@@ -114,23 +141,6 @@ class PlanRequest:
         self.status = G_PRQS_NO_OFFER
         self.expected_pickup_time = None
         self.expected_dropoff_time = None
-        self.real_duration_boarding = rq.duration_pudo_boarding
-        self.real_duration_alighting = rq.duration_pudo_alighting
-
-        self.insertion_with_heterogenous_PUDO_duration = rq.insertion_with_heterogenous_PUDO_duration  # Not needed here, but in the insertion.py file
-        if self.insertion_with_heterogenous_PUDO_duration:
-            self.max_rel_error_black_box_PUDO_duration = rq.max_rel_error_black_box_PUDO_duration  # Not needed here, but in the insertion.py file
-            self.predicted_duration_boarding = self.__durationPUDOprediction_model(self.real_duration_boarding,
-                                                                                   self.max_rel_error_black_box_PUDO_duration,
-                                                                                   lower_bound_black_box=rq.lower_bound_black_box_PUDO_dur,
-                                                                                   upper_bound_black_box=rq.upper_bound_black_box_PUDO_dur)  # Initialized in this step to make sure that the same value is used in every iteration within insertion.py
-            self.predicted_duration_alighting = self.__durationPUDOprediction_model(self.real_duration_alighting,
-                                                                                    self.max_rel_error_black_box_PUDO_duration,
-                                                                                    lower_bound_black_box=rq.lower_bound_black_box_PUDO_dur,
-                                                                                    upper_bound_black_box=rq.upper_bound_black_box_PUDO_dur)
-
-            rq.op_predicted_boarding_time = self.predicted_duration_boarding
-            rq.op_predicted_alighting_time = self.predicted_duration_alighting
 
     def __str__(self):
         return f"new PlanRequest: rid {self.rid}|{self.sub_rid_struct} at {self.rq_time} start {self.o_pos} dest" \

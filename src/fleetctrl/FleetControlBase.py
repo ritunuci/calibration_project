@@ -181,6 +181,8 @@ class FleetControlBase(metaclass=ABCMeta):
         self.dispatch_delay_peak_windows = _parse_windows(operator_attributes.get(G_OP_DISPATCH_DELAY_PEAK_WINDOWS))
         if self.dispatch_delay_offpeak is not None and not self.dispatch_delay_peak_windows:
             raise IOError(f"{G_OP_DISPATCH_DELAY_OFFPEAK} is set but {G_OP_DISPATCH_DELAY_PEAK_WINDOWS} is empty")
+        self.max_trip_time_with_predicted_boarding = bool(_optional_float(
+            operator_attributes.get(G_OP_MAX_TRIP_TIME_PRED_BOARDING)) or 0)   # Phase 6 (plan.md D7)
         # early locking/constraining of request pickup
         # --------------------------------------------
         self.early_lock_time = operator_attributes.get(G_RA_LOCK_TIME, 0)
