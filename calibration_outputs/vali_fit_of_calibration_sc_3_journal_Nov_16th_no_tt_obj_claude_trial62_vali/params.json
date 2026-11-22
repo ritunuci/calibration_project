@@ -1,0 +1,30 @@
+{
+  "study": "calibration_sc_3_journal_Nov_16th_no_tt_obj_claude",
+  "trial_number": 62,
+  "stage": "Bayesian optimization",
+  "calibration_energy_score": 2.931085118677976,
+  "trials_in_log": 63,
+  "dates": "vali",
+  "demand_folder": "example_network",
+  "only": null,
+  "params": {
+    "op_max_wait_time": 2212.104491309935,
+    "op_detour_time_factor": 48.34277075899624,
+    "const_PUDO_duration": 30.0,
+    "diffusion_wait_time_bound_lower": 1567.4561662722297,
+    "max_cancel_decision_time": 199.99999993977855,
+    "random_term_variance": 0.5000000000008988,
+    "decision_threshold": 169.9999999027143,
+    "no_show_wait_time": 20.0,
+    "CV_group_1_peak": 0.0500000000067697,
+    "CV_group_1_offpeak": 0.05,
+    "CV_group_2_peak": 0.6999999999874933,
+    "CV_group_2_offpeak": 0.10000000000179,
+    "CV_group_3_peak": 0.3,
+    "CV_group_3_offpeak": 0.2510806610265346,
+    "rider_decline_base": 0.25,
+    "rider_decline_slope_per_min": 0.0007295999382723,
+    "rider_decline_max": 0.7834960109061329,
+    "op_dispatch_delay": 93.71486229965876
+  }
+}
