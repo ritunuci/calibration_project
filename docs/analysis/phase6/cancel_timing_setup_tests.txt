@@ -1,0 +1,10 @@
+                 test_p6_T1_t54_d7off  test_p6_T2_t54_d7on  test_p6_T3b_win200  test_p6_T3a_win1200  real (2 dates)
+cancellations                    43.0                 43.0                51.0                 49.0            63.0
+median s                          4.5                  2.8                 3.4                  4.0           180.0
+% within 60 s                    90.7                 90.7                80.4                 85.7            36.5
+% within 200 s                  100.0                100.0               100.0                 87.8            54.0
+% within 300 s                  100.0                100.0               100.0                 93.9            65.1
+% within 600 s                  100.0                100.0               100.0                 98.0            85.7
+% within 900 s                  100.0                100.0               100.0                100.0            93.7
+% within 1200 s                 100.0                100.0               100.0                100.0            98.4
+% at window end                   7.0                  7.0                17.6                  0.0             NaN

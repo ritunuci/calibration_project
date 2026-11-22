@@ -1,0 +1,39 @@
+{
+  "study": "calibration_sc_3_journal_Nov_16th_no_tt_obj_claude",
+  "trial_number": 54,
+  "stage": "Bayesian optimization",
+  "calibration_energy_score": 3.138457706257871,
+  "trials_in_log": 63,
+  "overrides": {
+    "rider_decline_base": 0.1,
+    "rider_decline_slope_per_min": 0.0075,
+    "rider_decline_max": 1.0,
+    "op_dispatch_delay_offpeak": 60.0,
+    "const_PUDO_duration": 52.0,
+    "max_cancel_decision_time": 200.0
+  },
+  "dates": "vali",
+  "demand_folder": "example_network",
+  "only": "2024-01-30,2024-03-28",
+  "params": {
+    "op_max_wait_time": 2102.1203999894083,
+    "op_detour_time_factor": 51.202435797920245,
+    "const_PUDO_duration": 52.0,
+    "diffusion_wait_time_bound_lower": 1512.6680694992206,
+    "max_cancel_decision_time": 200.0,
+    "random_term_variance": 0.5,
+    "decision_threshold": 30.0,
+    "no_show_wait_time": 200.0,
+    "CV_group_1_peak": 0.0500000030248411,
+    "CV_group_1_offpeak": 0.05,
+    "CV_group_2_peak": 0.05000003046697,
+    "CV_group_2_offpeak": 0.1,
+    "CV_group_3_peak": 0.3,
+    "CV_group_3_offpeak": 0.2,
+    "rider_decline_base": 0.1,
+    "rider_decline_slope_per_min": 0.0075,
+    "rider_decline_max": 1.0,
+    "op_dispatch_delay": 124.4818790041257,
+    "op_dispatch_delay_offpeak": 60.0
+  }
+}
