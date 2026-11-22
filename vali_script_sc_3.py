@@ -48,7 +48,8 @@ from calibration_params import write_parameters   # Phase 5: parameter set -> Fl
 # Paths and setup
 # ----------------------------------------------------------------------------------------------------------------------
 PROJECT_ROOT = Path(__file__).resolve().parent
-CALI_STUDY = "calibration_sc_3_journal_Nov_16th_no_tt_obj_claude"   # Phase 5 calibration
+CALI_STUDY = "calibration_sc_3_phase6-recalibration_Nov_21st_no_tt_obj_claude"   # Phase 6 calibration
+# Phase 5 study (pass with --study): calibration_sc_3_journal_Nov_16th_no_tt_obj_claude
 
 ap = argparse.ArgumentParser(description="Run one parameter set on the validation or calibration dates.")
 ap.add_argument("--dates", choices=["vali", "cali"], default="vali", help="15 validation or 48 calibration dates")
@@ -442,13 +443,30 @@ HAND_PARAMS = {
 }
 
 
+# all parameter names calibration_params.write_parameters knows; the Phase 6 ones are optional:
+# op_dispatch_delay_offpeak defaults to op_dispatch_delay (one delay all day, as in Phase 5) and
+# decision_time_constant to empty (the Phase 5 cancellation model)
+ALL_PARAM_NAMES = list(HAND_PARAMS) + ["op_dispatch_delay_offpeak", "decision_time_constant"]
+
+
 def params_from_study(study, which):
-    """--params best / <trial number>: the parameters of one trial in the study's convergence_log.csv."""
-    log = pd.read_csv(PROJECT_ROOT / "calibration_outputs" / study / "convergence_log.csv")
+    """--params best / <trial number>: the parameters of one trial in the study's convergence_log.csv, plus the
+    study's fixed parameters (fixed_params.json, written by the calibration script from Phase 6 on)."""
+    folder = PROJECT_ROOT / "calibration_outputs" / study
+    log = pd.read_csv(folder / "convergence_log.csv")
     row = log.loc[log.energy_score.idxmin()] if which == "best" else log[log.trial_number == int(which)].iloc[0]
     info = {"study": study, "trial_number": int(row.trial_number), "stage": row.stage,
             "calibration_energy_score": float(row.energy_score), "trials_in_log": len(log)}
-    return {k: float(row[k]) for k in HAND_PARAMS}, info
+    params = {k: float(row[k]) for k in ALL_PARAM_NAMES if k in log.columns}
+    fixed_path = folder / "fixed_params.json"
+    if fixed_path.exists():
+        fixed = json.loads(fixed_path.read_text())
+        params.update({k: float(v) for k, v in fixed.items() if k not in params})
+        info["fixed_params"] = fixed
+    missing = [k for k in HAND_PARAMS if k not in params]
+    if missing:
+        raise SystemExit(f"{study}: no value for {', '.join(missing)} (not in convergence_log.csv or fixed_params.json)")
+    return params, info
 
 
 if ARGS.params == "hand":
@@ -459,8 +477,8 @@ if ARGS.set:
     overrides = {}
     for kv in ARGS.set:
         key, val = kv.split("=", 1)
-        if key not in VALI_PARAMS:
-            raise SystemExit(f"--set: unknown parameter {key!r}; known: {', '.join(VALI_PARAMS)}")
+        if key not in ALL_PARAM_NAMES:
+            raise SystemExit(f"--set: unknown parameter {key!r}; known: {', '.join(ALL_PARAM_NAMES)}")
         overrides[key] = float(val)
     VALI_PARAMS.update(overrides)
     info["overrides"] = overrides
