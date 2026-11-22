@@ -134,6 +134,12 @@ G_OP_RIDER_DECLINE_MAX = "rider_decline_max"
 # Phase 3: a vehicle may not set off towards a new rider's pickup earlier than request time + op_dispatch_delay [s]
 # (real system: ~4-5 min fixed delay before the vehicle arrives; default 0 = off)
 G_OP_DISPATCH_DELAY = "op_dispatch_delay"
+# Phase 6 (plan.md D15): separate off-peak dispatch delay [s]. If set, op_dispatch_delay applies to requests made inside
+# the peak windows and op_dispatch_delay_offpeak to all others. Peak windows: "start-end start-end" (space-separated;
+# ";" would be read as per-operator values) in seconds of the day, e.g. "28800-36000 54000-64800" (the AM 8-10 h and
+# PM 15-18 h KPI windows). Unset = one delay all day (default)
+G_OP_DISPATCH_DELAY_OFFPEAK = "op_dispatch_delay_offpeak"
+G_OP_DISPATCH_DELAY_PEAK_WINDOWS = "op_dispatch_delay_peak_windows"
 # Phase 3: 1 = a new rider's pick-up may not be planned before pick-ups already planned (real operator: only ~9 % of
 # queued riders are overtaken; FleetPy's free insertion ~36 %). Drop-offs can still be interleaved. 0 = off (default)
 G_OP_FIFO_PICKUPS = "op_fifo_pickups"

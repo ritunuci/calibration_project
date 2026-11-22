@@ -105,8 +105,9 @@ class PoolingInsertionHeuristicOnly(FleetControlBase):
                           max_detour_time_factor=self.max_dtf, max_constant_detour_time=self.max_cdt,
                           add_constant_detour_time=self.add_cdt, min_detour_time_window=self.min_dtw,
                           boarding_time=self.const_bt)
-        if self.dispatch_delay > 0:   # Phase 3: no vehicle sets off towards this pickup before rq_time + delay
-            prq.t_depart_earliest = prq.get_rq_time() + self.dispatch_delay
+        delay = self.dispatch_delay_for(prq.get_rq_time())   # Phase 6, D15: peak / off-peak delay if configured
+        if delay > 0:   # Phase 3: no vehicle sets off towards this pickup before rq_time + delay
+            prq.t_depart_earliest = prq.get_rq_time() + delay
         prq.fifo_pickups = self.fifo_pickups   # Phase 3
 
         rid_struct = rq.get_rid_struct()

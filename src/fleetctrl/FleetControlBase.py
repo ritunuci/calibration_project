@@ -46,6 +46,36 @@ LOG = logging.getLogger(__name__)
 LARGE_INT = 100000000
 BUFFER_SIZE = 100
 
+
+def _optional_float(value):
+    """Phase 6: a numeric operator attribute that may be missing, empty or NaN in the config -> float or None."""
+    if value is None:
+        return None
+    if isinstance(value, str):
+        value = value.strip()
+        if value == "" or value.lower() == "nan":
+            return None
+    try:
+        value = float(value)
+    except (TypeError, ValueError):
+        raise IOError(f"expected a number, got {value!r}")
+    return None if pd.isnull(value) else value
+
+
+def _parse_windows(value):
+    """Phase 6: "start-end start-end" (space-separated, seconds of the day) -> [(start, end), ...]; missing/empty -> [].
+    Not ";": FleetPy's config reader turns "a;b" into a list of per-operator values."""
+    if value is None or (not isinstance(value, str) and pd.isnull(value)):
+        return []
+    windows = []
+    for part in str(value).split():
+        if part.lower() == "nan":
+            continue
+        start, end = part.split("-")
+        windows.append((float(start), float(end)))
+    return windows
+
+
 INPUT_PARAMETERS_FleetControlBase = {
     "doc" : "this class is the base class representing an MoD operator",
     "inherit" : None,
@@ -146,6 +176,11 @@ class FleetControlBase(metaclass=ABCMeta):
         self.add_bt = operator_attributes.get(G_OP_ADD_BT, 0)
         self.dispatch_delay = operator_attributes.get(G_OP_DISPATCH_DELAY, 0) or 0   # Phase 3, see globals.py
         self.fifo_pickups = bool(operator_attributes.get(G_OP_FIFO_PICKUPS, 0) or 0)  # Phase 3, see globals.py
+        # Phase 6, see globals.py: off-peak dispatch delay and the peak windows it does not apply in
+        self.dispatch_delay_offpeak = _optional_float(operator_attributes.get(G_OP_DISPATCH_DELAY_OFFPEAK))
+        self.dispatch_delay_peak_windows = _parse_windows(operator_attributes.get(G_OP_DISPATCH_DELAY_PEAK_WINDOWS))
+        if self.dispatch_delay_offpeak is not None and not self.dispatch_delay_peak_windows:
+            raise IOError(f"{G_OP_DISPATCH_DELAY_OFFPEAK} is set but {G_OP_DISPATCH_DELAY_PEAK_WINDOWS} is empty")
         # early locking/constraining of request pickup
         # --------------------------------------------
         self.early_lock_time = operator_attributes.get(G_RA_LOCK_TIME, 0)
@@ -868,6 +903,16 @@ class FleetControlBase(metaclass=ABCMeta):
         if self.repo:
             self.repo.record_repo_stats()
             
+    def dispatch_delay_for(self, rq_time : float) -> float:
+        """Phase 3/6: the dispatch delay for a request made at rq_time. One delay all day unless an off-peak delay is
+        set (Phase 6, plan.md D15): then op_dispatch_delay inside the peak windows, op_dispatch_delay_offpeak outside."""
+        if self.dispatch_delay_offpeak is None:
+            return self.dispatch_delay
+        for start, end in self.dispatch_delay_peak_windows:
+            if start <= rq_time < end:
+                return self.dispatch_delay
+        return self.dispatch_delay_offpeak
+
     def _build_VRLs(self, vehicle_plan : VehiclePlan, veh_obj : SimulationVehicle, sim_time : int) -> List[VehicleRouteLeg]:
         """This method builds VRL for simulation vehicles from a given Plan. Since the vehicle could already have the
         VRL with the correct route, the route from veh_obj.assigned_route[0] will be used if destination positions
