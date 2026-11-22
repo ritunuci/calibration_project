@@ -1,16 +1,23 @@
 """Write a calibration parameter set into the FleetPy inputs. Shared by the calibration and validation scripts, so that
-both run the model with the same structure (Phase 5, docs/plan.md).
+both run the model with the same structure (Phase 5, docs/plan.md; Phase 6 adds D15 to FIXED_SETTINGS and keeps the D7
+switch off, so a Phase 5 parameter set re-run on this branch gives its Phase 5 result: one dispatch delay all day).
 
 Parameters are passed by name (the names of param_names in the calibration script). FIXED_SETTINGS is the Phase 3
 model structure (docs/analysis/phase3/findings.md) and is written before every run.
 """
 import pandas as pd
 
-# Phase 3 model structure
+# Peak windows of the dispatch delay = the AM and PM KPI windows (calibration_kpis.AM / PM), seconds of the day
+PEAK_WINDOWS = "28800-36000 54000-64800"   # space-separated: FleetPy reads "a;b" as per-operator values
+
+# Model structure: Phase 3 (docs/analysis/phase3/findings.md) plus Phase 6 (docs/plan.md D15; D7 switch kept off)
 FIXED_SETTINGS = {
     "rider_decline_model": "base_slope",                    # decline = base + slope x offered wait (TravelerModels.py)
     "insertion_with_heterogenous_PUDO_duration": "TRUE",    # plan each stop with the rider's own stop time
     "op_fifo_pickups": 1,                                   # queued riders are picked up in assignment order
+    "op_max_trip_time_with_predicted_boarding": 0,          # D7 (revised 2026-11-22): off, the max ride time uses
+                                                            # the constant op_const_boarding_time as before
+    "op_dispatch_delay_peak_windows": PEAK_WINDOWS,         # Phase 6 (D15): where op_dispatch_delay applies
 }
 
 # constant-config row <- calibration parameter
@@ -27,13 +34,20 @@ CONFIG_ROWS = {
     "rider_decline_base": "rider_decline_base",
     "rider_decline_slope_per_min": "rider_decline_slope_per_min",
     "rider_decline_max": "rider_decline_max",
-    "op_dispatch_delay": "op_dispatch_delay",
+    "op_dispatch_delay": "op_dispatch_delay",                  # Phase 6: the peak-window delay
+    "op_dispatch_delay_offpeak": "op_dispatch_delay_offpeak",  # Phase 6 (D15)
+    "decision_time_constant": "decision_time_constant",        # Phase 6 (D18), seconds
 }
 
 
 def write_parameters(params, const_config_path, edge_path):
-    """params: dict name -> value (all calibration parameters). Edits the constant config and the edge file in place."""
+    """params: dict name -> value (all calibration parameters, free and fixed). Edits the constant config and the edge
+    file in place. A parameter set from Phase 5 or earlier runs as before: without op_dispatch_delay_offpeak it gets
+    the peak delay off-peak too (one delay all day), and without decision_time_constant the row stays empty, so the
+    cancellation model uses decision_feedback_rate (TravelerModels.decision_model)."""
     v = {k: float(x) for k, x in params.items()}
+    v.setdefault("op_dispatch_delay_offpeak", v["op_dispatch_delay"])
+    v.setdefault("decision_time_constant", float("nan"))
     cfg = pd.read_csv(const_config_path, index_col=0)
     for row, name in CONFIG_ROWS.items():
         cfg.loc[row, "Parameter_Value"] = v[name]
