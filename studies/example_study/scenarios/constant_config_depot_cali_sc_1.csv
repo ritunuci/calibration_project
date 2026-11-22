@@ -31,6 +31,9 @@ op_const_boarding_time,160.01
 op_add_boarding_time,0
 op_dispatch_delay,0
 op_fifo_pickups,0
+op_dispatch_delay_offpeak,
+op_dispatch_delay_peak_windows,
+op_max_trip_time_with_predicted_boarding,0
 op_base_fare,0
 op_distance_fare,0.1
 op_time_fare,0
@@ -47,6 +50,7 @@ waiting_time_upper_bound,2203.83
 diffusion_model_time_step,0.05
 max_decision_time,200.0
 decision_feedback_rate,0.99
+decision_time_constant,
 random_term_variance,1.73
 decision_threshold_upper,106.07
 decision_threshold_lower,-106.07
