@@ -48,7 +48,7 @@ from calibration_params import write_parameters   # Phase 5: parameter set -> Fl
 # Paths and setup
 # ----------------------------------------------------------------------------------------------------------------------
 PROJECT_ROOT = Path(__file__).resolve().parent
-CALI_STUDY = "calibration_sc_3_phase6-recalibration_Nov_21st_no_tt_obj_claude"   # Phase 6 calibration
+CALI_STUDY = "calibration_sc_3_phase6-recalibration_Nov_22nd_no_tt_obj_claude"   # Phase 6 calibration (HPC job 59933213)
 # Phase 5 study (pass with --study): calibration_sc_3_journal_Nov_16th_no_tt_obj_claude
 
 ap = argparse.ArgumentParser(description="Run one parameter set on the validation or calibration dates.")
