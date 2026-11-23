@@ -422,6 +422,23 @@ another completed trip on the same vehicle. Real side: `VEHICLE_ID`, `ACTUAL_PIC
 raw request file (minute resolution). Sim side: end of the rider's boarding stop to start of the alighting stop, same
 vehicle and seed, from `2-0_op-stats.csv`.
 
+**Code.** Both sides use `calibration_kpis.pooled_share_pct` (`sim_extra_kpis` / `real_extra_kpis`); the real values are
+written into the `pooled_pct` column of the real KPI files by `docs/analysis/phase4/add_real_kpis.py`.
+
+**Caveats** (noted 2026-11-23):
+- Any overlap counts, however short, but it must be strictly positive: a drop-off and a pickup at the same moment do
+  not pool the two trips. The share says nothing about how long trips share the vehicle (real: 38 % pooled, 33 % with
+  more than 3 min of overlap).
+- A real completed trip without `ACTUAL_DROPOFF_TIME` gets a zero-length interval (drop-off = pickup) and never counts
+  as pooled.
+- The two intervals may not be measured alike. The sim interval excludes time at the stops; it is not known whether the
+  operator's pickup / drop-off timestamps include stop time. If they do, real intervals are slightly longer and overlap
+  more easily. Phase 1 found the same sim measure close to the real `actual_travel_time`, so the gap is probably small
+  (not checked directly).
+- Real timestamps are in whole minutes, the sim's in seconds: real overlaps under a minute can round either way.
+- Sim value per seed and date. The objective compares the 5 seed values with the one real value per date; validation
+  tables show the 5-seed mean. Tolerance in the objective: 5 points (`calibration_kpis.KPI_SCALES`).
+
 **Evidence.**
 
 | | Real | Sim (trial 32, hourly network, 5 seeds) |
