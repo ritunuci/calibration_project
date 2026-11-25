@@ -135,3 +135,64 @@ Cancellation times (seed 42, `cancel_timing_d18_tests.txt`):
 - **Late cancellations cost vehicle time:** rides per veh-rev-h 3.26 → 3.16 (real 2.97, SE 0.04) and rejections +0.5 to +0.7 points (SE 0.3–0.6), at the same cancellation share. This is the mechanism behind the D14 hypothesis, here at trial 54's values.
 - **No run-time cost:** 483–489 s vs 476 s.
 - **The objective has no timing KPI**, so the calibration places the time constant and threshold only through their effect on the other KPIs (above: rides and rejections). The validation reports the timing against real (Phase 6 acceptance).
+
+## 4. Is the real driver response slower off-peak than at the peaks? (2026-11-25)
+
+**Question.** The Phase 6 calibration (34 trials) puts the peak delay `op_dispatch_delay` at its 60 s lower bound and `op_dispatch_delay_offpeak` at its 120 s upper bound, the reverse of what D15 intended. A possible real-world reading (user): at the peaks drivers are busy and primed and respond quickly to bookings; off-peak they are idle, less attentive, and take longer to respond. If that were true, the real data should show a longer fixed delay off-peak.
+
+**Measure.** Script `driver_response_by_period.py`, output `driver_response_by_period.txt`; real data only, 63 dates. It is the Phase 3 measure ([phase3/findings.md](../phase3/findings.md) §4, `pickup_delay.py`) split by the request time:
+- Riders served by a vehicle that was **free** when they requested: empty, no other pickup queued, inside its shift and not in a break (state rules of `phase2/operator_dispatch.py`).
+- For these riders nobody is ahead in the queue, so the wait (`diff_pickup_request`) is a fixed part (the operator's system assigning, the driver accepting and setting off) plus the drive to the pickup.
+- The drive is set by the empty distance `EMPTY_MILES_BEFORE`. The fit wait = a + b × miles separates the two: **a, the fixed part, is the closest the data come to a driver-response time**; b is the driving time per mile.
+- Periods are those of the dispatch delay (`calibration_params.PEAK_WINDOWS`): AM peak 8–10 h, PM peak 15–18 h, off-peak the rest.
+
+**Result** (wait in minutes; medians by empty distance):
+
+| | Riders | Fixed part (fit) | Min per mile | 0–0.5 mi (riders) | 0.5–1 mi | 1–2 mi | 2–3 mi |
+|---|---|---|---|---|---|---|---|
+| AM peak | 703 | **8.2** | 1.79 | 4.7 (32) | 7.8 | 9.9 | 13.2 |
+| PM peak | 909 | **8.4** | 2.25 | 6.6 (69) | 8.8 | 10.7 | 12.9 |
+| Off-peak | 3 703 | **6.5** | 1.61 | 5.0 (294) | 6.6 | 8.3 | 10.0 |
+| All day | 5 315 | 7.1 | 1.70 | 5.2 (395) | 7.1 | 8.8 | 11.0 |
+
+Peak minus off-peak, with 95 % intervals from a bootstrap over whole dates (2 000 draws):
+
+| | AM − off-peak | PM − off-peak |
+|---|---|---|
+| Fixed part (fit), min | **+1.8** (+0.8 to +2.7) | **+1.9** (+1.0 to +2.9) |
+| Same, riders with nobody else picked up first | +1.6 (+0.8 to +2.6) | +1.5 (+0.6 to +2.4) |
+| Median wait under 0.5 mi, min | −0.3 (−1.8 to +1.7) | +1.6 (−0.1 to +4.2) |
+
+Checks:
+- **Break rule off** (a vehicle idle in a gap counted as a break also counts as free): fixed part 8.5 / 8.4 / 6.5 min, unchanged.
+- **Nobody else picked up first** (only riders with an empty vehicle at their pickup; 2–4 % of the free-vehicle riders are dropped): 7.8 / 7.7 / 6.2 min; the gap stays at 1.5–1.6 min.
+- **Slower peak traffic does not explain it.** Slower driving shows in the slope (PM 2.25 vs 1.61 min per mile), not in the fixed part. At 0.5–1 mi the PM wait is 2.1 min longer than off-peak; the slower driving accounts for about 0.5 min of that (0.75 mi × 0.64 min per mile).
+- By hour (`.txt` §3): the fixed part is 4.9–6.4 min from 10 to 13 h and at 7 and 18 h, and 7.4–10.4 min in the peak hours. Exception: 14 h at 8.7 min. The largest is 15 h (10.4 min; median 10.5 min under 0.5 mi). Not examined further.
+- Context (all completed trips): at the peaks 18–25 % of riders are served by a free vehicle (off-peak 36 %), the median number of other free vehicles is 0 (off-peak 1), and the median wait is 15.9 / 17.8 min (off-peak 11.8).
+
+**Findings.**
+- **The real data contradict "slower off-peak".** The fixed part of the wait is about **1.5–1.9 min (90–115 s) longer at the peaks**, at both peaks, with intervals that exclude zero, and it survives both checks.
+- **The median under 0.5 mi alone is not conclusive.** Only 32 (AM) and 69 (PM) peak riders were that close, so its intervals are wide and include zero. The fit uses all 5 315 riders and is the reliable figure.
+- **So the Phase 6 inversion is not a real-world feature.** Peak delay at 60 s and off-peak delay at 120 s is the optimizer compensating for something else in the model, at the cost of the off-peak wait (+83 s in trial 32 on the 15 validation dates). Candidates, all untested: rides per vehicle revenue hour, rejections, and the total decline share (a longer offered wait raises declines and lets `rider_decline_base` stay low).
+- **The direction D15 intended is right.** The peak delay should be the longer one, by roughly 90–115 s. The D15 test pointed the same way: about 60 s suited the off-peak, while the peaks wanted 124 s or more.
+- **Only the order and the rough size of the gap carry over to the model, not the absolute values.** The real fixed part is 6–8 min; the model's delays are 1–2 min. The model gets most of its wait from the first-come queue instead, because its wait for a free vehicle is still short (Phase 3: 2.8 vs 7.1 min).
+
+**What the measure is and is not.** This group is the cleanest available measure of the fixed delay, because no queue sits ahead and the distance can be held fixed. It is still not driver response alone:
+- It includes everything between the request and the pickup apart from the drive: the operator's system assigning, the driver accepting, finishing up after the last drop-off, and setting off. The data have no accept time to separate these.
+- The free state is reconstructed (shifts and breaks are inferred), and `EMPTY_MILES_BEFORE` is the operator's figure.
+- The fixed part is the fit's value at zero distance, an extrapolation.
+
+Why the peaks are slower is not known. Possible reasons, all untested:
+- At the peaks a free vehicle has usually only just dropped someone off, so the driver is still finishing the last trip.
+- The operator's system or dispatcher is busier.
+- Delays at the pickup point are not captured by distance.
+
+**Options for the next setup** (not decided; the running Phase 6 study is not changed):
+- (a) Enforce peak ≥ off-peak: calibrate `op_dispatch_delay_offpeak` and a peak extra ≥ 0 (for example 0–180 s), with peak = off-peak + extra. This needs a small change in `calibration_params.py`.
+- (b) Fix the extra at about 90–110 s from this measure and calibrate only the off-peak delay.
+- (c) Keep both free but use a peak lower bound above the off-peak upper bound.
+
+Reproduce (from the repo root; needs the raw request file):
+```
+python docs/analysis/phase6/driver_response_by_period.py > docs/analysis/phase6/driver_response_by_period.txt
+```

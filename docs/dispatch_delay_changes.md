@@ -104,6 +104,7 @@ def dispatch_delay_for(self, rq_time):            # FleetControlBase
 - **Peak delay vs hard-day load (D14):** if the Phase 6 calibration pushes the peak delay to 200 s, suspect it is standing in for missing peak load rather than a real dispatch time.
 - **The real fixed delay (4–6 min) is larger than the calibrated values** (60–200 s). The rest of the real wait is carried by the first-come queue; the model's wait for a free vehicle is still short (Phase 3 result: 2.8 vs 7.1 min, compensated by longer queue waits).
 - **Vehicle position during the delay** is wrong (the vehicle waits at the pickup, not at its origin). This does not change pickup times but could change which vehicle is closest for a later request.
+- **Peak vs off-peak in the real data** ([analysis/phase6/findings.md](analysis/phase6/findings.md) §4, 2026-11-25): the fixed part of the wait for a free vehicle is 1.5–1.9 min longer at the peaks than off-peak (8.2 / 8.4 vs 6.5 min). The peak delay should be the longer one. The Phase 6 calibration's reverse order (peak at 60 s, off-peak at 120 s; trial 32) does not reflect slower off-peak drivers.
 - **Validation (Phase 6 acceptance in plan.md):** check the off-peak and AM/PM peak wait biases separately; the split is meant to bring off-peak near 0 without losing the peaks.
 
 ## 9. Reproduce
