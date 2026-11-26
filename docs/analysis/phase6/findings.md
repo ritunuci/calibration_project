@@ -196,3 +196,130 @@ Reproduce (from the repo root; needs the raw request file):
 ```
 python docs/analysis/phase6/driver_response_by_period.py > docs/analysis/phase6/driver_response_by_period.txt
 ```
+
+## 5. Interim validation: trials 32, 37 and 38 (38 of 65 trials, 2026-11-25)
+
+**State of the run.** The HPC job (59933213) had finished 38 trials: 25 Sobol and 13 BO. A trial takes about 1.7–2.1 h. Trial numbers are `trial_number` in `convergence_log.csv`, the numbering `vali_script_sc_3.py --params` uses; the run log's `trial=` uses the same numbers. The best calibration scores (48 dates) were:
+
+| Trial | Calibration score |
+|---|---|
+| 37 | **2.828** |
+| 32 | 2.868 |
+| 38 | 2.879 |
+| 36 | 2.917 |
+| 29 | 2.946 |
+| Phase 5 trial 54 | 3.138 |
+
+The three best trials, validated:
+
+| | Trial 32 | Trial 37 | Trial 38 |
+|---|---|---|---|
+| `op_max_wait_time`, s | 2274 | 2318 | 2398 |
+| `op_detour_time_factor` | 46.0 | 52.1 | 48.8 |
+| `diffusion_wait_time_bound_lower`, s | 1567 | 1542 | 1488 |
+| `decision_time_constant`, s | 210 | 361 | 359 |
+| `decision_threshold` (bounds 10–100) | 86.9 | **100** | **100** |
+| `random_term_variance` (bounds 0.5–5) | 0.98 | **0.5** | **0.5** |
+| `rider_decline_base` | 0.098 | 0.110 | 0.116 |
+| `op_dispatch_delay` (peak; bounds 60–200), s | **60** | **60** | **60** |
+| `op_dispatch_delay_offpeak` (bounds 0–120), s | **120** | **120** | **0.8** |
+
+Bold values sit at a bound.
+
+**Parameter trends over the 13 BO trials.** Spearman correlation with the score (positive = a higher value gives a worse score):
+
+| Parameter | Spearman |
+|---|---|
+| `diffusion_wait_time_bound_lower` | +0.75 |
+| `random_term_variance` | +0.61 |
+| `op_max_wait_time` | +0.59 |
+| `op_dispatch_delay` (peak) | +0.58 |
+| `decision_threshold` | −0.45 |
+| `rider_decline_base` | −0.34 |
+| `op_dispatch_delay_offpeak` | −0.19 |
+| `op_detour_time_factor`, `decision_time_constant` | −0.02 |
+
+So the objective rewards a high threshold with little noise, which means cancelling at the window end (below). It also rewards a peak delay at its lower bound.
+
+**Run log.** In Sobol trial 13, FleetPy failed on 2024-04-17 (2026-11-23 14:00). The calibration script reran that date with the fleet at half size, its built-in fallback. That trial's score of 3.84 is therefore not a clean evaluation. It is far from the best, so it only misleads the optimizer by one point. The cause would be in the slurm `.err` file; not checked.
+
+### Validation on the 15 validation dates
+
+Run folders: `calibration_outputs/vali_fit_of_calibration_sc_3_phase6-recalibration_Nov_22nd_no_tt_obj_claude_trial{32,37,38}_vali`, with the parity plots there (not in git). 5 seeds.
+
+| Run | Validation score | Calibration score | Trial 38 − this run (paired, ± SE) | Trial 38 better on |
+|---|---|---|---|---|
+| **Trial 38** | **2.326** | 2.879 | | |
+| Trial 37 | 2.620 | 2.828 | −0.29 ± 0.13 | 12 / 15 dates |
+| Trial 32 | 2.631 | 2.868 | −0.30 ± 0.12 | 11 / 15 |
+| Phase 5 trial 54, 60 s delay | 2.652 | – | −0.33 ± 0.12 | 11 / 15 |
+| Phase 5 trial 54 | 2.674 | 3.138 | −0.35 ± 0.12 | 12 / 15 |
+
+Trials 37 and 32 tie: paired −0.01 ± 0.11. Trial 37 against trial 54: −0.06 ± 0.10.
+
+Bias (sim − real, mean over the 15 dates):
+
+| KPI | Trial 32 | Trial 37 | Trial 38 | Trial 54 | Trial 54, 60 s |
+|---|---|---|---|---|---|
+| Rejected % | +0.51 | −0.17 | −0.13 | −0.84 | −1.02 |
+| Peak rejected % | −0.11 | −0.76 | −0.90 | −2.07 | −2.25 |
+| Declined % | +0.30 | +1.24 | +1.29 | +1.57 | +1.01 |
+| Rides per veh-rev-h | +0.16 | +0.18 | **+0.12** | +0.20 | +0.23 |
+| AM wait, s | −33 | −31 | −43 | −12 | −43 |
+| PM wait, s | −66 | −76 | −58 | −33 | −58 |
+| **Off-peak wait, s** | +83 | +68 | **−10** | +77 | +15 |
+| p90 peak wait, s | −112 | −120 | −99 | −152 | −163 |
+| Cancelled % | −1.35 | −1.73 | −1.23 | −0.66 | −0.77 |
+| Pooled % | −2.46 | +0.93 | −0.90 | +1.63 | +1.76 |
+
+Acceptance checks (plan.md, Phase 6):
+
+| Check | Trial 32 | Trial 37 | Trial 38 | Trial 54 |
+|---|---|---|---|---|
+| Peak-wait bias < 80 s | met | met | met | met |
+| KPIs failing the across-date SD check (one seed, D12) | 4 of 10 | 4 of 10 | 4 of 10 | 6 of 10 |
+
+For trials 32 and 38 the four are rides per veh-rev-h, cancelled %, p90 peak wait and pooled %.
+
+**Declines by period** (D8; `phase5/decline_by_period.py`, seed 42):
+
+| Period | Trial 32 | Trial 37 | Trial 38 | Real |
+|---|---|---|---|---|
+| AM peak | 24.4 % | 25.7 % | 27.8 % | 23.7 % |
+| PM peak | 26.1 % | 26.8 % | 28.1 % | 25.6 % |
+| Off-peak | 22.3 % | 23.0 % | 21.8 % | 22.2 % |
+
+All three trials decline more at the peaks than off-peak, as the real data do, so the D8 check passes. Trial 38 overshoots at the peaks by +4.1 and +2.5 points.
+
+**Cancellation timing** (D9, D18; `cancel_timing.py`, seed 42, output `cancel_timing_phase6_vali.txt`):
+
+| | Trial 32 | Trial 37 | Trial 38 | Trial 54 (Phase 5) | Real (15 dates) |
+|---|---|---|---|---|---|
+| Cancellations | 366 | 340 | 354 | 432 | 466 |
+| Median, s | 1800 | 1800 | 1800 | 4.5 | 180 |
+| % within 200 s | 0 | 0 | 0 | 100 | 53 |
+| % within 600 s | 15 | 0 | 0 | 100 | 78 |
+| % within 1200 s | 27 | 2.6 | 3.4 | 100 | 92 |
+| % at the window end (1800 s) | 66 | **92** | **90** | – | – |
+
+**Findings.**
+- **Trial 38 is the best setting so far on the validation dates.** It scores 2.326, about 0.3 better than every other setting, with intervals of 2.5–3 SE that hold on 11–12 of 15 dates. Most of the gain is the off-peak wait: the bias is −10 s instead of +68 to +83 s. Rejections and rides per veh-rev-h are as good as or better than the other trials.
+- **The off-peak delay is the cause of the long off-peak waits, again.** Trial 38's off-peak delay is about 0 s instead of 120 s, and its off-peak wait is 78 s shorter than trial 37's. That is the D15 result once more. It is not a clean one-parameter test: trial 38 also differs in max wait, detour factor and cancellation lower bound. It agrees with §4: real off-peak drivers are not slower, and the off-peak delay should be the shorter one.
+- **The calibration score does not rank the trials as the validation does (D16 again).** Trial 38 is third on calibration and first on validation by a clear margin, while trial 37, best on calibration, ties trial 32 and trial 54 on validation. Not examined further. One candidate: the off-peak wait weighs differently on the two date sets (Phase 5 trial 54: off-peak bias +46 s on the 48 calibration dates, +77 s on the 15 validation dates).
+- **The cancellation model has become "cancel if still waiting at 30 min".** In trials 37 and 38, 90–92 % of cancellations fall at the window end, with a median of 1800 s against 180 s in the real data. The objective has no timing KPI, so it pushes the threshold to its upper bound (100) and the noise to its lower bound (0.5). This is the risk §2–3 and D18 recorded for option 1, now at its extreme. The good scores rest partly on this wrong timing: riders who stay in the plans until the window end add vehicle load, which plausibly helps the rejections (§3; not tested here).
+- **The peak delay stays at its 60 s lower bound** in all three trials, against §4's finding that the real fixed delay is longer at the peaks. One trial that tried 169 s (trial 35) scored 2.960.
+
+**Next steps (not decided; the HPC job keeps running).**
+- Trial 38 is the Phase 6 fallback setting.
+- The open structural issues for a later setup are:
+  - cancellation timing (a timing KPI in the objective, or a cap on `decision_threshold` of about 40);
+  - the delay order (peak ≥ off-peak, for example peak = off-peak + an extra ≥ 0).
+
+Reproduce (from the repo root; the validation runs overwrite the three input files, so back them up first):
+```
+python vali_script_sc_3.py --dates vali --params 38      # also 32, 37
+python vali_compare_sc_3.py t38=<run folder> t37=<run folder> t32=<run folder> t54=<run folder> --out <prefix>
+python docs/analysis/phase5/decline_by_period.py <run folder>
+python docs/analysis/phase6/cancel_timing.py <run folder> [...]
+python parity_plot_sc_3.py <run folder>
+```
